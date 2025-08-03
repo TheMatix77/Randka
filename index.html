@@ -27,7 +27,7 @@
         }
 
         .overlay {
-            background-color: rgba(0, 0, 0, 0.6); /* Ciemniejsza nakładka */
+            background-color: rgba(0, 0, 0, 0.6);
             position: fixed;
             top: 0;
             left: 0;
@@ -141,8 +141,8 @@
             font-size: 18px;
             color: #ff69b4;
             animation: fall linear forwards;
-            /* KLUCZOWA ZMIANA Z-INDEX NA 2, ŻEBY BYŁO NAD TŁEM */
-            z-index: 2; 
+            /* KLUCZOWE: z-index na 2, żeby było widać nad tłem i nakładką */
+            z-index: 2;
             user-select: none;
             pointer-events: none;
             text-shadow: 0 0 5px rgba(255,100,140,0.5);
@@ -204,7 +204,7 @@
             const emoji = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
             heart.innerHTML = emoji;
             heart.style.left = Math.random() * 100 + "vw";
-            heart.style.fontSize = (16 + Math.random() * 10) + "px"; // Losowy rozmiar
+            heart.style.fontSize = (16 + Math.random() * 10) + "px";
             heart.style.animationDuration = (6 + Math.random() * 4) + "s";
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 10000);
@@ -219,10 +219,22 @@
         let heartsInterval = null;
         let isPlaying = false;
 
+        // Uruchomienie serduszek i muzyki po załadowaniu strony
+        document.addEventListener("DOMContentLoaded", () => {
+             // Automatyczne włączenie muzyki po interakcji (np. na poprzedniej stronie)
+            music.play().catch(e => {
+                console.log("Autoodtwarzanie zablokowane. Czekam na interakcję użytkownika.");
+            });
+            music.volume = 0.2;
+            isPlaying = true;
+            volumePath.style.display = "block";
+            mutePath.style.display = "none";
+            heartsInterval = setInterval(createHeart, 500);
+        });
+
         // Obsługa kliknięcia w przycisk głośnika
         soundToggle.addEventListener("click", () => {
             if (!isPlaying) {
-                // Włączamy muzykę i serduszka
                 music.play();
                 music.volume = 0.2;
                 isPlaying = true;
@@ -230,7 +242,6 @@
                 mutePath.style.display = "none";
                 heartsInterval = setInterval(createHeart, 500);
             } else {
-                // Wyłączamy muzykę i serduszka
                 music.pause();
                 isPlaying = false;
                 volumePath.style.display = "none";
@@ -247,9 +258,8 @@
                 clearInterval(heartsInterval);
             }
             // Przechodzimy do kolejnej strony
-            window.location.href = "zagadki.html"; 
+            window.location.href = "labirynt.html";
         });
-
     </script>
 </body>
 </html>
