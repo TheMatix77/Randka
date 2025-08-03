@@ -216,11 +216,11 @@
             window.location.href = "gratki.html";
         });
 
-        function resetPlayer() {
-            player.style.left = "20px";
-            player.style.top = "20px";
-            lastMouseX = 20;
-            lastMouseY = 20;
+           function resetPlayer() {
+    lastMouseX = 20;
+    lastMouseY = 20;
+    player.style.left = lastMouseX + "px";
+    player.style.top = lastMouseY + "px";
         }
 
         function checkCollision(x, y) {
