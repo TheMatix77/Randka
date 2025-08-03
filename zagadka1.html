@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokój - Misja Sprzątanie</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: url('pokoj.jpg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #intro {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 10;
+    }
+
+    #game {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .item {
+      position: absolute;
+      cursor: pointer;
+    }
+
+    #timer {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 24px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+    }
+
+    #message {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 18px;
+      display: none;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      margin-top: 20px;
+      background-color: #6e3b8f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #542c6e;
+    }
+  </style>
+</head>
+<body>
+  <div id="intro">
+    <h2>Szukając Matiego trafiłaś do jej pokoju...</h2>
+    <p>Gosia wraca za <strong>minutę</strong> z pracy! Musisz posprzątać przedmioty, które mogłaby uznać za niestosowne 😳</p>
+    <button onclick="startGame()">Zaczynamy!</button>
+  </div>
+
+  <div id="game">
+    <div id="timer">60</div>
+    <div id="message"></div>
+    <img src="item1.png" class="item" style="top: 20%; left: 30%;" onclick="clickItem(this, true)">
+    <img src="item2.png" class="item" style="top: 50%; left: 60%;" onclick="clickItem(this, true)">
+    <img src="item3.png" class="item" style="top: 70%; left: 20%;" onclick="clickItem(this, true)">
+    <img src="item4.png" class="item" style="top: 40%; left: 40%;" onclick="clickItem(this, false)">
+    <img src="item5.png" class="item" style="top: 60%; left: 70%;" onclick="clickItem(this, false)">
+  </div>
+
+  <script>
+    let timer;
+    let timeLeft = 60;
+    let itemsToFind = 3;
+
+    function startGame() {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('game').style.display = 'block';
+
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    function clickItem(el, isIllegal) {
+      el.style.display = 'none';
+      if (isIllegal) {
+        itemsToFind--;
+        if (itemsToFind === 0) {
+          clearInterval(timer);
+          endGame(true);
+        }
+      } else {
+        timeLeft = Math.max(0, timeLeft - 5);
+        document.getElementById('timer').textContent = timeLeft;
+      }
+    }
+
+    function endGame(won) {
+      const msg = document.getElementById('message');
+      if (won) {
+        msg.textContent = 'Udało się! Zdążyłaś posprzątać wszystko zanim Gosia wróciła! 💨';
+      } else {
+        msg.textContent = 'Gosia już wróciła! I widzi ten burdel... 😱';
+      }
+      msg.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
