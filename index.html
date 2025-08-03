@@ -2,12 +2,13 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Randka</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Randka z Zuziaczkiem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; }
-
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -18,18 +19,15 @@
       min-height: 100vh;
       text-align: center;
       color: #fff;
+      position: relative;
     }
-
     .overlay {
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.35);
       position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 0;
     }
-
     .container {
       position: relative;
       z-index: 2;
@@ -40,74 +38,90 @@
       justify-content: center;
       min-height: 100vh;
     }
-
     h1 {
-      font-family: 'Pacifico', cursive;
-      font-size: 9vw;
-      margin-bottom: 10px;
-      animation: pulse 2.5s infinite;
-      color: #ffb6f2;
+      font-family: 'Anton', sans-serif;
+      font-size: 12vw;
+      margin-bottom: 15px;
+      color: #ff1e56;
+      text-transform: uppercase;
       text-shadow:
-        0 0 5px #ff99cc,
-        0 0 10px #ff66cc,
-        0 0 15px #ff33cc,
-        0 0 20px #ff00cc,
-        0 0 25px #ff00aa,
-        0 0 30px #ff0088;
+        0 0 5px #ff1e56,
+        0 0 10px #ff1e56,
+        0 0 20px #ff1e56,
+        0 0 40px #ff6aa3,
+        0 0 80px #ff6aa3;
+      animation: neonPulse 2.5s ease-in-out infinite;
     }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.9; }
+    @keyframes neonPulse {
+      0%, 100% {
+        text-shadow:
+          0 0 5px #ff1e56,
+          0 0 10px #ff1e56,
+          0 0 20px #ff1e56,
+          0 0 40px #ff6aa3,
+          0 0 80px #ff6aa3;
+        color: #ff1e56;
+      }
+      50% {
+        text-shadow:
+          0 0 10px #ff3a74,
+          0 0 20px #ff3a74,
+          0 0 30px #ff6aa3,
+          0 0 50px #ff6aa3,
+          0 0 90px #ff6aa3;
+        color: #ff3a74;
+      }
     }
-
     .description {
-      font-size: 4.5vw;
+      font-size: 4vw;
       max-width: 90%;
       background-color: rgba(0, 0, 0, 0.5);
       padding: 15px 20px;
       border-radius: 15px;
+      margin-bottom: 25px;
       text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+      line-height: 1.4;
     }
-
     .gif-container {
-      margin: 20px 0;
+      margin: 15px 0 30px;
     }
-
     .gif-container img {
       width: 70%;
       max-width: 300px;
       border-radius: 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-
     .start-button {
-      margin-top: 25px;
-      padding: 12px 26px;
-      font-size: 4.5vw;
-      background-color: #fff0f7;
-      color: #d81b60;
+      padding: 14px 32px;
+      font-size: 5vw;
+      background-color: #ff1e56;
+      color: #fff;
       border: none;
-      border-radius: 30px;
+      border-radius: 35px;
       cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-family: 'Anton', sans-serif;
+      text-transform: uppercase;
+      box-shadow:
+        0 0 8px #ff1e56,
+        0 0 15px #ff1e56;
       transition: all 0.3s ease;
+      user-select: none;
     }
-
     .start-button:hover {
-      background-color: #ffcde8;
+      background-color: #ff3a74;
+      box-shadow:
+        0 0 12px #ff3a74,
+        0 0 20px #ff6aa3;
     }
-
     .floating-heart {
-      position: absolute;
+      position: fixed;
       font-size: 18px;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 20, 47, 0.4);
       animation: fall linear infinite;
       z-index: 1;
+      pointer-events: none;
+      user-select: none;
     }
-
     @keyframes fall {
       0% {
         transform: translateY(-10vh) rotate(0deg);
@@ -118,7 +132,6 @@
         opacity: 0;
       }
     }
-
     audio {
       display: none;
     }
@@ -129,55 +142,47 @@
   <div class="overlay"></div>
 
   <div class="container">
-    <h1>Randka</h1>
-
+    <h1>RANDKA</h1>
     <div class="description">
       Wiem, że nasze nocne randki wyglądają różnie...<br/>
-      Ale dziś przygotowałem coś innego. <br/>
+      Ale dziś przygotowałem coś innego.<br/>
       Przejdź przez kilka słodkich zadań, a na końcu czeka na Ciebie coś... <b>FAJNEGO CHYBA?</b> 🥰💕
     </div>
 
     <div class="gif-container">
-      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Całujące się kotki">
+      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Całujące się kotki" />
     </div>
 
-    <button class="start-button" onclick="startDate()" id="startButton">Zaczynamy ❤️</button>
+    <button class="start-button" onclick="startDate()">Zaczynamy ❤️</button>
 
-    <audio id="romanticMusic" loop>
-      <source src="romantyczna.mp3" type="audio/mpeg">
+    <audio id="romanticMusic" loop autoplay>
+      <source src="romantyczna.mp3" type="audio/mpeg" />
+      Twój przeglądarka nie obsługuje odtwarzania audio.
     </audio>
   </div>
 
   <script>
-    // spadające serduszka
+    const music = document.getElementById("romanticMusic");
+    music.volume = 0.2;
+
+    // Delikatne spadające serduszka
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("floating-heart");
       heart.innerHTML = "❤";
       heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+      heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+      heart.style.fontSize = (16 + Math.random() * 8) + "px";
       document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 8000);
+      setTimeout(() => heart.remove(), 10000);
     }
-    setInterval(createHeart, 400);
+    setInterval(createHeart, 500);
 
-    // muzyka i przejście
     function startDate() {
-      const music = document.getElementById("romanticMusic");
-      music.volume = 0.2;
-      music.play().then(() => {
-        console.log("Muzyka gra!");
-      }).catch((e) => {
-        alert("Kliknij jeszcze raz, żeby włączyć muzykę 🎵");
-        console.error("Błąd:", e);
-      });
-
-      // Przejście po 1.5 sekundy
-      setTimeout(() => {
-        window.location.href = "etap1.html";
-      }, 1500);
+      music.pause();
+      music.currentTime = 0;
+      window.location.href = "etap1.html";
     }
   </script>
-
 </body>
 </html>
