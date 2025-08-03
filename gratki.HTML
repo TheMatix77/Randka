@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Talerz Gówna 🎯</title>
+  <style>
+    * { box-sizing: border-box; margin:0; padding:0; font-family: 'Quicksand', sans-serif; user-select:none; touch-action:none; }
+    body { background: #ffe6f0; color: #333; overflow:hidden; }
+    .overlay {
+      position:fixed; top:0; left:0; width:100vw; height:100vh;
+      background: rgba(255,235,245,0.98); z-index:999;
+      display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:20px;
+    }
+    .overlay .content {
+      max-width:400px; background:#fff0f7; padding:30px;
+      border-radius:25px; box-shadow:0 8px 20px rgba(0,0,0,0.2);
+      animation:popIn 0.6s ease;
+    }
+    .overlay h2 { font-size:24px; margin-bottom:10px; color:#d81b60; }
+    .overlay p { font-size:18px; line-height:1.4; margin-bottom:20px; }
+    .overlay button {
+      padding:12px 24px; background:#ff66a3; color:#fff; border:none;
+      border-radius:20px; font-size:16px; cursor:pointer; transition:background 0.3s;
+    }
+    .overlay button:hover { background:#e05591; }
+    @keyframes popIn { from {transform:scale(0.7);opacity:0;} to {transform:scale(1);opacity:1;} }
+
+    #game { position:relative; width:100vw; height:100vh; overflow:hidden; }
+    .dupa { position:absolute; top:0; left:0; width:120px; height:60px; z-index:2; }
+    #player { position:absolute; width:80px; height:80px; bottom:20px; left:50%; transform:translateX(-50%); z-index:2; }
+    #player img { width:100%; height:100%; object-fit:contain; }
+
+    .gowno, .item { position:absolute; width:40px; height:40px; z-index:1; }
+    .gowno { background:transparent; animation:spin 2s linear infinite alternate; }
+    .item { opacity:0.8; }
+
+    @keyframes spin { from {transform:rotate(0deg) scale(1);} to {transform:rotate(360deg) scale(1.2);} }
+
+    #score { position:fixed; top:10px; left:10px; font-size:20px; color:#333; z-index:5; }
+  </style>
+</head>
+<body>
+
+<div id="intro" class="overlay">
+  <div class="content">
+    <h2>A teraz zobacz z czym muszę się zmagać...</h2>
+    <button id="startBtn">START</button>
+  </div>
+</div>
+
+<div id="win" class="overlay" style="display:none;">
+  <div class="content">
+    <h2>GRATULUJĘ, NASRAŁAŚ NA TALERZ 💩</h2>
+    <p>Złapałaś 30 gówien!</p>
+    <button id="nextBtn">Dalej</button>
+  </div>
+</div>
+
+<div id="game">
+  <img src="dupa.png" class="dupa" id="dupa">
+  <div id="player"><img src="gracz.png" alt="gracz"></div>
+  <div id="score">Pkt: 0</div>
+</div>
+
+<audio id="fart" src="fart.mp3"></audio>
+<audio id="ouch" src="ouch.mp3"></audio>
+
+<script>
+  const intro = document.getElementById('intro');
+  const win = document.getElementById('win');
+  const startBtn = document.getElementById('startBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const game = document.getElementById('game');
+  const dupa = document.getElementById('dupa');
+  const player = document.getElementById('player');
+  const scoreDisplay = document.getElementById('score');
+  const fartSound = document.getElementById('fart');
+  const ouchSound = document.getElementById('ouch');
+
+  let score = 0, gameInterval, spawnInterval;
+  let screenW = window.innerWidth, screenH = window.innerHeight;
+
+  startBtn.onclick = () => {
+    intro.style.display = 'none';
+    startGame();
+  };
+  nextBtn.onclick = () => window.location.href = 'kolejna.html';
+
+  function startGame(){
+    spawnInterval = setInterval(spawnFalling, 800);
+    gameInterval = setInterval(update, 16);
+    document.addEventListener('touchmove', movePlayer, {passive:false});
+    document.addEventListener('mousemove', movePlayer);
+  }
+
+  function spawnFalling(){
+    const rand = Math.random();
+    const el = document.createElement('img');
+
+    if(rand < 0.6){
+      el.src = 'gowno.png';
+      el.className = 'gowno';
+      el.dataset.type = 'gowno';
+    } else if(rand < 0.85){
+      el.src = 'item.png';
+      el.className = 'item';
+      el.dataset.type = 'minus5';
+    } else {
+      el.src = 'pielucha.png';
+      el.className = 'item';
+      el.dataset.type = 'minus3';
+    }
+
+    el.style.left = (Math.random()*(screenW-40))+'px';
+    el.style.top = '0px';
+    game.appendChild(el);
+  }
+
+  function movePlayer(e){
+    e.preventDefault();
+    const x = e.clientX ?? e.touches[0].clientX;
+    let px = x - player.offsetWidth/2;
+    px = Math.max(0, Math.min(screenW-player.offsetWidth, px));
+    player.style.left = px+'px';
+  }
+
+  function update(){
+    document.querySelectorAll('.gowno, .item').forEach(el => {
+      el.style.top = (parseFloat(el.style.top) + 4) + 'px';
+      if(parseFloat(el.style.top) > screenH){
+        el.remove();
+        return;
+      }
+      if(collision(el, player)){
+        const type = el.dataset.type;
+        if(type === 'gowno'){
+          fartSound.play();
+          score++;
+        } else if(type === 'minus5'){
+          ouchSound.play();
+          score = Math.max(0, score - 5);
+        } else if(type === 'minus3'){
+          ouchSound.play();
+          score = Math.max(0, score - 3);
+        }
+        scoreDisplay.textContent = 'Pkt: '+score;
+        el.remove();
+        if(score >= 30) endGame();
+      }
+    });
+  }
+
+  function collision(a,b){
+    const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect();
+    return!(ra.right<rb.left||ra.left>rb.right||ra.bottom<rb.top||ra.top>rb.bottom);
+  }
+
+  function endGame(){
+    clearInterval(spawnInterval);
+    clearInterval(gameInterval);
+    win.style.display='flex';
+  }
+
+  window.addEventListener('resize', () => {
+    screenW=window.innerWidth; screenH=window.innerHeight;
+  });
+</script>
+</body>
+</html>
