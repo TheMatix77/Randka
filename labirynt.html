@@ -15,7 +15,8 @@
             overflow: hidden;
             font-family: 'Quicksand', sans-serif;
         }
-        .intro-overlay {
+
+        .intro-overlay, .win-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -30,7 +31,7 @@
             padding: 20px;
         }
 
-        .intro-content {
+        .intro-content, .win-content {
             max-width: 400px;
             color: #d81b60;
             font-family: 'Quicksand', sans-serif;
@@ -41,18 +42,18 @@
             animation: popIn 0.6s ease;
         }
 
-        .intro-content h2 {
+        .intro-content h2, .win-content h2 {
             font-size: 24px;
             margin-bottom: 10px;
         }
 
-        .intro-content p {
+        .intro-content p, .win-content p {
             font-size: 18px;
             margin-bottom: 20px;
             line-height: 1.4;
         }
 
-        .intro-content button {
+        .intro-content button, .win-content button {
             padding: 12px 24px;
             background-color: #ff66a3;
             color: white;
@@ -63,7 +64,7 @@
             transition: background 0.3s;
         }
 
-        .intro-content button:hover {
+        .intro-content button:hover, .win-content button:hover {
             background-color: #e05591;
         }
 
@@ -77,7 +78,7 @@
                 opacity: 1;
             }
         }
-
+        
         .maze {
             position: relative;
             width: 100vw;
@@ -165,41 +166,54 @@
             <button id="startGame">Zaczynamy 💦</button>
         </div>
     </div>
+    
     <div class="maze" id="maze">
         <div class="path" style="top: 0; left: 0; width: 100%; height: 60px;"></div>
         <div class="path" style="top: 60px; left: 90%; width: 10%; height: 120px;"></div>
         <div class="path" style="top: 180px; left: 0; width: 100%; height: 60px;"></div>
         <div class="path" style="top: 240px; left: 0; width: 10%; height: 120px;"></div>
         <div class="path" style="top: 360px; left: 0; width: 100%; height: 60px;"></div>
-        <div class="path" style="top: 420px; left: 50%; width: 4%; height: 60px;"></div> <div class="path" style="top: 480px; left: 0; width: 100%; height: 60px;"></div>
+        <div class="path" style="top: 420px; left: 50%; width: 4%; height: 60px;"></div>
+        <div class="path" style="top: 480px; left: 0; width: 100%; height: 60px;"></div>
 
         <img src="penis.png" alt="Penis" class="start-img" />
-
         <img src="komorka.png" alt="Komórka jajowa" class="end-img" id="meta" />
-
+        
         <div class="player" id="player">
             <img src="plemnik.png" alt="Plemnik" />
         </div>
     </div>
 
     <img src="straszak.png" class="screamer" id="screamer" alt="BUUU!" />
-    <audio id="buuSound" src="buuu.mp3"></audio>
+    <audio id="buuSound" src="buu.mp3"></audio>
+
+    <div id="winMessage" class="win-overlay" style="display: none;">
+        <div class="win-content">
+            <h2>ZAPŁODNIŁAŚ, GRATULUJĘ!</h2>
+            <p>Udało Ci się dotrzeć do celu, ale to dopiero początek! 😉</p>
+            <button id="nextBtn">Przejdź dalej</button>
+        </div>
+    </div>
 
     <script>
         const player = document.getElementById("player");
-        const maze = document.getElementById("maze");
         const meta = document.getElementById("meta");
         const screamer = document.getElementById("screamer");
         const buuSound = document.getElementById("buuSound");
         const introOverlay = document.getElementById("intro");
         const startGameBtn = document.getElementById("startGame");
+        const winMessage = document.getElementById("winMessage");
+        const nextBtn = document.getElementById("nextBtn");
 
         let jumpscared = false;
 
         startGameBtn.addEventListener("click", () => {
             introOverlay.style.display = "none";
-            // Rozpoczynamy grę
             resetPlayer();
+        });
+
+        nextBtn.addEventListener("click", () => {
+            window.location.href = "gratki.html";
         });
 
         function resetPlayer() {
@@ -224,10 +238,9 @@
 
         function checkScreamerZone(x, y) {
             const playerBox = player.getBoundingClientRect();
-            const screamerYStart = window.innerHeight * 0.5 - 50; // strefa w połowie ekranu
+            const screamerYStart = window.innerHeight * 0.5 - 50;
             const screamerYEnd = window.innerHeight * 0.5 + 50;
 
-            // Sprawdzamy, czy gracz jest na odpowiedniej wysokości
             return playerBox.top > screamerYStart && playerBox.top < screamerYEnd;
         }
 
@@ -252,10 +265,10 @@
                     screamer.classList.remove("active");
                 }, 2500);
             } else if (checkWin(x, y)) {
-                meta.style.transform = "scale(1.2)";
-                setTimeout(() => {
-                    window.location.href = "gratki.html";
-                }, 500);
+                 // Pokazujemy powiadomienie o wygranej i blokujemy grę
+                winMessage.style.display = "flex";
+                document.removeEventListener("mousemove", move);
+                document.removeEventListener("touchmove", move);
             }
         }
         
