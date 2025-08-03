@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Labirynt Miłości</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plemnikowa Misja</title>
   <style>
     * {
       box-sizing: border-box;
@@ -11,81 +11,71 @@
 
     body {
       margin: 0;
-      background: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      background: #ffe6f0;
       overflow: hidden;
-      position: relative;
       font-family: 'Quicksand', sans-serif;
     }
 
     .maze {
-      width: 80vw;
-      height: 80vh;
-      background: #222;
       position: relative;
-      border-radius: 10px;
-      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffe6f0;
     }
 
     .path {
       position: absolute;
-      background: #fff;
-      border-radius: 10px;
+      background: #fff0fa;
+      border-radius: 20px;
+      z-index: 1;
     }
 
-    /* Przykład trasy (prosta, kręta droga) */
-    .path1 { top: 10%; left: 5%; width: 90%; height: 10%; }
-    .path2 { top: 10%; left: 85%; width: 10%; height: 60%; }
-    .path3 { top: 60%; left: 20%; width: 75%; height: 10%; }
-    .path4 { top: 60%; left: 20%; width: 10%; height: 25%; }
-
     .player {
-      width: 30px;
-      height: 30px;
-      background: pink;
-      border-radius: 50%;
       position: absolute;
-      top: 10%;
-      left: 5%;
-      z-index: 5;
+      width: 40px;
+      height: 40px;
+      z-index: 3;
       pointer-events: none;
       transition: top 0.05s, left 0.05s;
+    }
+
+    .player img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .start-img, .end-img {
       position: absolute;
       width: 60px;
       height: 60px;
-      border-radius: 10px;
-      object-fit: cover;
-      z-index: 3;
+      object-fit: contain;
+      z-index: 2;
     }
 
     .start-img {
-      top: 10%;
-      left: 5%;
+      top: 10px;
+      left: 10px;
     }
 
     .end-img {
-      bottom: 5%;
-      left: 20%;
+      bottom: 10px;
+      right: 10px;
     }
 
-    #screamer {
+    .screamer {
       position: fixed;
       top: 50%;
       left: 50%;
+      transform: translate(-50%, -50%);
       width: 0;
       height: 0;
-      transform: translate(-50%, -50%);
+      overflow: hidden;
       z-index: 100;
-      transition: all 0.5s ease;
+      transition: all 0.4s ease;
     }
 
-    #screamer.active {
+    .screamer.active {
       width: 300px;
       height: auto;
     }
@@ -97,50 +87,58 @@
 </head>
 <body>
   <div class="maze" id="maze">
-    <div class="path path1"></div>
-    <div class="path path2"></div>
-    <div class="path path3"></div>
-    <div class="path path4"></div>
+    <!-- Pudrowy labirynt -->
+    <div class="path" style="top: 0; left: 0; width: 100%; height: 60px;"></div>
+    <div class="path" style="top: 60px; left: 90%; width: 10%; height: 120px;"></div>
+    <div class="path" style="top: 180px; left: 0; width: 100%; height: 60px;"></div>
+    <div class="path" style="top: 240px; left: 0; width: 10%; height: 120px;"></div>
+    <div class="path" style="top: 360px; left: 0; width: 100%; height: 60px;"></div>
+    <div class="path" style="top: 420px; left: 50%; width: 4%; height: 60px;"></div> <!-- Wąskie przejście -->
+    <div class="path" style="top: 480px; left: 0; width: 100%; height: 60px;"></div>
 
-    <img class="start-img" src="start.jpg" alt="Start" />
-    <img class="end-img" src="meta.jpg" alt="Meta" />
+    <!-- Obrazek startu: penis -->
+    <img src="penis.png" alt="Penis" class="start-img" />
 
-    <div class="player" id="player"></div>
+    <!-- Obrazek końca: komórka jajowa -->
+    <img src="komorka.png" alt="Komórka jajowa" class="end-img" id="meta" />
+
+    <!-- Gracz: plemnik -->
+    <div class="player" id="player">
+      <img src="plemnik.png" alt="Plemnik" />
+    </div>
   </div>
 
-  <img src="screamer.jpg" id="screamer" alt="BUUU!" />
+  <!-- Straszak -->
+  <img src="straszak.png" class="screamer" id="screamer" alt="BUUU!" />
   <audio id="buuSound" src="buuu.mp3"></audio>
 
   <script>
-    const player = document.getElementById('player');
-    const maze = document.getElementById('maze');
-    const buuSound = document.getElementById('buuSound');
-    const screamer = document.getElementById('screamer');
+    const player = document.getElementById("player");
+    const maze = document.getElementById("maze");
+    const meta = document.getElementById("meta");
+    const screamer = document.getElementById("screamer");
+    const buuSound = document.getElementById("buuSound");
 
-    let playing = false;
-
-    // Ustawienia pozycji startowej
-    let startX = maze.offsetLeft + maze.offsetWidth * 0.05;
-    let startY = maze.offsetTop + maze.offsetHeight * 0.10;
+    let jumpscared = false;
 
     function resetPlayer() {
-      player.style.left = "5%";
-      player.style.top = "10%";
+      player.style.left = "20px";
+      player.style.top = "20px";
     }
 
     function checkCollision(x, y) {
       const el = document.elementFromPoint(x, y);
-      return !(el && el.classList.contains("path"));
+      return !(el && (el.classList.contains("path") || el.classList.contains("player")));
     }
 
     function checkWin(x, y) {
-      const end = document.querySelector('.end-img').getBoundingClientRect();
-      return x > end.left && x < end.right && y > end.top && y < end.bottom;
+      const metaBox = meta.getBoundingClientRect();
+      return x > metaBox.left && x < metaBox.right && y > metaBox.top && y < metaBox.bottom;
     }
 
     function checkScreamerZone(x, y) {
-      const mazeRect = maze.getBoundingClientRect();
-      return x > mazeRect.left + mazeRect.width * 0.5 && x < mazeRect.left + mazeRect.width * 0.6;
+      const mazeCenterX = window.innerWidth / 2;
+      return x > mazeCenterX - 50 && x < mazeCenterX + 50 && y > 420 && y < 480;
     }
 
     document.addEventListener("mousemove", move);
@@ -151,25 +149,24 @@
       let x = e.clientX || (e.touches && e.touches[0].clientX);
       let y = e.clientY || (e.touches && e.touches[0].clientY);
 
-      player.style.left = (x - maze.offsetLeft - 15) + "px";
-      player.style.top = (y - maze.offsetTop - 15) + "px";
+      player.style.left = (x - 20) + "px";
+      player.style.top = (y - 20) + "px";
 
       if (checkCollision(x, y)) {
         resetPlayer();
-      } else if (!playing && checkScreamerZone(x, y)) {
-        playing = true;
+      } else if (!jumpscared && checkScreamerZone(x, y)) {
+        jumpscared = true;
         buuSound.play();
         screamer.classList.add("active");
         setTimeout(() => {
           screamer.classList.remove("active");
         }, 2500);
       } else if (checkWin(x, y)) {
-        window.location.href = "kolejna-strona.html";
+        window.location.href = "gratki.html";
       }
     }
 
-    // Start po załadowaniu
-    window.addEventListener("load", resetPlayer);
+    window.onload = resetPlayer;
   </script>
 </body>
 </html>
