@@ -1,287 +1,175 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Labirynt dla Zuziaczka</title>
-    <style>
-        body {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            font-family: sans-serif;
-            overflow: hidden;
-            flex-direction: column;
-            text-align: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Labirynt Miłości</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        h2 {
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Quicksand', sans-serif;
+    }
 
-        #maze-container {
-            position: relative;
-            width: 80vw;
-            height: 80vh;
-            max-width: 600px;
-            max-height: 600px;
-            border: 5px solid #bdc3c7;
-            background-color: #34495e;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            touch-action: none; /* Zapobiega przewijaniu na urządzeniach dotykowych */
-        }
+    .maze {
+      width: 80vw;
+      height: 80vh;
+      background: #222;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+    }
 
-        .wall {
-            position: absolute;
-            background-color: #95a5a6;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
-        }
+    .path {
+      position: absolute;
+      background: #fff;
+      border-radius: 10px;
+    }
 
-        .path {
-            background-color: transparent;
-        }
+    /* Przykład trasy (prosta, kręta droga) */
+    .path1 { top: 10%; left: 5%; width: 90%; height: 10%; }
+    .path2 { top: 10%; left: 85%; width: 10%; height: 60%; }
+    .path3 { top: 60%; left: 20%; width: 75%; height: 10%; }
+    .path4 { top: 60%; left: 20%; width: 10%; height: 25%; }
 
-        #player {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            background-color: #e74c3c;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            color: #fff;
-            cursor: pointer;
-            z-index: 10;
-        }
+    .player {
+      width: 30px;
+      height: 30px;
+      background: pink;
+      border-radius: 50%;
+      position: absolute;
+      top: 10%;
+      left: 5%;
+      z-index: 5;
+      pointer-events: none;
+      transition: top 0.05s, left 0.05s;
+    }
 
-        #start, #end {
-            position: absolute;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            color: #fff;
-        }
+    .start-img, .end-img {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      object-fit: cover;
+      z-index: 3;
+    }
 
-        #start {
-            left: 20px;
-            top: 20px;
-            width: 50px;
-            height: 50px;
-        }
+    .start-img {
+      top: 10%;
+      left: 5%;
+    }
 
-        #end {
-            right: 20px;
-            bottom: 20px;
-            width: 50px;
-            height: 50px;
-        }
+    .end-img {
+      bottom: 5%;
+      left: 20%;
+    }
 
-        #start-image, #end-image {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            border-radius: 50%;
-        }
+    #screamer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+      transition: all 0.5s ease;
+    }
 
-        #start-image img, #end-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    #screamer.active {
+      width: 300px;
+      height: auto;
+    }
 
-        /* Mid-game scare popup */
-        #scare-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.1);
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            padding: 20px;
-            border: 3px solid #e74c3c;
-            box-shadow: 0 0 30px #e74c3c;
-            text-align: center;
-            z-index: 100;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            opacity: 0;
-            transition: all 0.5s ease-in-out;
-            width: 80vw;
-            max-width: 400px;
-        }
-
-        #scare-popup.active {
-            display: flex;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        #scare-image img {
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 15px;
-            border: 2px solid #fff;
-        }
-    </style>
+    audio {
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <div class="maze" id="maze">
+    <div class="path path1"></div>
+    <div class="path path2"></div>
+    <div class="path path3"></div>
+    <div class="path path4"></div>
 
-    <h2>Labirynt Miłości</h2>
+    <img class="start-img" src="start.jpg" alt="Start" />
+    <img class="end-img" src="meta.jpg" alt="Meta" />
 
-    <div id="maze-container">
-        <div id="player">&hearts;</div>
+    <div class="player" id="player"></div>
+  </div>
 
-        <div id="start">
-            <div id="start-image">
-                <p>START FOTO</p>
-            </div>
-        </div>
-        <div id="end">
-            <div id="end-image">
-                <p>END FOTO</p>
-            </div>
-        </div>
+  <img src="screamer.jpg" id="screamer" alt="BUUU!" />
+  <audio id="buuSound" src="buuu.mp3"></audio>
 
-        <div class="wall" style="left: 0; top: 0; width: 100%; height: 20px;"></div>
-        <div class="wall" style="left: 0; top: 0; width: 20px; height: 100%;"></div>
-        <div class="wall" style="left: 0; bottom: 0; width: 100%; height: 20px;"></div>
-        <div class="wall" style="right: 0; top: 0; width: 20px; height: 100%;"></div>
-        
-        <div class="wall" style="left: 10%; top: 20px; width: 20px; height: 50%;"></div>
-        <div class="wall" style="left: 10%; top: 50%; width: 50%; height: 20px;"></div>
-        <div class="wall" style="left: 60%; top: 50%; width: 20px; height: 40%;"></div>
-        <div class="wall" style="right: 10%; top: 10%; width: 20px; height: 50%;"></div>
-        <div class="wall" style="left: 30%; top: 20px; width: 20px; height: 20%;"></div>
-        <div class="wall" style="left: 30%; top: 20%; width: 50%; height: 20px;"></div>
-        <div class="wall" style="left: 50%; top: 70%; width: 30%; height: 20px;"></div>
-        
-        <div class="wall" style="left: 30%; top: 70%; width: 20px; height: 20%;"></div>
-        <div class="wall" style="left: 30%; bottom: 20px; width: 50%; height: 20px;"></div>
+  <script>
+    const player = document.getElementById('player');
+    const maze = document.getElementById('maze');
+    const buuSound = document.getElementById('buuSound');
+    const screamer = document.getElementById('screamer');
 
-    </div>
+    let playing = false;
 
-    <div id="scare-popup">
-        <div id="scare-image">
-            <p>ZDJĘCIE BUU</p>
-        </div>
-        <p>ZASTANÓW SIĘ, CZY TEGO CHCESZ...</p>
-    </div>
+    // Ustawienia pozycji startowej
+    let startX = maze.offsetLeft + maze.offsetWidth * 0.05;
+    let startY = maze.offsetTop + maze.offsetHeight * 0.10;
 
-    <audio id="scare-sound" src="buu.mp3"></audio>
+    function resetPlayer() {
+      player.style.left = "5%";
+      player.style.top = "10%";
+    }
 
-    <script>
-        const player = document.getElementById('player');
-        const mazeContainer = document.getElementById('maze-container');
-        const walls = document.querySelectorAll('.wall');
-        const start = document.getElementById('start');
-        const end = document.getElementById('end');
-        const scarePopup = document.getElementById('scare-popup');
-        const scareSound = document.getElementById('scare-sound');
+    function checkCollision(x, y) {
+      const el = document.elementFromPoint(x, y);
+      return !(el && el.classList.contains("path"));
+    }
 
-        const mazeRect = mazeContainer.getBoundingClientRect();
-        const playerSize = 25;
-        const startX = start.offsetLeft + start.offsetWidth / 2 - playerSize / 2;
-        const startY = start.offsetTop + start.offsetHeight / 2 - playerSize / 2;
+    function checkWin(x, y) {
+      const end = document.querySelector('.end-img').getBoundingClientRect();
+      return x > end.left && x < end.right && y > end.top && y < end.bottom;
+    }
 
-        let isPlaying = false;
-        let midGameEventTriggered = false;
+    function checkScreamerZone(x, y) {
+      const mazeRect = maze.getBoundingClientRect();
+      return x > mazeRect.left + mazeRect.width * 0.5 && x < mazeRect.left + mazeRect.width * 0.6;
+    }
 
-        // Ustaw początkową pozycję gracza
-        function resetPlayerPosition() {
-            player.style.left = `${startX}px`;
-            player.style.top = `${startY}px`;
-            isPlaying = true;
-        }
-        resetPlayerPosition();
+    document.addEventListener("mousemove", move);
+    document.addEventListener("touchmove", move, { passive: false });
 
-        function checkCollision() {
-            const playerRect = player.getBoundingClientRect();
+    function move(e) {
+      e.preventDefault();
+      let x = e.clientX || (e.touches && e.touches[0].clientX);
+      let y = e.clientY || (e.touches && e.touches[0].clientY);
 
-            // Kolizja ze ścianami
-            walls.forEach(wall => {
-                const wallRect = wall.getBoundingClientRect();
-                if (
-                    playerRect.x < wallRect.x + wallRect.width &&
-                    playerRect.x + playerRect.width > wallRect.x &&
-                    playerRect.y < wallRect.y + wallRect.height &&
-                    playerRect.y + playerRect.height > wallRect.y
-                ) {
-                    resetPlayerPosition();
-                }
-            });
+      player.style.left = (x - maze.offsetLeft - 15) + "px";
+      player.style.top = (y - maze.offsetTop - 15) + "px";
 
-            // Kolizja z metą
-            const endRect = end.getBoundingClientRect();
-            if (
-                playerRect.x > endRect.x &&
-                playerRect.x < endRect.x + endRect.width &&
-                playerRect.y > endRect.y &&
-                playerRect.y < endRect.y + endRect.height
-            ) {
-                // Przekierowanie na kolejną stronę po dotarciu do mety
-                window.location.href = "zagadka2.html";
-            }
-        }
+      if (checkCollision(x, y)) {
+        resetPlayer();
+      } else if (!playing && checkScreamerZone(x, y)) {
+        playing = true;
+        buuSound.play();
+        screamer.classList.add("active");
+        setTimeout(() => {
+          screamer.classList.remove("active");
+        }, 2500);
+      } else if (checkWin(x, y)) {
+        window.location.href = "kolejna-strona.html";
+      }
+    }
 
-        // Wyskakujący element w połowie drogi
-        function checkMidpointEvent() {
-            const playerRect = player.getBoundingClientRect();
-            const midpointY = mazeRect.y + mazeRect.height / 2;
-
-            if (!midGameEventTriggered && playerRect.y < midpointY && playerRect.y + playerRect.height > midpointY) {
-                midGameEventTriggered = true;
-                scarePopup.classList.add('active');
-                scareSound.play();
-                // Po 5 sekundach schowaj popup
-                setTimeout(() => {
-                    scarePopup.classList.remove('active');
-                }, 5000);
-            }
-        }
-
-        // Obsługa ruchu gracza myszką
-        mazeContainer.addEventListener('mousemove', (e) => {
-            if (!isPlaying) return;
-
-            const x = e.clientX - mazeRect.left - playerSize / 2;
-            const y = e.clientY - mazeRect.top - playerSize / 2;
-
-            if (x >= 0 && x <= mazeRect.width - playerSize && y >= 0 && y <= mazeRect.height - playerSize) {
-                player.style.left = `${x}px`;
-                player.style.top = `${y}px`;
-                checkCollision();
-                checkMidpointEvent();
-            }
-        });
-
-        // Obsługa ruchu gracza palcem na urządzeniach dotykowych
-        mazeContainer.addEventListener('touchmove', (e) => {
-            if (!isPlaying) return;
-            
-            const touch = e.touches[0];
-            const x = touch.clientX - mazeRect.left - playerSize / 2;
-            const y = touch.clientY - mazeRect.top - playerSize / 2;
-
-            if (x >= 0 && x <= mazeRect.width - playerSize && y >= 0 && y <= mazeRect.height - playerSize) {
-                player.style.left = `${x}px`;
-                player.style.top = `${y}px`;
-                checkCollision();
-                checkMidpointEvent();
-            }
-        });
-
-    </script>
+    // Start po załadowaniu
+    window.addEventListener("load", resetPlayer);
+  </script>
 </body>
 </html>
