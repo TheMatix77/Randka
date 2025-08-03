@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Randka z Niespodzianką 💘</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #ffd6ec, #d6f3ff);
+      text-align: center;
+      padding: 40px;
+      color: #444;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff7fc;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      margin: 10px;
+      background-color: #ff88c2;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    #noBtn.shrink {
+      transform: scale(0.9);
+      opacity: 0.8;
+    }
+    #noBtn.smaller {
+      transform: scale(0.5);
+      opacity: 0.5;
+    }
+    #noBtn.hide {
+      display: none;
+    }
+    .hidden { display: none; }
+    .heart { font-size: 32px; color: #ff5b9e; }
+  </style>
+</head>
+<body>
+  <div class="container" id="start">
+    <h1>Hej Ty 💗</h1>
+    <p>Wiem, że randki wyglądają różnie... Ale dziś przygotowałem coś innego. <br>Przejdź przez kilka słodkich zadań, a na końcu czeka na Ciebie coś, co bije prosto z serca.</p>
+    <button onclick="nextStep('step1')">Zaczynamy!</button>
+  </div>
+
+  <div class="container hidden" id="step1">
+    <h2>Co najbardziej lubię w Tobie?</h2>
+    <button onclick="nextStep('step2')">Twój uśmiech</button>
+    <button onclick="nextStep('step2')">Twoje oczy</button>
+    <button onclick="nextStep('step2')">Wszystko naraz (i jeszcze więcej)</button>
+  </div>
+
+  <div class="container hidden" id="step2">
+    <h2>Co czuję, gdy piszesz mi "hej"?</h2>
+    <button onclick="nextStep('step3')">Lekki dreszcz</button>
+    <button onclick="nextStep('step3')">Szeroki uśmiech</button>
+    <button onclick="nextStep('step3')">Wszystkie emocje naraz</button>
+  </div>
+
+  <div class="container hidden" id="step3">
+    <h2>Na kogo czeka moje serce?</h2>
+    <button onclick="nextStep('finalQuestion')">Na sąsiadkę z parteru</button>
+    <button onclick="nextStep('finalQuestion')">Na pizzę pepperoni</button>
+    <button onclick="nextStep('finalQuestion')">Na Ciebie, głuptasie 💕</button>
+  </div>
+
+  <div class="container hidden" id="finalQuestion">
+    <h2>Czy zostaniesz moją dziewczyną?</h2>
+    <button onclick="showLove()">Tak</button>
+    <button id="noBtn" onclick="shrinkNo()">Nie</button>
+  </div>
+
+  <div class="container hidden" id="loveScreen">
+    <h2 class="heart">💖 Oficjalnie jesteś moją dziewczyną 💖</h2>
+    <p>Już od kilku miesięcy jesteś jak moja dziewczyna…<br>
+    I wiesz co?<br><br>
+    Uważam, że jesteś piękna.<br>
+    Słodka.<br>
+    Wyjątkowa.<br><br>
+    I dlatego jestem pewny, że chcę Ciebie. Na serio.<br>
+    Na nasze dobre dni i te trochę mniej.<br><br>
+    Czas na nasze "my" ✨</p>
+  </div>
+
+  <script>
+    function nextStep(stepId) {
+      document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+      document.getElementById(stepId).classList.remove('hidden');
+    }
+
+    let noClickCount = 0;
+    function shrinkNo() {
+      const noBtn = document.getElementById('noBtn');
+      noClickCount++;
+      if (noClickCount === 1) {
+        noBtn.classList.add('shrink');
+      } else if (noClickCount === 2) {
+        noBtn.classList.remove('shrink');
+        noBtn.classList.add('smaller');
+      } else {
+        noBtn.classList.add('hide');
+      }
+    }
+
+    function showLove() {
+      nextStep('loveScreen');
+    }
+  </script>
+</body>
+</html>
