@@ -1,253 +1,251 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Randka z Zuziaczkiem</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Randka z Zuziaczkiem</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Quicksand', sans-serif;
-      background: url('https://img.freepik.com/premium-zdjecie/piekny-zachod-slonca-na-plazy-rozowe-niebo-o-zmierzchu-i-refleksja-nad-morzem_1013107-2340.jpg') no-repeat center center fixed;
-      background-size: cover;
-      overflow-x: hidden;
-      min-height: 100vh;
-      text-align: center;
-      color: #fff;
-      position: relative;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            background: url('https://img.freepik.com/premium-zdjecie/piekny-zachod-slonca-na-plazy-rozowe-niebo-o-zmierzchu-i-refleksja-nad-morzem_1013107-2340.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow-x: hidden;
+            min-height: 100vh;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
 
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.6);
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      z-index: 1;
-    }
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
 
-    .container {
-      position: relative;
-      z-index: 10;
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
+        .container {
+            position: relative;
+            z-index: 10;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-    h1 {
-      font-family: 'Bebas Neue', cursive;
-      font-size: 15vw;
-      margin-bottom: 15px;
-      text-transform: uppercase;
-      color: #ff3366;
-      -webkit-text-stroke: 2px #1f1f1f;
-      text-stroke: 2px #1f1f1f;
-      text-shadow:
-        0 0 8px #ff3366,
-        0 0 16px #ff6699,
-        0 0 24px #ff3366;
-      user-select: none;
-    }
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 15vw;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            color: #ff3366;
+            -webkit-text-stroke: 2px #1f1f1f;
+            text-stroke: 2px #1f1f1f;
+            text-shadow:
+                0 0 8px #ff3366,
+                0 0 16px #ff6699,
+                0 0 24px #ff3366;
+            user-select: none;
+        }
 
-    .description {
-      font-size: 4.5vw;
-      max-width: 90%;
-      background-color: rgba(30, 30, 30, 0.7);
-      padding: 15px 20px;
-      border-radius: 15px;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
+        .description {
+            font-size: 4.5vw;
+            max-width: 90%;
+            background-color: rgba(30, 30, 30, 0.7);
+            padding: 15px 20px;
+            border-radius: 15px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
 
-    .gif-container {
-      margin: 20px 0;
-    }
+        .gif-container {
+            margin: 20px 0;
+        }
 
-    .gif-container img {
-      width: 70%;
-      max-width: 300px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
+        .gif-container img {
+            width: 70%;
+            max-width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
-    .start-button {
-      margin-top: 25px;
-      padding: 14px 28px;
-      font-size: 4.5vw;
-      background-color: #ffcde8;
-      color: #d81b60;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-      z-index: 10;
-    }
+        .start-button {
+            margin-top: 25px;
+            padding: 14px 28px;
+            font-size: 4.5vw;
+            background-color: #ffcde8;
+            color: #d81b60;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
 
-    .start-button:hover {
-      background-color: #fff0f7;
-    }
+        .start-button:hover {
+            background-color: #fff0f7;
+        }
 
-    #soundToggle {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      width: 40px;
-      height: 40px;
-      background-color: rgba(0,0,0,0.5);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 20;
-      transition: background-color 0.3s;
-    }
+        #soundToggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            transition: background-color 0.3s;
+        }
 
-    #soundToggle:hover {
-      background-color: rgba(0,0,0,0.8);
-    }
+        #soundToggle:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
 
-    #soundToggle svg {
-      fill: #fff;
-      width: 24px;
-      height: 24px;
-    }
+        #soundToggle svg {
+            fill: #fff;
+            width: 24px;
+            height: 24px;
+        }
 
-    /* Nowe serduszka */
-    .heart {
-      position: fixed;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 20px;
-      animation: fall linear infinite;
-      z-index: 20;
-      user-select: none;
-      pointer-events: none;
-      text-shadow: 0 0 5px #ff69b4;
-    }
+        /* KLUCZOWY KOD DLA SERDUSZEK */
+        .floating-heart {
+            position: fixed;
+            font-size: 18px;
+            color: #ff69b4;
+            animation: fall linear forwards;
+            z-index: 2;
+            user-select: none;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(255,100,140,0.5);
+        }
 
-    @keyframes fall {
-      0% {
-        transform: translateY(-10vh) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
+        @keyframes fall {
+            0% {
+                transform: translateY(-5vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
 
-    audio {
-      display: none;
-    }
-  </style>
+        audio {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="overlay"></div>
+    <div class="overlay"></div>
 
-  <div class="container">
-    <h1>RANDKA</h1>
-    <div class="description">
-      Wiem, że nasze nocne randki wyglądają różnie...<br />
-      Ale dziś przygotowałem coś innego. <br />
-      Przejdź przez kilka słodkich zadań, a na końcu czeka na Ciebie coś... <b>FAJNEGO CHYBA?</b> 🥰💕
+    <div class="container">
+        <h1>RANDKA</h1>
+        <div class="description">
+            Wiem, że nasze nocne randki wyglądają różnie...<br />
+            Ale dziś przygotowałem coś innego. <br />
+            Przejdź przez kilka słodkich zadań, a na końcu czeka na Ciebie coś... <b>FAJNEGO CHYBA?</b> 🥰💕
+        </div>
+
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Całujące się kotki" />
+        </div>
+
+        <button class="start-button" id="startBtn">Zaczynamy ❤️</button>
+
+        <audio id="romanticMusic" loop>
+            <source src="romantyczna.mp3" type="audio/mpeg" />
+        </audio>
     </div>
 
-    <div class="gif-container">
-      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Całujące się kotki" />
+    <div id="soundToggle" title="Włącz / wyłącz muzykę" aria-label="Włącz wyłącz muzykę" role="button" tabindex="0">
+        <svg id="volumeIcon" viewBox="0 0 24 24">
+            <path id="mutePath" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.22 1.82-.64 2.64L20.5 16c.92-1.39 1.5-3.04 1.5-4.9c0-4.42-3.58-8-8-8-.93 0-1.8.16-2.61.46l1.81 1.81c.66-.23 1.35-.35 2.06-.35 2.92 0 5.33 2.19 5.86 5zM4.05 4.05L2.83 5.27l4.38 4.38H3v6h4l5 5v-6.73l4.91 4.91c-.91.64-1.98 1.05-3.11 1.22v2.02c1.7-.27 3.3-.96 4.6-2.02l2.12 2.12 1.22-1.22-2.12-2.12c1.16-1.57 2.03-3.5 2.5-5.59l-2.01-.01c-.41 1.34-1.09 2.57-1.99 3.61L12 11.27V4L2.83 1.76l1.22-1.22L4.05 4.05z"/>
+            <path id="volumePath" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM19 12c0 2.21-1.35 4.09-3.28 4.96v-1.72c1.07-.63 1.78-1.92 1.78-3.24s-.71-2.61-1.78-3.24V7.04c1.93.87 3.28 2.75 3.28 4.96z"/>
+        </svg>
     </div>
 
-    <button class="start-button" id="startBtn">Zaczynamy ❤️</button>
+    <script>
+        const startBtn = document.getElementById("startBtn");
+        const music = document.getElementById("romanticMusic");
+        const soundToggle = document.getElementById("soundToggle");
+        const volumePath = document.getElementById("volumePath");
+        const mutePath = document.getElementById("mutePath");
+        let heartsInterval = null;
+        let isPlaying = false;
+        
+        // Serduszka (emoji)
+        const heartEmojis = ["💖", "💕", "💞"];
 
-    <audio id="romanticMusic" loop>
-      <source src="romantyczna.mp3" type="audio/mpeg" />
-    </audio>
-  </div>
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("floating-heart");
+            const emoji = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.innerHTML = emoji;
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = (16 + Math.random() * 10) + "px";
+            heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }
 
-  <div id="soundToggle" title="Włącz / wyłącz muzykę" aria-label="Włącz wyłącz muzykę" role="button" tabindex="0">
-    <svg id="volumeIcon" viewBox="0 0 24 24">
-      <path id="mutePath" d="..."></path>
-      <path id="volumePath" d="..."></path>
-    </svg>
-  </div>
+        // Automatyczne uruchomienie po załadowaniu strony
+        document.addEventListener("DOMContentLoaded", () => {
+            music.play().catch(e => {
+                console.log("Autoodtwarzanie zablokowane.");
+            });
+            music.volume = 0.2;
+            isPlaying = true;
+            volumePath.style.display = "block";
+            mutePath.style.display = "none";
+            heartsInterval = setInterval(createHeart, 500);
+        });
 
-  <script>
-    const startBtn = document.getElementById("startBtn");
-    const music = document.getElementById("romanticMusic");
-    const soundToggle = document.getElementById("soundToggle");
-    const volumePath = document.getElementById("volumePath");
-    const mutePath = document.getElementById("mutePath");
-    let heartsInterval = null;
-    let isPlaying = false;
+        soundToggle.addEventListener("click", () => {
+            if (!isPlaying) {
+                music.play();
+                music.volume = 0.2;
+                isPlaying = true;
+                volumePath.style.display = "block";
+                mutePath.style.display = "none";
+                heartsInterval = setInterval(createHeart, 500);
+            } else {
+                music.pause();
+                isPlaying = false;
+                volumePath.style.display = "none";
+                mutePath.style.display = "block";
+                clearInterval(heartsInterval);
+            }
+        });
 
-    // Nowe serca
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.innerHTML = "❤";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (3 + Math.random() * 3) + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => {
-        heart.remove();
-      }, 6000);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      music.play().catch(e => {
-        console.log("Autoodtwarzanie zablokowane.");
-      });
-      music.volume = 0.2;
-      isPlaying = true;
-      volumePath.style.display = "block";
-      mutePath.style.display = "none";
-
-      heartsInterval = setInterval(createHeart, 400);
-
-      for (let i = 0; i < 20; i++) {
-        setTimeout(createHeart, i * 200);
-      }
-    });
-
-    soundToggle.addEventListener("click", () => {
-      if (!isPlaying) {
-        music.play();
-        music.volume = 0.2;
-        isPlaying = true;
-        volumePath.style.display = "block";
-        mutePath.style.display = "none";
-        heartsInterval = setInterval(createHeart, 400);
-      } else {
-        music.pause();
-        isPlaying = false;
-        volumePath.style.display = "none";
-        mutePath.style.display = "block";
-        clearInterval(heartsInterval);
-      }
-    });
-
-    startBtn.addEventListener("click", () => {
-      music.pause();
-      if (heartsInterval) {
-        clearInterval(heartsInterval);
-      }
-      window.location.href = "labirynt.html";
-    });
-  </script>
+        startBtn.addEventListener("click", () => {
+            music.pause();
+            if (heartsInterval) {
+                clearInterval(heartsInterval);
+            }
+            window.location.href = "labirynt.html";
+        });
+    </script>
 </body>
 </html>
