@@ -215,25 +215,24 @@
             window.location.href = "gratki.html";
         });
 
-        function resetPlayer() {
-            lastMouseX = 20;
-            lastMouseY = 20;
-            player.style.left = lastMouseX + "px";
-            player.style.top = lastMouseY + "px";
+   function resetPlayer() {
+    lastMouseX = 20;
+    lastMouseY = 20;
+    player.style.left = lastMouseX + "px";
+    player.style.top = lastMouseY + "px";
+}
         }
 
-        function checkCollision(x, y) {
-            const el = document.elementFromPoint(x, y);
-            const pathElements = document.querySelectorAll('.path');
-            let onPath = false;
-            for (let path of pathElements) {
-                if (el === path || path.contains(el)) {
-                    onPath = true;
-                    break;
-                }
-            }
-            return !onPath && el !== player && el !== meta;
+    function checkCollision(x, y) {
+    const paths = document.querySelectorAll('.path');
+    for (let path of paths) {
+        const rect = path.getBoundingClientRect();
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+            return false; // gracz jest na ścieżce
         }
+    }
+    return true; // gracz poza ścieżką
+}
 
         function checkWin(x, y) {
             const metaBox = meta.getBoundingClientRect();
@@ -272,8 +271,10 @@
                 player.style.transform = `rotate(${angle + 90}deg)`;
             }
 
-            if (checkCollision(x, y)) {
-                resetPlayer();
+          if (checkCollision(x, y)) {
+    resetPlayer();
+    return; // zatrzymuje aktualny ruch
+}
             } else if (!jumpscared && checkScreamerZone(x, y)) {
                 jumpscared = true;
                 buuSound.play();
