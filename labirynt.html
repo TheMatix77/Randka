@@ -41,7 +41,7 @@
 
     .start-img {
       position: absolute; width: 120px; object-fit: contain; z-index: 2;
-      top: -2px; left: 10px;
+      top: -40px; left: 10px;
     }
     .end-img {
       position: absolute; width: 80px; object-fit: contain; z-index: 2;
@@ -174,8 +174,19 @@
       lastX=x; lastY=y;
     }
 
-    document.addEventListener("mousemove",move);
-    document.addEventListener("touchmove",move,{passive:false});
+    let isTouching = false;
+
+document.addEventListener("mousemove", move);
+document.addEventListener("touchstart", (e) => {
+  isTouching = true;
+  move(e);
+});
+document.addEventListener("touchmove", (e) => {
+  if (isTouching) move(e);
+}, { passive: false });
+document.addEventListener("touchend", () => {
+  isTouching = false;
+});
     window.onload = ()=>{ /* do nothing until start */ };
   </script>
 </body>
