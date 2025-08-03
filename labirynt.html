@@ -15,6 +15,68 @@
       overflow: hidden;
       font-family: 'Quicksand', sans-serif;
     }
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 235, 245, 0.98);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.intro-content {
+  max-width: 400px;
+  color: #d81b60;
+  font-family: 'Quicksand', sans-serif;
+  background: #fff0f7;
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: popIn 0.6s ease;
+}
+
+.intro-content h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.intro-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.intro-content button {
+  padding: 12px 24px;
+  background-color: #ff66a3;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.intro-content button:hover {
+  background-color: #e05591;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
     .maze {
       position: relative;
@@ -59,10 +121,18 @@
     }
 
     .end-img {
-      bottom: 10px;
-      right: 10px;
+     position: absolute;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  z-index: 2;
+  bottom: 20px;
+  right: 20px;
+  transition: transform 0.2s ease;
     }
-
+.end-img:hover {
+  transform: scale(1.1);
+}
     .screamer {
       position: fixed;
       top: 50%;
@@ -86,6 +156,13 @@
   </style>
 </head>
 <body>
+  <div id="intro" class="intro-overlay">
+  <div class="intro-content">
+    <h2>Masz do przejścia labirynt życia...</h2>
+    <p>Ale mamy rozklapiochę... bo w Klaudii by 2 palce nie weszły 😈</p>
+    <button id="startGame">Zaczynamy 💦</button>
+  </div>
+</div>
   <div class="maze" id="maze">
     <!-- Pudrowy labirynt -->
     <div class="path" style="top: 0; left: 0; width: 100%; height: 60px;"></div>
@@ -120,7 +197,9 @@
     const buuSound = document.getElementById("buuSound");
 
     let jumpscared = false;
-
+document.getElementById("startGame").addEventListener("click", () => {
+  document.getElementById("intro").style.display = "none";
+});
     function resetPlayer() {
       player.style.left = "20px";
       player.style.top = "20px";
@@ -131,9 +210,15 @@
       return !(el && (el.classList.contains("path") || el.classList.contains("player")));
     }
 
-    function checkWin(x, y) {
-      const metaBox = meta.getBoundingClientRect();
-      return x > metaBox.left && x < metaBox.right && y > metaBox.top && y < metaBox.bottom;
+      function checkWin(x, y) {
+  const metaBox = meta.getBoundingClientRect();
+  return (
+    x > metaBox.left &&
+    x < metaBox.right &&
+    y > metaBox.top &&
+    y < metaBox.bottom
+  );
+}
     }
 
     function checkScreamerZone(x, y) {
@@ -162,9 +247,15 @@
           screamer.classList.remove("active");
         }, 2500);
       } else if (checkWin(x, y)) {
-        window.location.href = "gratki.html";
-      }
+  window.location.href = "gratki.html"; // <- tu tworzysz gratulacyjną stronę
+}
     }
+    else if (checkWin(x, y)) {
+  meta.style.transform = "scale(1.2)";
+  setTimeout(() => {
+    window.location.href = "gratki.html";
+  }, 500);
+}
 
     window.onload = resetPlayer;
   </script>
