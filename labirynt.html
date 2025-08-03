@@ -1,300 +1,182 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Plemnikowa Misja</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Quicksand', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plemnikowa Misja</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+    body { margin: 0; background: #ffe6f0; overflow: hidden; }
+    .intro-overlay, .win-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(255,235,245,0.98); z-index: 999;
+      display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    .intro-content, .win-content {
+      max-width: 400px; color: #d81b60; background: #fff0f7;
+      padding: 30px; border-radius: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      animation: popIn 0.6s ease;
+    }
+    .intro-content h2, .win-content h2 { font-size: 24px; margin-bottom: 10px; }
+    .intro-content p, .win-content p { font-size: 18px; margin-bottom: 20px; line-height: 1.4; }
+    .intro-content button, .win-content button {
+      padding: 12px 24px; background-color: #ff66a3; color: #fff; border: none;
+      border-radius: 20px; font-size: 16px; cursor: pointer; transition: background 0.3s;
+    }
+    .intro-content button:hover, .win-content button:hover { background-color: #e05591; }
+    @keyframes popIn { from { transform: scale(0.7); opacity: 0;} to { transform: scale(1); opacity: 1;} }
 
-        body {
-            margin: 0;
-            background: #ffe6f0;
-            overflow: hidden;
-        }
+    .maze {
+      position: relative; width: 100vw; height: calc(100vh - 80px);
+      background: #ffe6f0; margin-top: 40px;
+    }
+    .path {
+      position: absolute; background: #fff0fa; border-radius: 10px; z-index: 1;
+    }
+    .player {
+      position: absolute; width: 40px; height: 40px;
+      z-index: 3; pointer-events: none; transition: transform 0.1s ease;
+    }
+    .player img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 
-        .intro-overlay, .win-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(255, 235, 245, 0.98);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
+    .start-img {
+      position: absolute; width: 120px; object-fit: contain; z-index: 2;
+      top: -2px; left: 10px;
+    }
+    .end-img {
+      position: absolute; width: 80px; object-fit: contain; z-index: 2;
+      top: 490px; right: 15px; transition: transform 0.2s ease;
+    }
+    .end-img:hover { transform: scale(1.1); }
 
-        .intro-content, .win-content {
-            max-width: 400px;
-            color: #d81b60;
-            background: #fff0f7;
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            animation: popIn 0.6s ease;
-        }
+    .screamer {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 0; height: 0; overflow: hidden; z-index: 100; transition: all 0.4s ease;
+    }
+    .screamer.active { width: 300px; height: auto; }
 
-        .intro-content h2, .win-content h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .intro-content p, .win-content p {
-            font-size: 18px;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-
-        .intro-content button, .win-content button {
-            padding: 12px 24px;
-            background-color: #ff66a3;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .intro-content button:hover, .win-content button:hover {
-            background-color: #e05591;
-        }
-
-        @keyframes popIn {
-            from {
-                transform: scale(0.7);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        .maze {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background-color: #ffe6f0;
-        }
-
-        .path {
-            position: absolute;
-            background: #fff0fa;
-            border-radius: 10px;
-            z-index: 1;
-        }
-
-        .player {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            z-index: 3;
-            pointer-events: none;
-            transition: transform 0.1s ease;
-        }
-
-        .player img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            pointer-events: none;
-        }
-
-        .start-img {
-            position: absolute;
-            width: 120px;
-            height: auto;
-            object-fit: contain;
-            z-index: 2;
-            top: -2px;
-            left: 10px;
-        }
-
-        .end-img {
-            position: absolute;
-            width: 80px;
-            height: auto;
-            object-fit: contain;
-            z-index: 2;
-            top: 490px;
-            right: 15px;
-            transition: transform 0.2s ease;
-        }
-
-        .end-img:hover {
-            transform: scale(1.1);
-        }
-
-        .screamer {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 0;
-            height: 0;
-            overflow: hidden;
-            z-index: 100;
-            transition: all 0.4s ease;
-        }
-
-        .screamer.active {
-            width: 300px;
-            height: auto;
-        }
-
-        audio {
-            display: none;
-        }
-    </style>
+    audio { display: none; }
+  </style>
 </head>
 <body>
-    <div id="intro" class="intro-overlay">
-        <div class="intro-content">
-            <h2>Masz do przejścia labirynt życia...</h2>
-            <p>Na szczęście to rozklapiocha... <br> bo w Klaudię to by 2 palce nie weszły😈</p>
-            <button id="startGame">Zaczynamy💦</button>
-        </div>
+  <div id="intro" class="intro-overlay">
+    <div class="intro-content">
+      <h2>Masz do przejścia labirynt życia...</h2>
+      <p>Na szczęście to rozklapiocha... bo w Klaudię to by 2 palce nie weszły 😈</p>
+      <button id="startGame">Zaczynamy💦</button>
     </div>
-    
-    <div class="maze" id="maze">
-        <div class="path" style="top: 0; left: 0; width: 100%; height: 60px;"></div>
-        <div class="path" style="top: 60px; left: 90%; width: 10%; height: 120px;"></div>
-        <div class="path" style="top: 180px; left: 0; width: 100%; height: 60px;"></div>
-        <div class="path" style="top: 240px; left: 0; width: 10%; height: 120px;"></div>
-        <div class="path" style="top: 360px; left: 0; width: 100%; height: 60px;"></div>
-        <div class="path" style="top: 420px; left: 50%; width: 4%; height: 60px;"></div>
-        <div class="path" style="top: 480px; left: 0; width: 100%; height: 60px;"></div>
-        
-        <img src="penis.png" alt="Penis" class="start-img" />
-        <img src="komorka.png" alt="Komórka jajowa" class="end-img" id="meta" />
-        
-        <div class="player" id="player">
-            <img src="plemnik.png" alt="Plemnik" />
-        </div>
+  </div>
+
+  <div class="maze" id="maze">
+    <div class="path" style="top: 0; left: 0; width: 100%; height: 60px;"></div>
+    <div class="path" style="top: 60px; left: 90%; width: 10%; height: 120px;"></div>
+    <div class="path" style="top: 180px; left: 0; width: 100%; height: 60px;"></div>
+    <div class="path" style="top: 240px; left: 0; width: 10%; height: 120px;"></div>
+    <div class="path" style="top: 360px; left: 0; width: 100%; height: 60px;"></div>
+    <div class="path" style="top: 420px; left: 50%; width: 4%; height: 60px;"></div>
+    <div class="path" style="top: 480px; left: 0; width: 100%; height: 60px;"></div>
+    <img src="penis.png" alt="Penis" class="start-img"/>
+    <img src="komorka.png" alt="Komórka jajowa" class="end-img" id="meta"/>
+    <div class="player" id="player"><img src="plemnik.png" alt="Plemnik"/></div>
+  </div>
+
+  <img src="buu.png" class="screamer" id="screamer" alt="BUUU!"/>
+  <audio id="buuSound" src="buu.mp3"></audio>
+
+  <div id="winMessage" class="win-overlay" style="display:none;">
+    <div class="win-content">
+      <h2>ZAPŁODNIŁAŚ, GRATULUJĘ🍆💦</h2>
+      <p>Udało Ci się dotrzeć do celu, ale to dopiero początek!🥰</p>
+      <button id="nextBtn">Przejdź dalej</button>
     </div>
+  </div>
 
-    <img src="buu.png" class="screamer" id="screamer" alt="BUUU!" />
-    <audio id="buuSound" src="buu.mp3"></audio>
+  <script>
+    const player = document.getElementById("player");
+    const meta = document.getElementById("meta");
+    const screamer = document.getElementById("screamer");
+    const buuSound = document.getElementById("buuSound");
+    const intro = document.getElementById("intro");
+    const startBtn = document.getElementById("startGame");
+    const winMsg = document.getElementById("winMessage");
+    const nextBtn = document.getElementById("nextBtn");
 
-    <div id="winMessage" class="win-overlay" style="display: none;">
-        <div class="win-content">
-            <h2>ZAPŁODNIŁAŚ, GRATULUJĘ🍆💦</h2>
-            <p>Udało Ci się dotrzeć do celu, ale to dopiero początek!🥰</p>
-            <button id="nextBtn">Przejdź dalej</button>
-        </div>
-    </div>
+    let jumpscared = false;
+    let lastX = 20, lastY = 20;
 
-    <script>
-        const player = document.getElementById("player");
-        const meta = document.getElementById("meta");
-        const screamer = document.getElementById("screamer");
-        const buuSound = document.getElementById("buuSound");
-        const introOverlay = document.getElementById("intro");
-        const startGameBtn = document.getElementById("startGame");
-        const winMessage = document.getElementById("winMessage");
-        const nextBtn = document.getElementById("nextBtn");
-        
-        let jumpscared = false;
-        let lastMouseX = 0;
-        let lastMouseY = 0;
+    startBtn.addEventListener("click", () => {
+      intro.style.display = "none";
+      resetPlayer();
+    });
 
-        startGameBtn.addEventListener("click", () => {
-            introOverlay.style.display = "none";
-            resetPlayer();
-        });
+    nextBtn.addEventListener("click", () => {
+      window.location.href = "gratki.html";
+    });
 
-        nextBtn.addEventListener("click", () => {
-            window.location.href = "gratki.html";
-        });
-
-   function resetPlayer() {
-    lastMouseX = 20;
-    lastMouseY = 20;
-    player.style.left = lastMouseX + "px";
-    player.style.top = lastMouseY + "px";
-}
-        
-
-    function checkCollision(x, y) {
-    const paths = document.querySelectorAll('.path');
-    for (let path of paths) {
-        const rect = path.getBoundingClientRect();
-        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-            return false; // gracz jest na ścieżce
-        }
+    function resetPlayer(){
+      lastX = 20; lastY = 20;
+      player.style.left = lastX + "px";
+      player.style.top = lastY + "px";
     }
-    return true; // gracz poza ścieżką
-}
 
-        function checkWin(x, y) {
-            const metaBox = meta.getBoundingClientRect();
-            return (
-                x > metaBox.left &&
-                x < metaBox.right &&
-                y > metaBox.top &&
-                y < metaBox.bottom
-            );
+    function checkCollision(x, y){
+      const paths = document.querySelectorAll('.path');
+      for(const p of paths){
+        const r = p.getBoundingClientRect();
+        if(x>=r.left && x<=r.right && y>=r.top && y<=r.bottom){
+          return false; // jest na ścieżce
         }
+      }
+      return true;
+    }
 
-        function checkScreamerZone(x, y) {
-            const playerBox = player.getBoundingClientRect();
-            const narrowPath = document.querySelector('.path[style*="left: 50%;"]');
-            if (!narrowPath) return false;
+    function checkWin(x,y){
+      const mb = meta.getBoundingClientRect();
+      return x>mb.left && x<mb.right && y>mb.top && y<mb.bottom;
+    }
 
-            const narrowRect = narrowPath.getBoundingClientRect();
-            const playerCenterY = playerBox.top + playerBox.height / 2;
+    function checkScreamerZone(x,y){
+      const narrow = document.querySelector('.path[style*="left: 50%"]');
+      if(!narrow) return false;
+      const nr = narrow.getBoundingClientRect();
+      return y>nr.top && y<nr.bottom && x>nr.left && x<nr.right;
+    }
 
-            return playerCenterY > narrowRect.top && playerCenterY < narrowRect.bottom;
-        }
+    function move(e){
+      e.preventDefault();
+      const x = e.clientX ?? (e.touches && e.touches[0].clientX);
+      const y = e.clientY ?? (e.touches && e.touches[0].clientY);
 
-        document.addEventListener("mousemove", move);
-        document.addEventListener("touchmove", move, { passive: false });
+      if(checkCollision(x,y)){
+        resetPlayer();
+        return;
+      }
 
-        function move(e) {
-            e.preventDefault();
-            const x = e.clientX || (e.touches && e.touches[0].clientX);
-            const y = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            const dx = x - lastMouseX;
-            const dy = y - lastMouseY;
-            
-            if (dx !== 0 || dy !== 0) {
-                const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-                player.style.transform = `rotate(${angle + 90}deg)`;
-            }
+      const dx = x - lastX, dy = y - lastY;
+      const angle = Math.atan2(dy,dx)*(180/Math.PI);
+      player.style.transform = `rotate(${angle+90}deg)`;
 
-          if (checkCollision(x, y)) {
-    resetPlayer();
-    return; // zatrzymuje aktualny ruch
-}
-            } else if (!jumpscared && checkScreamerZone(x, y)) {
-                jumpscared = true;
-                buuSound.play();
-                screamer.classList.add("active");
-                setTimeout(() => {
-                    screamer.classList.remove("active");
-                }, 2500);
-            } else if (checkWin(x, y)) {
-                winMessage.style.display = "flex";
-                document.removeEventListener("mousemove", move);
-                document.removeEventListener("touchmove", move);
-            }
-            
-            player.style.left = (x - 20) + "px";
-            player.style.top = (y - 20) + "px";
-            lastMouseX = x;
-            lastMouseY = y;
-        }
-        
-        window.onload = resetPlayer;
-    </script>
+      if(!jumpscared && checkScreamerZone(x,y)){
+        jumpscared = true;
+        buuSound.play();
+        screamer.classList.add('active');
+        setTimeout(()=>screamer.classList.remove('active'),2500);
+      }
+
+      if(checkWin(x,y)){
+        winMsg.style.display = "flex";
+        document.removeEventListener('mousemove',move);
+        document.removeEventListener('touchmove',move);
+      }
+
+      player.style.left = (x-20)+"px";
+      player.style.top = (y-20)+"px";
+      lastX=x; lastY=y;
+    }
+
+    document.addEventListener("mousemove",move);
+    document.addEventListener("touchmove",move,{passive:false});
+    window.onload = ()=>{ /* do nothing until start */ };
+  </script>
 </body>
 </html>
