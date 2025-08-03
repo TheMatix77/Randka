@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF‑8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Memory: Par bajkowe + my</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Quicksand',sans-serif; user-select:none; }
+    body { background:#ffe6f0; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:10px; }
+    .overlay {
+      position:fixed; top:0; left:0; width:100vw; height:100vh;
+      background: rgba(255,235,245,0.98); z‑index:999;
+      display:flex; align-items:center; justify-content:center; text-align:center; padding:20px;
+    }
+    .overlay .content {
+      max-width:400px; background:#fff0f7; padding:30px;
+      border-radius:25px; box-shadow:0 8px 20px rgba(0,0,0,0.2);
+      animation:popIn 0.6s ease;
+    }
+    .overlay h2 { font-size:24px; color:#d81b60; margin-bottom:15px; }
+    .overlay button {
+      padding:12px 24px; background:#ff66a3; color:#fff; border:none;
+      border-radius:20px; font-size:16px; cursor:pointer; transition:background 0.3s;
+    }
+    .overlay button:hover { background:#e05591; }
+    #game {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(70px,1fr));
+      gap:10px;
+      max-width:600px;
+      margin-top:20px;
+    }
+    .card {
+      width:70px; height:70px; background:#fff0f7; border-radius:10px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.2); position:relative;
+      transform-style:preserve-3d; transition:transform 0.4s;
+      cursor:pointer;
+    }
+    .card.flipped { transform:rotateY(180deg); }
+    .card.matched { visibility:hidden; }
+    .card img, .card .back {
+      width:100%; height:100%; backface-visibility:hidden; position:absolute; top:0; left:0;
+      border-radius:10px;
+    }
+    .card img {
+      object-fit:cover; transform:rotateY(180deg);
+    }
+    .card .back {
+      background:#ff66a3; display:flex; align-items:center;
+      justify-content:center; color:#fff; font-size:22px;
+    }
+    #msg { font-size:16px; color:#d81b60; margin-top:10px; text-align:center; }
+    @keyframes popIn { from {transform:scale(0.7);opacity:0;} to {transform:scale(1);opacity:1;} }
+  </style>
+</head>
+<body>
+
+<div id="intro" class="overlay">
+  <div class="content">
+    <h2>A teraz sprawdzimy Twoją pamięć...</h2>
+    <button id="startBtn">Rozpocznij!</button>
+  </div>
+</div>
+
+<div id="msg">Kliknij kartę, by rozpocząć</div>
+<div id="game"></div>
+
+<script>
+  const intro = document.getElementById('intro');
+  const startBtn = document.getElementById('startBtn');
+  const msg = document.getElementById('msg');
+  const game = document.getElementById('game');
+
+  startBtn.onclick = () => intro.style.display = 'none';
+
+  const fairyTales = ['bella.png','bestia.png','kopciuszek.png','ariel.png','aladdin.png','jasmin.png','mulan.png','simba.png'];
+  const special = ['myself.png','yourimage.png'];
+  const pairList = [...fairyTales.flatMap(src=>[src,src]), ...special];
+  const cards = pairList.map(src=>({src,id:src})).sort(()=>Math.random()-0.5);
+
+  let first=null, second=null, lock=false, matches=0;
+  const totalPairs = pairList.length/2;
+
+  cards.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='card'; card.dataset.id=c.id;
+    const img=document.createElement('img'); img.src=c.src;
+    const back=document.createElement('div'); back.className='back'; back.textContent='🎬';
+    card.append(img, back);
+    card.addEventListener('click', ()=>flipCard(card));
+    game.appendChild(card);
+  });
+
+  function flipCard(card){
+    if(lock||card.classList.contains('flipped')||card.classList.contains('matched')||intro.style.display!=='none') return;
+    card.classList.add('flipped');
+    if(!first){ first=card; msg.textContent='Teraz druga karta!'; }
+    else { second=card; lock=true; setTimeout(checkMatch,700); }
+  }
+
+  function checkMatch(){
+    if(first.dataset.id === second.dataset.id){
+      first.classList.add('matched'); second.classList.add('matched'); matches++;
+      if(fairyTales.includes(first.dataset.id)){
+        msg.textContent='Parę z bajki dopasowano!';
+      } else {
+        msg.textContent='To nasza para — po prostu idealna ❤️';
+      }
+      if(matches === totalPairs){
+        msg.textContent='Z tych wszystkich bajek — nasza jest najpiękniejsza! 💖';
+      }
+    } else {
+      first.classList.remove('flipped');
+      second.classList.remove('flipped');
+      msg.textContent='Nie udało się, spróbuj ponownie!';
+    }
+    first=second=null; lock=false;
+  }
+</script>
+
+</body>
+</html>
