@@ -139,12 +139,13 @@
         .floating-heart {
             position: fixed;
             font-size: 18px;
-            color: #ff69b4; /* Użyjemy różowego koloru, bo emoji mogą być czarne w zależności od systemu */
+            color: #ff69b4;
             animation: fall linear forwards;
-            z-index: 0;
+            /* KLUCZOWA ZMIANA Z-INDEX NA 2, ŻEBY BYŁO NAD TŁEM */
+            z-index: 2; 
             user-select: none;
             pointer-events: none;
-            text-shadow: 0 0 5px rgba(255,100,140,0.5); /* Lekki cień, żeby były widoczne */
+            text-shadow: 0 0 5px rgba(255,100,140,0.5);
         }
 
         @keyframes fall {
