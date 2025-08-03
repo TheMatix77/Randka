@@ -135,16 +135,16 @@
             height: 24px;
         }
 
-        /* Spadające serduszka */
+        /* Spadające serduszka-emoji */
         .floating-heart {
             position: fixed;
             font-size: 18px;
-            color: rgba(255, 100, 140, 0.3);
+            color: #ff69b4; /* Użyjemy różowego koloru, bo emoji mogą być czarne w zależności od systemu */
             animation: fall linear forwards;
             z-index: 0;
             user-select: none;
             pointer-events: none;
-            filter: drop-shadow(0 0 2px rgba(255,100,140,0.5));
+            text-shadow: 0 0 5px rgba(255,100,140,0.5); /* Lekki cień, żeby były widoczne */
         }
 
         @keyframes fall {
@@ -194,12 +194,16 @@
     </div>
 
     <script>
-        // Spadające serduszka
+        // Spadające serduszka (emoji)
+        const heartEmojis = ["💖", "💕", "💞"];
+
         function createHeart() {
             const heart = document.createElement("div");
             heart.classList.add("floating-heart");
-            heart.innerHTML = "❤";
+            const emoji = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.innerHTML = emoji;
             heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = (16 + Math.random() * 10) + "px"; // Losowy rozmiar
             heart.style.animationDuration = (6 + Math.random() * 4) + "s";
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 10000);
