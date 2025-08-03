@@ -73,8 +73,8 @@
 
   startBtn.onclick = () => intro.style.display = 'none';
 
-  const fairyTales = ['bella.png','bestia.png','kopciuszek.png','ariel.png','aladdin.png','jasmin.png','mulan.png','simba.png'];
-  const special = ['myself.png','yourimage.png'];
+  const fairyTales = ['bella.jpg','bestia.jpg','kopciuszek.jpg','ariel.jpg','aladdin.jpg','jasmin.jpg','mulan.jpg','simba.jpg','aladdin1.jpg','jasmin1.jpg','mulan1.jpg','simba1.jpg'];
+  const special = ['ja.jpg','zuzia.jpg'];
   const pairList = [...fairyTales.flatMap(src=>[src,src]), ...special];
   const cards = pairList.map(src=>({src,id:src})).sort(()=>Math.random()-0.5);
 
