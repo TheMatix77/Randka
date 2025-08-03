@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Randka z Zuziaczkiem</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Czcionka Bebas Neue z Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -46,25 +49,20 @@
     }
 
     h1 {
-      font-family: 'Pacifico', cursive;
-      font-size: 9vw;
-      margin-bottom: 10px;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 12vw;
+      margin-bottom: 15px;
       text-transform: uppercase;
-      color: #ff2e63;
-      /* neon-like pink/red */
+      color: #ff3366;
+      /* czarna obwódka */
+      -webkit-text-stroke: 2px black;
+      text-stroke: 2px black;
+      /* lekki cień dla neonu */
       text-shadow:
-        0 0 5px #ff2e63,
-        0 0 10px #ff2e63,
-        0 0 20px #ff2e63,
-        0 0 40px #ff2e63,
-        0 0 80px #ff2e63;
-      -webkit-text-stroke: 1.5px black;
-      animation: pulse 2.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.9; }
+        0 0 6px #ff3366,
+        0 0 12px #ff6699,
+        0 0 18px #ff3366;
+      user-select: none;
     }
 
     .description {
@@ -108,15 +106,43 @@
       background-color: #ffcde8;
     }
 
+    /* Ikona głośnika w prawym górnym rogu */
+    #soundToggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 20;
+      transition: background-color 0.3s;
+    }
+    #soundToggle:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    /* Prosty symbol głośnika - SVG */
+    #soundToggle svg {
+      fill: #fff;
+      width: 24px;
+      height: 24px;
+    }
+
     /* Spadające serduszka - DELIKATNE */
     .floating-heart {
       position: fixed;
-      font-size: 16px;
+      font-size: 18px;
       color: rgba(255, 100, 140, 0.3);
       animation: fall linear forwards;
       z-index: 0;
       user-select: none;
       pointer-events: none;
+      filter: drop-shadow(0 0 2px rgba(255,100,140,0.5));
     }
 
     @keyframes fall {
@@ -158,8 +184,16 @@
     </audio>
   </div>
 
+  <!-- Ikona głośnika -->
+  <div id="soundToggle" title="Włącz / wyłącz muzykę" aria-label="Włącz wyłącz muzykę" role="button" tabindex="0">
+    <svg viewBox="0 0 24 24" >
+      <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" />
+    </svg>
+  </div>
+
   <script>
-    // Tworzenie delikatnych spadających serduszek
+    // Spadające serduszka
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("floating-heart");
@@ -171,25 +205,25 @@
       setTimeout(() => heart.remove(), 10000);
     }
 
-    // Co 500ms tworzymy nowe serduszko
     setInterval(createHeart, 500);
 
+    // Muzyka i kontrola głośnika
     const music = document.getElementById("romanticMusic");
     music.volume = 0.2; // 20% głośności
+    let isPlaying = false;
 
-    // Muzyka gra od razu po załadowaniu strony
-    window.addEventListener("load", () => {
-      music.play().catch(() => {
-        console.log("Autoplay zablokowany - wymagana interakcja użytkownika.");
-      });
-    });
+    const soundToggle = document.getElementById("soundToggle");
 
-    // Po kliknięciu "Zaczynamy" zatrzymujemy muzykę i przechodzimy dalej
-    document.getElementById("startBtn").addEventListener("click", () => {
-      music.pause();
-      music.currentTime = 0;
-      window.location.href = "etap1.html";
-    });
-  </script>
-</body>
-</html>
+    function updateIcon() {
+      if (isPlaying) {
+        // Ikona głośnika włączonego
+        soundToggle.innerHTML = `
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" />
+          </svg>`;
+      } else {
+        // Ikona głośnika wyciszonego (przekreślona)
+        soundToggle.innerHTML = `
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9
