@@ -50,16 +50,16 @@
         /* Nagłówek 'RANDKA' */
         h1 {
             font-family: 'Bebas Neue', cursive;
-            font-size: 15vw; /* Zwiększony rozmiar dla lepszej czytelności na urządzeniach mobilnych */
+            font-size: 15vw;
             margin-bottom: 15px;
             text-transform: uppercase;
             color: #ff3366;
-            -webkit-text-stroke: 2px #1f1f1f; /* Ciemnoszara obwódka */
+            -webkit-text-stroke: 2px #1f1f1f;
             text-stroke: 2px #1f1f1f;
             text-shadow:
                 0 0 8px #ff3366,
                 0 0 16px #ff6699,
-                0 0 24px #ff3366; /* Mocniejszy neonowy cień */
+                0 0 24px #ff3366;
             user-select: none;
         }
         
@@ -67,7 +67,7 @@
         .description {
             font-size: 4.5vw;
             max-width: 90%;
-            background-color: rgba(30, 30, 30, 0.7); /* Elegancki, ciemnoszary półprzezroczysty prostokąt */
+            background-color: rgba(30, 30, 30, 0.7);
             padding: 15px 20px;
             border-radius: 15px;
             text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
@@ -87,13 +87,13 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* Przycisk */
+        /* Przycisk 'Zaczynamy' */
         .start-button {
             margin-top: 25px;
-            padding: 14px 28px; /* Nieco większy przycisk */
+            padding: 14px 28px;
             font-size: 4.5vw;
-            background-color: #ffcde8; /* Kolor przycisku */
-            color: #d81b60; /* Kolor tekstu */
+            background-color: #ffcde8;
+            color: #d81b60;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -105,7 +105,7 @@
         }
 
         .start-button:hover {
-            background-color: #fff0f7; /* Jaśniejszy kolor po najechaniu */
+            background-color: #fff0f7;
         }
 
         /* Ikona głośnika */
@@ -189,4 +189,62 @@
     <div id="soundToggle" title="Włącz / wyłącz muzykę" aria-label="Włącz wyłącz muzykę" role="button" tabindex="0">
         <svg id="volumeIcon" viewBox="0 0 24 24" >
             <path id="mutePath" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.22 1.82-.64 2.64L20.5 16c.92-1.39 1.5-3.04 1.5-4.9c0-4.42-3.58-8-8-8-.93 0-1.8.16-2.61.46l1.81 1.81c.66-.23 1.35-.35 2.06-.35 2.92 0 5.33 2.19 5.86 5zM4.05 4.05L2.83 5.27l4.38 4.38H3v6h4l5 5v-6.73l4.91 4.91c-.91.64-1.98 1.05-3.11 1.22v2.02c1.7-.27 3.3-.96 4.6-2.02l2.12 2.12 1.22-1.22-2.12-2.12c1.16-1.57 2.03-3.5 2.5-5.59l-2.01-.01c-.41 1.34-1.09 2.57-1.99 3.61L12 11.27V4L2.83 1.76l1.22-1.22L4.05 4.05z"/>
-            <path id="volumePath" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74
+            <path id="volumePath" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM19 12c0 2.21-1.35 4.09-3.28 4.96v-1.72c1.07-.63 1.78-1.92 1.78-3.24s-.71-2.61-1.78-3.24V7.04c1.93.87 3.28 2.75 3.28 4.96z"/>
+        </svg>
+    </div>
+
+    <script>
+        // Spadające serduszka
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("floating-heart");
+            heart.innerHTML = "❤";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }
+
+        // Zmienne i stałe do obsługi muzyki i serduszek
+        const startBtn = document.getElementById("startBtn");
+        const music = document.getElementById("romanticMusic");
+        const soundToggle = document.getElementById("soundToggle");
+        const volumePath = document.getElementById("volumePath");
+        const mutePath = document.getElementById("mutePath");
+        let heartsInterval = null;
+        let isPlaying = false;
+
+        // Obsługa kliknięcia w przycisk głośnika
+        soundToggle.addEventListener("click", () => {
+            if (!isPlaying) {
+                // Włączamy muzykę i serduszka
+                music.play();
+                music.volume = 0.2;
+                isPlaying = true;
+                volumePath.style.display = "block";
+                mutePath.style.display = "none";
+                heartsInterval = setInterval(createHeart, 500);
+            } else {
+                // Wyłączamy muzykę i serduszka
+                music.pause();
+                isPlaying = false;
+                volumePath.style.display = "none";
+                mutePath.style.display = "block";
+                clearInterval(heartsInterval);
+            }
+        });
+
+        // Obsługa kliknięcia w przycisk "Zaczynamy"
+        startBtn.addEventListener("click", () => {
+            // Wyciszamy muzykę i zatrzymujemy serduszka
+            music.pause();
+            if (heartsInterval) {
+                clearInterval(heartsInterval);
+            }
+            // Przechodzimy do kolejnej strony
+            window.location.href = "zagadki.html"; 
+        });
+
+    </script>
+</body>
+</html>
