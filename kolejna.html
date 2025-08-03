@@ -7,13 +7,13 @@
   <style>
     * { box-sizing:border-box; margin:0; padding:0; font-family:'Quicksand',sans-serif; user-select:none; }
     body { background:#ffe6f0; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; }
-    .overlay {
+    .overlay, .win-overlay {
       position:fixed; top:0; left:0; width:100vw; height:100vh;
       background:rgba(255,235,245,0.98); z-index:1000;
       display:flex; align-items:center; justify-content:center; text-align:center;
       padding:20px;
     }
-    .content {
+    .content, .win-content {
       max-width:400px; background:#fff0f7; padding:30px;
       border-radius:25px; box-shadow:0 8px 20px rgba(0,0,0,0.2);
       animation:popIn 0.6s ease;
@@ -28,7 +28,7 @@
 
     #game {
       display:grid;
-      grid-template-columns:repeat(3, 1fr); /* ZMIENIONY UKŁAD NA 6 KOLUMN */
+      grid-template-columns:repeat(3, 1fr);
       gap:10px;
       max-width:640px; margin-top:20px;
       z-index:1;
@@ -67,13 +67,23 @@
 <div id="msg">Kliknij parę kart 👀</div>
 <div id="game"></div>
 
+<div id="winMessage" class="win-overlay" style="display: none;">
+    <div class="content win-content">
+        <h2>Z tych wszystkich bajek – nasza para jest najpiękniejsza 💖</h2>
+        <button id="nextBtn">Przejdź dalej</button>
+    </div>
+</div>
+
 <script>
   const intro = document.getElementById('intro');
   const startBtn = document.getElementById('startBtn');
   const msg = document.getElementById('msg');
   const game = document.getElementById('game');
+  const winMessage = document.getElementById('winMessage');
+  const nextBtn = document.getElementById('nextBtn');
 
   startBtn.onclick = () => intro.style.display = 'none';
+  nextBtn.onclick = () => window.location.href = 'serek.html';
 
   const pairs = [
     ['bella.jpg', 'bestia.jpg'],
@@ -84,7 +94,7 @@
     ['simba.jpg','nala.jpg'],
     ['shrek.jpg','fiona.jpg'],
     ['laska.jpg','keis.jpg'],
-    ['ja.jpg','zuzia.jpg']
+    ['ja.png','zuzia.png']
   ];
 
   let cards = pairs.flatMap(pair => pair.map(src => ({ src, id: pair.join('-') })));
@@ -121,13 +131,14 @@
       first.classList.add('matched');
       second.classList.add('matched');
       matches++;
-      if (first.dataset.id === 'myself.jpg-yourimage.jpg') {
+      if (first.dataset.id === 'ja.jpg-zuzia.jpg') {
         msg.textContent = 'To nasza para! ❤️';
       } else {
         msg.textContent = 'Parę bajkową dopasowano!';
       }
       if (matches === totalPairs) {
-        msg.textContent = 'Z tych wszystkich bajek – nasza para jest najpiękniejsza 💖';
+        msg.style.display = 'none';
+        winMessage.style.display = 'flex';
       }
     } else {
       first.classList.remove('flipped');
