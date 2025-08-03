@@ -1,14 +1,12 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RANDKA</title>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <title>Randka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -44,11 +42,18 @@
     }
 
     h1 {
-      font-family: 'Great Vibes', cursive;
-      font-size: 11vw;
-      margin-bottom: 15px;
-      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+      font-family: 'Pacifico', cursive;
+      font-size: 9vw;
+      margin-bottom: 10px;
       animation: pulse 2.5s infinite;
+      color: #ffb6f2;
+      text-shadow:
+        0 0 5px #ff99cc,
+        0 0 10px #ff66cc,
+        0 0 15px #ff33cc,
+        0 0 20px #ff00cc,
+        0 0 25px #ff00aa,
+        0 0 30px #ff0088;
     }
 
     @keyframes pulse {
@@ -125,6 +130,7 @@
 
   <div class="container">
     <h1>Randka</h1>
+
     <div class="description">
       Wiem, że nasze nocne randki wyglądają różnie...<br/>
       Ale dziś przygotowałem coś innego. <br/>
@@ -135,8 +141,7 @@
       <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Całujące się kotki">
     </div>
 
-    <button class="start-button" id="musicButton" onclick="playMusic()">🎵 Muzyczka</button>
-    <button class="start-button" id="startButton" style="display:none;" onclick="startDate()">Zaczynamy ❤️</button>
+    <button class="start-button" onclick="startDate()" id="startButton">Zaczynamy ❤️</button>
 
     <audio id="romanticMusic" loop>
       <source src="romantyczna.mp3" type="audio/mpeg">
@@ -144,6 +149,7 @@
   </div>
 
   <script>
+    // spadające serduszka
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("floating-heart");
@@ -153,25 +159,23 @@
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 8000);
     }
-
     setInterval(createHeart, 400);
 
-    function playMusic() {
+    // muzyka i przejście
+    function startDate() {
       const music = document.getElementById("romanticMusic");
-      const musicBtn = document.getElementById("musicButton");
-      const startBtn = document.getElementById("startButton");
-
+      music.volume = 0.2;
       music.play().then(() => {
-        musicBtn.style.display = "none";
-        startBtn.style.display = "inline-block";
+        console.log("Muzyka gra!");
       }).catch((e) => {
         alert("Kliknij jeszcze raz, żeby włączyć muzykę 🎵");
-        console.log("Problem z odtwarzaniem:", e);
+        console.error("Błąd:", e);
       });
-    }
 
-    function startDate() {
-      window.location.href = "etap1.html";
+      // Przejście po 1.5 sekundy
+      setTimeout(() => {
+        window.location.href = "etap1.html";
+      }, 1500);
     }
   </script>
 
