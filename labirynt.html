@@ -195,92 +195,135 @@
         </div>
     </div>
 
-    <script>
-        const player = document.getElementById("player");
-        const meta = document.getElementById("meta");
-        const screamer = document.getElementById("screamer");
-        const buuSound = document.getElementById("buuSound");
-        const introOverlay = document.getElementById("intro");
-        const startGameBtn = document.getElementById("startGame");
-        const winMessage = document.getElementById("winMessage");
-        const nextBtn = document.getElementById("nextBtn");
-        
-        let jumpscared = false;
-        let lastMouseX = 0;
-        let lastMouseY = 0;
+ <script>
+    const player = document.getElementById("player");
+    const meta = document.getElementById("meta");
+    const screamer = document.getElementById("screamer");
+    const buuSound = document.getElementById("buuSound");
+    const introOverlay = document.getElementById("intro");
+    const startGameBtn = document.getElementById("startGame");
+    const winMessage = document.getElementById("winMessage");
+    const nextBtn = document.getElementById("nextBtn");
 
-        startGameBtn.addEventListener("click", () => {
-            introOverlay.style.display = "none";
-            resetPlayer();
-        });
+    let jumpscared = false;
+    let targetX = 20;
+    let targetY = 20;
+    let angle = 0;
 
-        nextBtn.addEventListener("click", () => {
-            window.location.href = "gratki.html";
-        });
+    // Start gry
+    startGameBtn.addEventListener("click", () => {
+        introOverlay.style.display = "none";
+        resetPlayer();
+        requestAnimationFrame(updatePlayerPosition);
+    });
 
-        function resetPlayer() {
-            player.style.left = "20px";
-            player.style.top = "20px";
-        }
+    // Przycisk po wygranej
+    nextBtn.addEventListener("click", () => {
+        window.location.href = "gratki.html";
+    });
 
-        function checkCollision(x, y) {
-            const el = document.elementFromPoint(x, y);
-            return !(el && (el.classList.contains("path") || el.classList.contains("player")));
-        }
+    // Ustawienia startowe
+    function resetPlayer() {
+        player.style.left = "20px";
+        player.style.top = "20px";
+        targetX = 40;
+        targetY = 40;
+    }
 
-        function checkWin(x, y) {
-            const metaBox = meta.getBoundingClientRect();
-            return (
-                x > metaBox.left &&
-                x < metaBox.right &&
-                y > metaBox.top &&
-                y < metaBox.bottom
-            );
-        }
-
-        function checkScreamerZone(x, y) {
-            const playerBox = player.getBoundingClientRect();
-            const screamerYStart = window.innerHeight * 0.5 - 50;
-            const screamerYEnd = window.innerHeight * 0.5 + 50;
-            return playerBox.top > screamerYStart && playerBox.top < screamerYEnd;
-        }
-
-        document.addEventListener("mousemove", move);
-        document.addEventListener("touchmove", move, { passive: false });
-
-        function move(e) {
-            e.preventDefault();
-            const x = e.clientX || (e.touches && e.touches[0].clientX);
-            const y = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            const dx = x - lastMouseX;
-            const dy = y - lastMouseY;
-            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-            player.style.transform = `rotate(${angle + 90}deg)`;
-
-            player.style.left = (x - 20) + "px";
-            player.style.top = (y - 20) + "px";
-
-            lastMouseX = x;
-            lastMouseY = y;
-
-            if (checkCollision(x, y)) {
-                resetPlayer();
-            } else if (!jumpscared && checkScreamerZone(x, y)) {
-                jumpscared = true;
-                buuSound.play();
-                screamer.classList.add("active");
-                setTimeout(() => {
-                    screamer.classList.remove("active");
-                }, 2500);
-            } else if (checkWin(x, y)) {
-                winMessage.style.display = "flex";
-                document.removeEventListener("mousemove", move);
-                document.removeEventListener("touchmove", move);
+    // Wykrywanie kolizji z poza ścieżką
+    function isCollidingWithWall() {
+        const playerRect = player.getBoundingClientRect();
+        const paths = document.querySelectorAll('.path');
+        for (let path of paths) {
+            const pathRect = path.getBoundingClientRect();
+            if (intersect(playerRect, pathRect)) {
+                return false; // nie kolizja
             }
         }
-        
-        window.onload = resetPlayer;
-    </script>
-</body>
-</html>
+        return true; // kolizja
+    }
+
+    // Wykrywanie zwycięstwa
+    function checkWin() {
+        const playerRect = player.getBoundingClientRect();
+        const metaRect = meta.getBoundingClientRect();
+        const buffer = 10; // margines tolerancji
+
+        return (
+            playerRect.left + buffer < metaRect.right &&
+            playerRect.right - buffer > metaRect.left &&
+            playerRect.top + buffer < metaRect.bottom &&
+            playerRect.bottom - buffer > metaRect.top
+        );
+    }
+
+    // Prosta kolizja prostokątów
+    function intersect(a, b) {
+        return !(
+            b.left > a.right ||
+            b.right < a.left ||
+            b.top > a.bottom ||
+            b.bottom < a.top
+        );
+    }
+
+    // Wykrycie "straszaka"
+    function checkScreamerZone() {
+        const playerBox = player.getBoundingClientRect();
+        const screamerYStart = window.innerHeight * 0.5 - 50;
+        const screamerYEnd = window.innerHeight * 0.5 + 50;
+        return playerBox.top > screamerYStart && playerBox.top < screamerYEnd;
+    }
+
+    // Główna pętla animacji plemnika
+    function updatePlayerPosition() {
+        // Aktualizacja pozycji i rotacji
+        const dx = targetX - (player.offsetLeft + 20);
+        const dy = targetY - (player.offsetTop + 20);
+        angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        player.style.transform = `rotate(${angle + 90}deg)`;
+
+        player.style.left = (targetX - 20) + "px";
+        player.style.top = (targetY - 20) + "px";
+
+        // Kolizja
+        if (isCollidingWithWall()) {
+            resetPlayer();
+        }
+
+        // Screamer
+        if (!jumpscared && checkScreamerZone()) {
+            jumpscared = true;
+            buuSound.play();
+            screamer.classList.add("active");
+            setTimeout(() => {
+                screamer.classList.remove("active");
+            }, 2500);
+        }
+
+        // Wygrana
+        if (checkWin()) {
+            winMessage.style.display = "flex";
+            return; // Stop animacji
+        }
+
+        requestAnimationFrame(updatePlayerPosition);
+    }
+
+    // Obsługa myszy
+    document.addEventListener("mousemove", e => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+    });
+
+    // Obsługa dotyku
+    document.addEventListener("touchmove", e => {
+        const touch = e.touches[0];
+        targetX = touch.clientX;
+        targetY = touch.clientY;
+        e.preventDefault();
+    }, { passive: false });
+
+    // Reset przy załadowaniu
+    window.onload = resetPlayer;
+</script>
