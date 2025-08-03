@@ -4,57 +4,76 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Randka z Zuziaczkiem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to bottom, #ffd6e7, #ffe0ec);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       position: relative;
+      text-align: center;
     }
 
     h1 {
-      font-size: 8vw;
+      font-family: 'Pacifico', cursive;
+      font-size: 7vw;
       color: white;
-      text-align: center;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
       animation: pulse 2s infinite;
       z-index: 2;
       margin: 0;
     }
 
+    .description {
+      font-size: 4vw;
+      max-width: 90%;
+      margin-top: 15px;
+      color: #ffffffdd;
+      z-index: 2;
+    }
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.9; }
     }
 
     .start-button {
-      margin-top: 30px;
-      padding: 15px 30px;
-      font-size: 5vw;
-      background-color: #fff0f5;
-      color: #e91e63;
+      margin-top: 25px;
+      padding: 10px 22px;
+      font-size: 4.5vw;
+      background-color: #fff0f7;
+      color: #d81b60;
       border: none;
-      border-radius: 25px;
+      border-radius: 30px;
       cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
       z-index: 2;
     }
 
     .start-button:hover {
-      background-color: #ffe4ec;
+      background-color: #ffd6ea;
     }
 
-    .heart {
+    .heart, .cat {
       position: absolute;
       color: rgba(255, 255, 255, 0.7);
-      font-size: 20px;
+      font-size: 18px;
       animation: fall linear infinite;
+      z-index: 1;
+    }
+
+    .cat {
+      font-size: 24px;
     }
 
     @keyframes fall {
@@ -71,13 +90,19 @@
     audio {
       position: absolute;
       bottom: 20px;
-      z-index: 1;
+      z-index: 0;
     }
   </style>
 </head>
 <body>
 
   <h1>Randka z Zuziaczkiem</h1>
+  <div class="description">
+    Wiem, że nasze nocne randki wyglądają różnie...<br/>
+    Ale dziś przygotowałem coś innego. <br/>
+    Przejdź przez kilka słodkich zadań, a na końcu czeka na Ciebie coś... <b>FAJNEGO CHYBA?</b> 😅💕
+  </div>
+
   <button class="start-button" onclick="startDate()">Zaczynamy ❤️</button>
 
   <audio autoplay loop>
@@ -86,24 +111,24 @@
   </audio>
 
   <script>
-    // Spadające serduszka
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.innerHTML = "❤";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (3 + Math.random() * 3) + "s";
-      document.body.appendChild(heart);
+    const emojis = ["❤", "🐱", "💖", "🐾", "🌸", "😽", "🎀"];
+    
+    function createFloating() {
+      const el = document.createElement("div");
+      el.classList.add(Math.random() > 0.5 ? "heart" : "cat");
+      el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.animationDuration = (3 + Math.random() * 4) + "s";
+      document.body.appendChild(el);
 
       setTimeout(() => {
-        heart.remove();
-      }, 6000);
+        el.remove();
+      }, 7000);
     }
 
-    setInterval(createHeart, 300);
+    setInterval(createFloating, 300);
 
     function startDate() {
-      // Przejście do następnej strony
       window.location.href = "etap1.html";
     }
   </script>
