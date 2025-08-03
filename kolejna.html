@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF‑8"/>
-  <meta name="viewport" content="width=device‑width,initial‑scale=1"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Memory – Par bajkowe</title>
   <style>
     * { box-sizing:border-box; margin:0; padding:0; font-family:'Quicksand',sans-serif; user-select:none; }
@@ -28,7 +28,7 @@
 
     #game {
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(80px,1fr));
+      grid-template-columns:repeat(6, 1fr); /* ZMIENIONY UKŁAD NA 6 KOLUMN */
       gap:10px;
       max-width:640px; margin-top:20px;
       z-index:1;
@@ -76,15 +76,15 @@
   startBtn.onclick = () => intro.style.display = 'none';
 
   const pairs = [
-    ['bella.png', 'bestia.png'],
-    ['kopciuszek.png', 'falniaczka.png'],
-    ['ariel.png', 'sebastian.png'],
-    ['aladdin.png', 'jasmin.png'],
-    ['mulan.png','shang.png'],
-    ['simba.png','nala.png'],
-    ['peter.png','wendy.png'],
-    ['tarzan.png','jane.png'],
-    ['myself.png','yourimage.png']
+    ['bella.jpg', 'bestia.jpg'],
+    ['kopciuszek.jpg', 'falniaczka.jpg'],
+    ['ariel.jpg', 'sebastian.jpg'],
+    ['aladdin.jpg', 'jasmin.jpg'],
+    ['mulan.jpg','shang.jpg'],
+    ['simba.jpg','nala.jpg'],
+    ['peter.jpg','wendy.jpg'],
+    ['tarzan.jpg','jane.jpg'],
+    ['myself.jpg','yourimage.jpg']
   ];
 
   let cards = pairs.flatMap(pair => pair.map(src => ({ src, id: pair.join('-') })));
@@ -121,7 +121,7 @@
       first.classList.add('matched');
       second.classList.add('matched');
       matches++;
-      if (first.dataset.id === 'myself.png-yourimage.png') {
+      if (first.dataset.id === 'myself.jpg-yourimage.jpg') {
         msg.textContent = 'To nasza para! ❤️';
       } else {
         msg.textContent = 'Parę bajkową dopasowano!';
