@@ -88,7 +88,7 @@
         .path {
             position: absolute;
             background: #fff0fa;
-            border-radius: 10px; /* Delikatnie zmieniony border-radius */
+            border-radius: 10px;
             z-index: 1;
         }
 
@@ -123,7 +123,7 @@
             height: auto;
             object-fit: contain;
             z-index: 2;
-            top: 180px;
+            top: 490px;
             right: 15px;
             transition: transform 0.2s ease;
         }
@@ -238,9 +238,13 @@
 
         function checkScreamerZone(x, y) {
             const playerBox = player.getBoundingClientRect();
-            const screamerYStart = window.innerHeight * 0.5 - 50;
-            const screamerYEnd = window.innerHeight * 0.5 + 50;
-            return playerBox.top > screamerYStart && playerBox.top < screamerYEnd;
+            const narrowPath = document.querySelector('.path[style*="left: 50%;"]');
+            if (!narrowPath) return false;
+
+            const narrowRect = narrowPath.getBoundingClientRect();
+            const playerCenterY = playerBox.top + playerBox.height / 2;
+
+            return playerCenterY > narrowRect.top && playerCenterY < narrowRect.bottom;
         }
 
         document.addEventListener("mousemove", move);
@@ -254,7 +258,7 @@
             const dx = x - lastMouseX;
             const dy = y - lastMouseY;
             
-            if (dx !== 0 || dy !== 0) { // Tylko jeśli jest ruch
+            if (dx !== 0 || dy !== 0) {
                 const angle = Math.atan2(dy, dx) * (180 / Math.PI);
                 player.style.transform = `rotate(${angle + 90}deg)`;
             }
