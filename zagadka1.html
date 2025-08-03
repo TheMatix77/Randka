@@ -1,168 +1,181 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pokój - Misja Sprzątanie</title>
-  <style>
-       body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background: url('pokoj.png') no-repeat center center;
-      background-size: contain; /* zmieniono z cover */
-      background-color: #333;
-      border: 10px solid black; /* obramowanie */
-      position: relative;
-      height: 100vh;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokój - Misja Sprzątanie</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #333; /* Ustawienie tła body na jednolity kolor */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    #intro {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.95);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      z-index: 10;
-    }
+        #container {
+            position: relative;
+            width: 100vh; /* Ustawienie szerokości na 100% wysokości widocznego okna, aby utrzymać proporcje */
+            height: 100vh;
+            max-width: 100vw; /* Zapobieganie wyjściu poza szerokość ekranu */
+            max-height: 100vh; /* Zapobieganie wyjściu poza wysokość ekranu */
+            border: 10px solid black;
+            background: url('pokoj.png') no-repeat center center;
+            background-size: contain;
+            background-origin: content-box; /* Tło zaczyna się od krawędzi 'box-content' */
+            background-clip: content-box; /* Tło będzie widoczne tylko wewnątrz obszaru 'box-content' */
+            box-sizing: border-box; /* Ważne, aby border był liczony w rozmiarze elementu */
+        }
 
-    #game {
-      display: none;
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
+        #intro {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            z-index: 10;
+        }
 
-    .item {
-      position: absolute;
-      cursor: pointer;
-      max-width: 8%;
-    }
+        #game {
+            display: none;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
 
-    #timer {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 24px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 10px;
-    }
+        .item {
+            position: absolute;
+            cursor: pointer;
+            max-width: 8%;
+        }
 
-    #messageBox {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: none;
-      z-index: 11;
-    }
+        #timer {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
 
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      margin-top: 20px;
-      background-color: #6e3b8f;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+        #messageBox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 11;
+        }
 
-    button:hover {
-      background-color: #542c6e;
-    }
-  </style>
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            margin-top: 20px;
+            background-color: #6e3b8f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #542c6e;
+        }
+    </style>
 </head>
 <body>
-  <div id="intro">
-    <h2>Szukałaś Matiego, ale zapomniałaś, że...</h2>
-    <p>Gosia wraca za <strong>minutę</strong> z pracy! Musisz posprzątać przedmioty, które mogłaby uznać za niestosowne😳</p>
-    <button onclick="startGame()">Zaczynamy!</button>
-  </div>
+    <div id="container">
+        <div id="intro">
+            <h2>Szukałaś Matiego, ale zapomniałaś, że...</h2>
+            <p>Gosia wraca za <strong>minutę</strong> z pracy! Musisz posprzątać przedmioty, które mogłaby uznać za niestosowne😳</p>
+            <button onclick="startGame()">Zaczynamy!</button>
+        </div>
 
-  <div id="game">
-    <div id="timer">60</div>
-    <div id="messageBox">
-      <div id="message"></div>
-      <button id="nextButton" onclick="window.location.href='zagadka2.html'">Przejdź dalej</button>
-      <button id="retryButton" onclick="location.reload()">Spróbuj ponownie</button>
+        <div id="game">
+            <div id="timer">60</div>
+            <div id="messageBox">
+                <div id="message"></div>
+                <button id="nextButton" onclick="window.location.href='zagadka2.html'">Przejdź dalej</button>
+                <button id="retryButton" onclick="location.reload()">Spróbuj ponownie</button>
+            </div>
+
+            <img src="item1.png" class="item" style="top: 60%; left: 45%;" onclick="clickItem(this, true)">
+            <img src="item2.png" class="item" style="top: 35%; left: 20%;" onclick="clickItem(this, true)">
+            <img src="item3.png" class="item" style="top: 70%; left: 30%;" onclick="clickItem(this, true)">
+            <img src="item6.png" class="item" style="top: 48%; left: 70%;" onclick="clickItem(this, true)">
+            <img src="item7.png" class="item" style="top: 25%; left: 60%;" onclick="clickItem(this, true)">
+
+            <img src="item4.png" class="item" style="top: 50%; left: 15%;" onclick="clickItem(this, false)">
+            <img src="item5.png" class="item" style="top: 20%; left: 70%;" onclick="clickItem(this, false)">
+            <img src="item8.png" class="item" style="top: 80%; left: 50%;" onclick="clickItem(this, false)">
+            <img src="item9.png" class="item" style="top: 30%; left: 40%;" onclick="clickItem(this, false)">
+            <img src="item10.png" class="item" style="top: 65%; left: 15%;" onclick="clickItem(this, false)">
+            <img src="item11.png" class="item" style="top: 15%; left: 10%;" onclick="clickItem(this, false)">
+            <img src="item12.png" class="item" style="top: 35%; left: 80%;" onclick="clickItem(this, false)">
+            <img src="item13.png" class="item" style="top: 75%; left: 60%;" onclick="clickItem(this, false)">
+        </div>
     </div>
 
-    <!-- NIELEGALNE (do posprzątania) -->
-    <img src="item1.png" class="item" style="top: 60%; left: 45%;" onclick="clickItem(this, true)">
-    <img src="item2.png" class="item" style="top: 35%; left: 20%;" onclick="clickItem(this, true)">
-    <img src="item3.png" class="item" style="top: 70%; left: 30%;" onclick="clickItem(this, true)">
-    <img src="item6.png" class="item" style="top: 48%; left: 70%;" onclick="clickItem(this, true)">
-    <img src="item7.png" class="item" style="top: 25%; left: 60%;" onclick="clickItem(this, true)">
+    <script>
+        let timer;
+        let timeLeft = 60;
+        let itemsToFind = 5;
 
-    <!-- NIEISTOTNE (pułapki) -->
-    <img src="item4.png" class="item" style="top: 50%; left: 15%;" onclick="clickItem(this, false)">
-    <img src="item5.png" class="item" style="top: 20%; left: 70%;" onclick="clickItem(this, false)">
-    <img src="item8.png" class="item" style="top: 80%; left: 50%;" onclick="clickItem(this, false)">
-    <img src="item9.png" class="item" style="top: 30%; left: 40%;" onclick="clickItem(this, false)">
-    <img src="item10.png" class="item" style="top: 65%; left: 15%;" onclick="clickItem(this, false)">
-    <img src="item11.png" class="item" style="top: 15%; left: 10%;" onclick="clickItem(this, false)">
-    <img src="item12.png" class="item" style="top: 35%; left: 80%;" onclick="clickItem(this, false)">
-    <img src="item13.png" class="item" style="top: 75%; left: 60%;" onclick="clickItem(this, false)">
-  </div>
+        function startGame() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('game').style.display = 'block';
 
-  <script>
-    let timer;
-    let timeLeft = 60;
-    let itemsToFind = 5;
-
-    function startGame() {
-      document.getElementById('intro').style.display = 'none';
-      document.getElementById('game').style.display = 'block';
-
-      timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer').textContent = timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          endGame(false);
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endGame(false);
+                }
+            }, 1000);
         }
-      }, 1000);
-    }
 
-    function clickItem(el, isIllegal) {
-      el.style.display = 'none';
-      if (isIllegal) {
-        itemsToFind--;
-        if (itemsToFind === 0) {
-          clearInterval(timer);
-          endGame(true);
+        function clickItem(el, isIllegal) {
+            el.style.display = 'none';
+            if (isIllegal) {
+                itemsToFind--;
+                if (itemsToFind === 0) {
+                    clearInterval(timer);
+                    endGame(true);
+                }
+            } else {
+                timeLeft = Math.max(0, timeLeft - 15);
+                document.getElementById('timer').textContent = timeLeft;
+            }
         }
-      } else {
-        timeLeft = Math.max(0, timeLeft - 15);
-        document.getElementById('timer').textContent = timeLeft;
-      }
-    }
 
-    function endGame(won) {
-      const msg = document.getElementById('message');
-      const box = document.getElementById('messageBox');
-      document.getElementById('nextButton').style.display = won ? 'inline-block' : 'none';
-      document.getElementById('retryButton').style.display = won ? 'none' : 'inline-block';
-      msg.textContent = won
-        ? 'Udało się! Zdążyłaś posprzątać wszystko zanim Gosia wróciła! 💨'
-        : 'Gosia już wróciła! I widzi ten burdel... 😱';
-      box.style.display = 'block';
-    }
-  </script>
+        function endGame(won) {
+            const msg = document.getElementById('message');
+            const box = document.getElementById('messageBox');
+            document.getElementById('nextButton').style.display = won ? 'inline-block' : 'none';
+            document.getElementById('retryButton').style.display = won ? 'none' : 'inline-block';
+            msg.textContent = won
+                ? 'Udało się! Zdążyłaś posprzątać wszystko zanim Gosia wróciła! 💨'
+                : 'Gosia już wróciła! I widzi ten burdel... 😱';
+            box.style.display = 'block';
+        }
+    </script>
 </body>
 </html>
