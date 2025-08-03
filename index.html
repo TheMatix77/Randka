@@ -6,37 +6,42 @@
   <title>Randka z Zuziaczkiem</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(to bottom, #ffd6e7, #ffe0ec);
+      background: url('https://i.imgur.com/ijTQuX2.jpg') no-repeat center center fixed;
+      background-size: cover;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      position: relative;
+      justify-content: flex-start;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #fff;
       text-align: center;
+    }
+
+    .container {
+      margin-top: 10vh;
+      background-color: rgba(255, 182, 193, 0.3);
+      padding: 20px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      max-width: 90%;
     }
 
     h1 {
       font-family: 'Pacifico', cursive;
-      font-size: 7vw;
-      color: white;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-      animation: pulse 2s infinite;
-      z-index: 2;
-      margin: 0;
-    }
-
-    .description {
-      font-size: 4vw;
-      max-width: 90%;
-      margin-top: 15px;
-      color: #ffffffdd;
-      z-index: 2;
+      font-size: 8vw;
+      margin: 0 0 10px;
+      animation: pulse 2.5s infinite;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
     }
 
     @keyframes pulse {
@@ -44,9 +49,24 @@
       50% { transform: scale(1.05); opacity: 0.9; }
     }
 
+    .description {
+      font-size: 4.5vw;
+      margin-bottom: 20px;
+    }
+
+    .gif-container {
+      margin: 15px 0;
+    }
+
+    .gif-container img {
+      width: 70%;
+      max-width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
     .start-button {
-      margin-top: 25px;
-      padding: 10px 22px;
+      padding: 12px 26px;
       font-size: 4.5vw;
       background-color: #fff0f7;
       color: #d81b60;
@@ -57,53 +77,50 @@
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       transition: all 0.3s ease;
-      z-index: 2;
+      margin-top: 20px;
     }
 
     .start-button:hover {
-      background-color: #ffd6ea;
+      background-color: #ffcde8;
     }
 
-    .heart, .cat {
+    .floating-emoji {
       position: absolute;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 18px;
+      font-size: 20px;
       animation: fall linear infinite;
-      z-index: 1;
-    }
-
-    .cat {
-      font-size: 24px;
+      color: rgba(255, 255, 255, 0.8);
+      z-index: 0;
     }
 
     @keyframes fall {
-      0% {
-        transform: translateY(-10vh) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
     audio {
       position: absolute;
-      bottom: 20px;
+      bottom: 10px;
       z-index: 0;
     }
   </style>
 </head>
 <body>
 
-  <h1>Randka z Zuziaczkiem</h1>
-  <div class="description">
-    Wiem, że nasze nocne randki wyglądają różnie...<br/>
-    Ale dziś przygotowałem coś innego. <br/>
-    Przejdź przez kilka słodkich zadań, a na końcu czeka na Ciebie coś... <b>FAJNEGO CHYBA?</b> 😅💕
-  </div>
+  <div class="container">
+    <h1>Randka z Zuziaczkiem</h1>
+    <div class="description">
+      Wiem, że nasze nocne randki wyglądają różnie...<br/>
+      Ale dziś przygotowałem coś innego. <br/>
+      Przejdź przez kilka słodkich zadań, a na końcu czeka na Ciebie coś... <b>FAJNEGO CHYBA?</b> 😅💕
+    </div>
 
-  <button class="start-button" onclick="startDate()">Zaczynamy ❤️</button>
+    <div class="gif-container">
+      <!-- Możesz zmienić na dowolnego słodkiego gifa -->
+      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Całujące kotki">
+    </div>
+
+    <button class="start-button" onclick="startDate()">Zaczynamy ❤️</button>
+  </div>
 
   <audio autoplay loop>
     <source src="romantyczna.mp3" type="audio/mpeg">
@@ -111,22 +128,20 @@
   </audio>
 
   <script>
-    const emojis = ["❤", "🐱", "💖", "🐾", "🌸", "😽", "🎀"];
+    const emojis = ["🐱", "💗", "🌸", "😽", "💞", "🎀", "😻", "🐾"];
     
-    function createFloating() {
-      const el = document.createElement("div");
-      el.classList.add(Math.random() > 0.5 ? "heart" : "cat");
-      el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-      el.style.left = Math.random() * 100 + "vw";
-      el.style.animationDuration = (3 + Math.random() * 4) + "s";
-      document.body.appendChild(el);
+    function createFloatingEmoji() {
+      const emoji = document.createElement("div");
+      emoji.classList.add("floating-emoji");
+      emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + "vw";
+      emoji.style.animationDuration = (3 + Math.random() * 4) + "s";
+      document.body.appendChild(emoji);
 
-      setTimeout(() => {
-        el.remove();
-      }, 7000);
+      setTimeout(() => emoji.remove(), 7000);
     }
 
-    setInterval(createFloating, 300);
+    setInterval(createFloatingEmoji, 300);
 
     function startDate() {
       window.location.href = "etap1.html";
