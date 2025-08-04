@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rozmowa z Mati</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to top, #ffd6e0, #fff0f5);
+    overflow: hidden;
+  }
+
+  /* Tło i serduszka */
+  #sceneBg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.4) 0%, transparent 70%),
+                linear-gradient(to top, #ffd6e0, #fff0f5);
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .heart {
+    position: absolute;
+    color: rgba(255, 105, 180, 0.8);
+    font-size: 20px;
+    animation: fall 5s linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Postacie */
+  .character {
+    position: absolute;
+    bottom: 0;
+    max-height: 95vh;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    pointer-events: none;
+  }
+
+  #charLeft { left: 3%; }
+  #charRight { right: 3%; }
+
+  /* Chmurka dialogowa */
+  #dialogBox {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
+    background: rgba(255, 240, 245, 0.95);
+    border-radius: 20px;
+    border: 3px solid #d4af37;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    font-size: 20px;
+    line-height: 1.4;
+    color: #222;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    cursor: pointer;
+  }
+
+  #speakerName {
+    font-weight: bold;
+    font-size: 18px;
+    color: #a0522d;
+    margin-bottom: 8px;
+  }
+
+  /* Przycisk startowy */
+  #startBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 22px;
+    padding: 14px 28px;
+    background: #ff6f91;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 10;
+  }
+  #startBtn:hover {
+    background: #e65c7a;
+  }
+
+  /* Modal końcowy */
+  #endModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+
+  #endBox {
+    background: #fff0f5;
+    padding: 30px 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    max-width: 80%;
+    border: 3px solid #ff4d4d;
+  }
+
+  #endBox h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #ff4d4d;
+  }
+
+  #endBox button {
+    font-size: 18px;
+    padding: 12px 28px;
+    background-color: #ff6f91;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #endBox button:hover {
+    background-color: #e65c7a;
+  }
+
+  /* Dostosowanie na telefon */
+  @media (max-width: 768px) {
+    .character {
+      max-height: 70vh;
+    }
+    #dialogBox {
+      font-size: 16px;
+      padding: 15px;
+    }
+    #speakerName {
+      font-size: 16px;
+    }
+    #startBtn {
+      font-size: 18px;
+      padding: 10px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="sceneBg"></div>
+
+<!-- Postacie -->
+<img id="charLeft" class="character" src="player2.png" alt="Zuzia">
+<img id="charRight" class="character" src="mati.png" alt="Mati">
+
+<!-- Chmurka dialogowa -->
+<div id="dialogBox">
+  <div id="speakerName"></div>
+  <div id="dialogText"></div>
+</div>
+
+<!-- Przycisk start -->
+<button id="startBtn">Myszko?!</button>
+
+<!-- Modal końcowy -->
+<div id="endModal">
+  <div id="endBox">
+    <h2>😡 JESTEM WKURZONA!</h2>
+    <button onclick="window.location.href='pytanie.html'">Co to za pytanie?</button>
+  </div>
+</div>
+
+<script>
+const startBtn = document.getElementById('startBtn');
+const charLeft = document.getElementById('charLeft');
+const charRight = document.getElementById('charRight');
+const dialogBox = document.getElementById('dialogBox');
+const speakerName = document.getElementById('speakerName');
+const dialogText = document.getElementById('dialogText');
+const endModal = document.getElementById('endModal');
+const sceneBg = document.getElementById('sceneBg');
+
+// Tworzenie serduszek
+function createHearts() {
+  for (let i = 0; i < 15; i++) {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+    heart.style.animationDelay = Math.random() * 5 + 's';
+    sceneBg.appendChild(heart);
+  }
+}
+createHearts();
+
+const conversation = [
+  { speaker: "Mati", side: "right", text: "Myszko?! CO TY TU ROBISZ..." },
+  { speaker: "Zuzia", side: "left", text: "TO JA CIEBIE POWINNAM O TO ZAPYTAĆ GRRR! CZEMU DAŁEŚ MI DUCHA I UCIEKŁEŚ NA UKRAINĘ..." },
+  { speaker: "Mati", side: "right", text: "Ja... ja... ja chciałem stworzyć nam królewskie warunki do życia i sprowadzić Cię tu kiedy wojna się skończy... mimimi" },
+  { speaker: "Zuzia", side: "left", text: "No ta, na pewno GRRR, coś Ty odjebał..." },
+  { speaker: "Mati", side: "right", text: "Przy okazji, skoro tu jesteś, mam do Ciebie ważne pytanie..." }
+];
+
+let step = 0;
+
+startBtn.onclick = () => {
+  startBtn.style.display = "none";
+  showLine();
+};
+
+function showLine() {
+  const line = conversation[step];
+  if (!line) {
+    dialogBox.style.opacity = 0;
+    setTimeout(() => {
+      endModal.style.display = 'flex';
+    }, 500);
+    return;
+  }
+
+  charLeft.style.opacity = 0;
+  charRight.style.opacity = 0;
+
+  if (line.side === "left") {
+    charLeft.style.opacity = 1;
+  } else {
+    charRight.style.opacity = 1;
+  }
+
+  speakerName.textContent = line.speaker;
+  dialogText.textContent = line.text;
+  dialogBox.style.opacity = 1;
+
+  dialogBox.onclick = () => {
+    step++;
+    showLine();
+  };
+}
+</script>
+
+</body>
+</html>
