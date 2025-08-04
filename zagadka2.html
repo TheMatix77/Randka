@@ -12,10 +12,24 @@
         padding: 0;
         text-align: center;
     }
-    .intro {
+    /* Modal powiadomień */
+    .modal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+    .modal-content {
+        background: white;
         padding: 20px;
-        background-color: #fff3e0;
-        border-bottom: 2px solid #d2a679;
+        max-width: 90%;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
     }
     .btn {
         background-color: #8b5e3c;
@@ -30,13 +44,14 @@
     .btn:hover {
         background-color: #a86f4c;
     }
+    /* Tabliczka czekolady */
     .chocolate {
         display: none;
         margin: 20px auto;
-        max-width: 360px;
+        max-width: 320px;
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        grid-gap: 5px;
+        grid-gap: 4px;
     }
     .piece {
         width: 100%;
@@ -49,31 +64,39 @@
         background-color: #f8f1e4;
         border: 2px dashed #b89b83;
     }
+    /* Sekcja hasła */
     .password-section {
         display: none;
         margin-top: 20px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         gap: 15px;
     }
     .hint-img {
-        max-width: 120px;
+        max-width: 100px;
         height: auto;
     }
-    /* Stylizacja telefonu */
+    /* Telefon */
     .phone {
-        width: 200px;
-        height: 350px;
+        width: 180px;
+        height: 300px;
         background-color: black;
         border-radius: 20px;
-        padding: 15px;
+        padding: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+    }
+    .status-bar {
+        color: white;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 8px;
     }
     .screen {
         background-color: #dcdcdc;
@@ -83,11 +106,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 15px;
+        padding: 10px;
+        margin-top: 5px;
     }
     .screen input {
-        font-size: 18px;
-        padding: 8px;
+        font-size: 16px;
+        padding: 6px;
         text-align: center;
         width: 100%;
         border: 2px solid #555;
@@ -97,6 +121,7 @@
     @media (max-width: 500px) {
         .password-section {
             flex-direction: column;
+            align-items: center;
         }
         .hint-img {
             max-width: 80px;
@@ -106,17 +131,26 @@
 </head>
 <body>
 
-<div class="intro" id="introBox">
-    <h2>Sprzątając pokój natknęłaś się na telefon i czekoladę, którą jadł Mati.</h2>
-    <p>Tylko czemu wyjadł <b>tylko niektóre kostki</b>...? 🤔</p>
-    <button class="btn" onclick="startPuzzle()">Zaczynaj</button>
+<!-- Modal początkowy -->
+<div class="modal" id="introModal">
+    <div class="modal-content">
+        <h2>Sprzątając pokój natknęłaś się na telefon i czekoladę, którą jadł Mati.</h2>
+        <p>Tylko czemu wyjadł <b>tylko niektóre kostki</b>...? 🤔</p>
+        <button class="btn" onclick="startPuzzle()">Zaczynaj</button>
+    </div>
 </div>
 
+<!-- Tabliczka czekolady -->
 <div class="chocolate" id="chocolate"></div>
 
+<!-- Sekcja hasła -->
 <div class="password-section" id="passwordSection">
     <img src="abc.png" alt="Podpowiedź" class="hint-img">
     <div class="phone">
+        <div class="status-bar">
+            <span>1:11</span>
+            <span>📶 🔋</span>
+        </div>
         <div class="screen">
             <input type="text" id="password" placeholder="Hasło...">
         </div>
@@ -125,11 +159,18 @@
 </div>
 
 <div id="result"></div>
-<button class="btn" style="display:none;" id="nextBtn" onclick="location.href='zagadka3.html'">Dalej ➡</button>
+
+<!-- Modal końcowy -->
+<div class="modal" id="endModal" style="display:none;">
+    <div class="modal-content">
+        <p><b>Mam teraz hasło do telefonu Matiego!</b> 📱</p>
+        <button class="btn" onclick="location.href='zagadka3.html'">Dalej ➡</button>
+    </div>
+</div>
 
 <script>
 function startPuzzle() {
-    document.getElementById('introBox').style.display = 'none';
+    document.getElementById('introModal').style.display = 'none';
     document.getElementById('chocolate').style.display = 'grid';
     document.getElementById('passwordSection').style.display = 'flex';
 
@@ -154,8 +195,7 @@ function startPuzzle() {
 function checkPassword() {
     const pass = document.getElementById('password').value.trim().toLowerCase();
     if (pass === 'myszka') {
-        document.getElementById('result').innerHTML = '<p><b>Mam teraz hasło do telefonu Matiego!</b> 📱</p>';
-        document.getElementById('nextBtn').style.display = 'inline-block';
+        document.getElementById('endModal').style.display = 'flex';
     } else {
         document.getElementById('result').innerHTML = '<p style="color:red;">Błędne hasło ❌</p>';
     }
