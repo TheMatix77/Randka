@@ -1,191 +1,208 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vertical Dodge Game</title>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Vertical Runner Special</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { overflow: hidden; background: #000; }
-    #game {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      background: url('background.jpg') center/cover repeat-y;
-    }
-    #player {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: yellow;
-      background-image: url('player.png');
-      background-size: cover;
-      z-index: 10;
-    }
-    .obstacle {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background: red;
-      background-image: url('obstacle.png');
-      background-size: cover;
-      z-index: 5;
-    }
-    .bullet {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: white;
-      border-radius: 50%;
-      background-image: url('bullet.png');
-      background-size: cover;
-      z-index: 6;
-    }
-    #goal {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background: green;
-      background-image: url('goal.png');
-      background-size: cover;
-      z-index: 9;
-    }
+#game {
+  display: none;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('background.jpg'); /* 👈 Twój plik tła */
+  background-size: cover;
+  background-repeat: repeat-y;
+}
+
+#player {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-image: url('player.png'); /* 👈 Twój gracz */
+  background-size: cover;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.obstacle {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-image: url('obstacle.png'); /* 👈 Przeszkoda */
+  background-size: cover;
+  border-radius: 4px;
+  z-index: 5;
+}
+
+.bullet {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-image: url('bullet.png'); /* 👈 Pocisk */
+  background-size: cover;
+  border-radius: 50%;
+  z-index: 6;
+}
+
+#goal {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-image: url('goal.png'); /* 👈 Meta */
+  background-size: cover;
+  border-radius: 8px;
+  z-index: 9;
+}
+
   </style>
 </head>
 <body>
-  <div id="game">
-    <div id="player"></div>
-    <div id="goal"></div>
-  </div>
-  <script>
-    const game = document.getElementById('game');
-    const player = document.getElementById('player');
-    const goal = document.getElementById('goal');
-    let gameOffset = 0;
-    let touchX = null;
-    let playing = true;
 
-    const scrollSpeed = 2;
+<div id="startScreen">
+  <h1>💣 Co odjebało temu Matiemu? Pojechał na Ukrainę... Muszę go ratować! <br> A WIĘC JA POJECHAJU ZA NIM NA FRONT💥</h1>
+  <button id="start">Zaczynamy</button>
+</div>
 
-    function moveBackground() {
-      gameOffset += scrollSpeed;
-      game.style.backgroundPositionY = `${gameOffset}px`;
-    }
+<div id="game">
+  <div id="player"></div>
+  <div id="goal"></div>
+</div>
 
-    function spawnObstacle() {
-      const obs = document.createElement('div');
-      obs.className = 'obstacle';
-      obs.style.left = `${Math.random() * (game.clientWidth - 60)}px`;
-      obs.style.top = `${-60}px`;
-      game.appendChild(obs);
-      moveObstacle(obs);
-    }
+<div id="endScreen" style="display:none;">
+  <h2>🍀 Spotykasz znajomą twarz!</h2>
+  <button id="talk">Zacznij rozmowę</button>
+</div>
 
-    function spawnBullet() {
-      const bullet = document.createElement('div');
-      bullet.className = 'bullet';
-      bullet.style.left = `${Math.random() * (game.clientWidth - 20)}px`;
-      bullet.style.top = `-30px`;
-      game.appendChild(bullet);
-      moveBullet(bullet);
-    }
+<script>
+  const startBtn = document.getElementById('start');
+  const talkBtn = document.getElementById('talk');
+  const startScreen = document.getElementById('startScreen');
+  const endScreen = document.getElementById('endScreen');
+  const game = document.getElementById('game');
+  const player = document.getElementById('player');
+  const goal = document.getElementById('goal');
+  let playing = false;
+  const scrollSpeed = 2;
+  let gameOffset = 0;
 
-    function moveObstacle(obs) {
-      function step() {
-        if (!playing) return;
-        let top = parseFloat(obs.style.top);
-        obs.style.top = `${top + scrollSpeed}px`;
-        if (top > game.clientHeight) {
-          obs.remove();
-        } else {
-          if (checkCollision(player, obs)) endGame("💥 Wpadłeś na przeszkodę!");
-          requestAnimationFrame(step);
-        }
-      }
-      step();
-    }
+  function moveBackground(){
+    gameOffset += scrollSpeed;
+    game.style.backgroundPositionY = gameOffset + 'px';
+    if(playing) requestAnimationFrame(moveBackground);
+  }
 
-    function moveBullet(bullet) {
-      function step() {
-        if (!playing) return;
-        let top = parseFloat(bullet.style.top);
-        bullet.style.top = `${top + 6}px`;
-        if (top > game.clientHeight) {
-          bullet.remove();
-        } else {
-          if (checkCollision(player, bullet)) endGame("💣 Trafiony pociskiem!");
-          requestAnimationFrame(step);
-        }
-      }
-      step();
-    }
+  function placeGoal(){
+    goal.style.top = '-2000px';
+    goal.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+  }
 
-    function checkCollision(a, b) {
-      const A = a.getBoundingClientRect();
-      const B = b.getBoundingClientRect();
-      return !(A.right < B.left || A.left > B.right || A.bottom < B.top || A.top > B.bottom);
-    }
-
-    function movePlayer(clientX) {
-      const gameRect = game.getBoundingClientRect();
-      let newX = clientX - gameRect.left - player.clientWidth / 2;
-      newX = Math.max(0, Math.min(game.clientWidth - player.clientWidth, newX));
-      player.style.left = `${newX}px`;
-    }
-
-    function endGame(message) {
-      playing = false;
-      alert(message);
-      location.reload();
-    }
-
-    // Spawner
-    function loopSpawner() {
-      if (!playing) return;
-      if (Math.random() < 0.05) spawnObstacle();
-      if (Math.random() < 0.07) spawnBullet();
-      requestAnimationFrame(loopSpawner);
-    }
-
-    // Sterowanie
-    game.addEventListener("touchmove", e => {
-      movePlayer(e.touches[0].clientX);
-    });
-    game.addEventListener("mousemove", e => {
-      if (e.buttons) movePlayer(e.clientX);
-    });
-
-    // Meta po dystansie
-    function placeGoal() {
-      goal.style.top = "-3000px";
-      goal.style.left = `${Math.random() * (game.clientWidth - 60)}px`;
-    }
-    function moveGoal() {
-      if (!playing) return;
+  function moveGoal(){
+    function step(){
+      if(!playing) return;
       let top = parseFloat(goal.style.top);
-      goal.style.top = `${top + scrollSpeed}px`;
-      if (top > game.clientHeight) {
-        goal.remove();
+      goal.style.top = (top + scrollSpeed) + 'px';
+      if(top + 60 > game.clientHeight){
+        playing = false;
       } else {
-        if (checkCollision(player, goal)) endGame("🏁 Dotarłeś do mety!");
-        requestAnimationFrame(moveGoal);
+        requestAnimationFrame(step);
       }
     }
+    step();
+  }
 
-    placeGoal();
-    moveGoal();
-    loopSpawner();
-
-    function gameLoop() {
-      if (!playing) return;
-      moveBackground();
-      requestAnimationFrame(gameLoop);
+  function spawnObstacle(){
+    if(!playing) return;
+    const obs = document.createElement('div');
+    obs.className = 'obstacle';
+    const side = Math.random() < 0.5 ? 'left' : 'right';
+    obs.style.left = (side==='left' ? 0 : game.clientWidth - 60) + 'px';
+    obs.style.top = '-60px';
+    game.appendChild(obs);
+    moveObstacle(obs);
+  }
+  function moveObstacle(obs){
+    function step(){
+      if(!playing) return;
+      const top = parseFloat(obs.style.top);
+      obs.style.top = (top + scrollSpeed) + 'px';
+      if(top > game.clientHeight) obs.remove();
+      else {
+        if(checkCollision(player, obs)) endGame('💥 Wpadłeś na przeszkodę!');
+        requestAnimationFrame(step);
+      }
     }
+    step();
+  }
 
+  function spawnBullet(){
+    if(!playing) return;
+    if(Math.random() < 0.03){
+      const b = document.createElement('div');
+      b.className = 'bullet';
+      b.style.top = '-20px';
+      b.style.left = Math.random() * (game.clientWidth - 20) + 'px';
+      game.appendChild(b);
+      moveBullet(b);
+    }
+  }
+  function moveBullet(b){
+    function step(){
+      if(!playing) return;
+      const top = parseFloat(b.style.top);
+      b.style.top = (top + scrollSpeed + 3) + 'px';
+      if(top > game.clientHeight) b.remove();
+      else {
+        if(checkCollision(player, b)) endGame('💣 Trafiony pociskiem!');
+        requestAnimationFrame(step);
+      }
+    }
+    step();
+  }
+
+  function checkCollision(a,b){
+    const A=a.getBoundingClientRect(), B=b.getBoundingClientRect();
+    return !(A.right<B.left||A.left>B.right||A.bottom<B.top||A.top>B.bottom);
+  }
+
+  function movePlayer(x){
+    const r=game.getBoundingClientRect();
+    let nx = x - r.left - player.clientWidth/2;
+    nx = Math.max(0, Math.min(game.clientWidth-player.clientWidth, nx));
+    player.style.left = nx + 'px';
+  }
+
+  function endGame(msg){
+    alert(msg);
+    endScreen.style.display = 'flex';
+  }
+
+  function gameLoop(){
+    if(!playing) return;
+    spawnObstacle();
+    spawnBullet();
+    requestAnimationFrame(gameLoop);
+  }
+
+  startBtn.onclick = ()=>{
+    startScreen.style.display='none';
+    game.style.display='block';
+    playing = true;
+    placeGoal();
+    moveBackground();
+    moveGoal();
     gameLoop();
-  </script>
+  };
+
+  talkBtn.onclick = ()=>{
+    window.location.href = 'zagadka5.html';
+  };
+
+  game.addEventListener('touchmove', e => movePlayer(e.touches[0].clientX));
+  game.addEventListener('mousemove', e=>{ if(e.buttons) movePlayer(e.clientX); });
+
+</script>
 </body>
 </html>
