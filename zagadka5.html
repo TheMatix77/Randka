@@ -3,15 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scena Dialogowa</title>
+  <title>Wejście do baru</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to top, #5e5e5e, #b7c1cc);
+      background: linear-gradient(to top, #3a3a3a, #888);
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
       position: relative;
+    }
+
+    #entryScreen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: url('drzwi.png') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 5;
+    }
+
+    #entryScreen button {
+      font-size: 24px;
+      padding: 16px 32px;
+      background-color: #614d3d;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 2px 2px 12px rgba(0,0,0,0.5);
+      cursor: pointer;
+    }
+
+    #entryScreen button:hover {
+      background-color: #4d3b2f;
     }
 
     .sprite {
@@ -42,10 +70,12 @@
       opacity: 0;
       transition: opacity 0.6s ease-in-out;
       z-index: 3;
+      display: none;
     }
 
     .dialogBox.show {
       opacity: 1;
+      display: block;
     }
 
     .dialogText {
@@ -53,27 +83,6 @@
       line-height: 1.5;
       color: #222;
       text-align: center;
-    }
-
-    .cloud {
-      position: absolute;
-      background: url('cloud.png') no-repeat center center;
-      background-size: contain;
-      width: 200px;
-      height: 100px;
-      opacity: 0.25;
-      animation: floatCloud 80s linear infinite;
-      top: 10%;
-      z-index: 1;
-    }
-
-    .cloud:nth-child(1) { left: -200px; animation-delay: 0s; }
-    .cloud:nth-child(2) { left: -400px; animation-delay: 20s; }
-    .cloud:nth-child(3) { left: -600px; animation-delay: 40s; }
-
-    @keyframes floatCloud {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(200vw); }
     }
 
     #endModal {
@@ -119,10 +128,10 @@
 </head>
 <body>
 
-  <!-- Chmurki -->
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
+  <!-- Ekran z drzwiami -->
+  <div id="entryScreen">
+    <button id="enterBtn">Wejdź do baru 🍺</button>
+  </div>
 
   <!-- Postaci -->
   <img id="leftChar" class="sprite" src="player2.png" alt="Kobieta" />
@@ -142,6 +151,8 @@
   </div>
 
   <script>
+    const enterBtn = document.getElementById('enterBtn');
+    const entryScreen = document.getElementById('entryScreen');
     const leftChar = document.getElementById('leftChar');
     const rightChar = document.getElementById('rightChar');
     const dialog = document.getElementById('dialog');
@@ -152,12 +163,18 @@
       { show: leftChar, text: "Endrju, to Ty... co Ty tu robisz..." },
       { show: rightChar, text: "Mamy nowego władcę tutaj na Ukrainie i mu służę." },
       { hide: leftChar },
-      { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o lodowych oczkach z lekką nadwagą?" },
+      { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o błękitnych oczkach z lekką nadwagą?" },
       { show: rightChar, text: "To nasz król. Chodź do baru, to Ci opowiem..." },
       { showModal: true }
     ];
 
     let idx = 0;
+
+    enterBtn.onclick = () => {
+      entryScreen.style.display = 'none';
+      dialog.style.display = 'block';
+      nextStep();
+    };
 
     function nextStep() {
       dialog.classList.remove('show');
@@ -182,10 +199,6 @@
         }
       }, 500);
     }
-
-    window.addEventListener('load', () => {
-      nextStep();
-    });
   </script>
 </body>
 </html>
