@@ -65,6 +65,13 @@
       border-radius: 10px;
       border: 3px solid #f8bbd0;
     }
+    #final-btn {
+      margin-top: 30px;
+      font-size: 18px;
+      padding: 14px 24px;
+      background-color: #ab47bc;
+      border-radius: 16px;
+    }
   </style>
 </head>
 <body>
@@ -98,6 +105,8 @@
       },
       {
         question: "Które z tych miejsc najbardziej chciałbym odwiedzić?",
+        type: "slideshow",
+        images: ["tadź.jpg", "piramidy.jpg", "mur.jpg"],
         answers: [
           { text: "Tadź Mahal", correct: false },
           { text: "Piramidy Egipskie", correct: true },
@@ -106,6 +115,8 @@
       },
       {
         question: "Jaką kuchnię najbardziej lubię?",
+        type: "slideshow",
+        images: ["wloska.jpg", "japonska.jpg", "meksykanska.jpg"],
         answers: [
           { text: "Włoska", correct: true },
           { text: "Japońska", correct: false },
@@ -114,6 +125,8 @@
       },
       {
         question: "Kiedy się śmieję najbardziej?",
+        type: "slideshow",
+        images: ["smieszne.jpg", "z-toba.jpg", "komedia.jpg"],
         answers: [
           { text: "Gdy ktoś opowiada śmieszne historie", correct: false },
           { text: "Gdy jestem z Tobą", correct: true },
@@ -122,14 +135,18 @@
       },
       {
         question: "Który z tych kierunków wakacyjnych wydaje mi się najbardziej ekscytujący?",
+        type: "slideshow",
+        images: ["azja.jpg", "europa.jpg", "ameryka.jpg"],
         answers: [
-          { text: "Azja", correct: false },
+          { text: "Azja", correct: true },
           { text: "Europa", correct: false },
-          { text: "Ameryka Południowa", correct: true }
+          { text: "Ameryka Południowa", correct: false }
         ]
       },
       {
         question: "Jaka jest moja wymarzona DZIKA podróż?",
+        type: "slideshow",
+        images: ["safari.jpg", "rejs.jpg", "himalaje.jpg"],
         answers: [
           { text: "Safari w Afryce", correct: true },
           { text: "Rejs po Morzu Śródziemnym", correct: false },
@@ -138,6 +155,8 @@
       },
       {
         question: "Jaką książkę mogę czytać po raz kolejny?",
+        type: "slideshow",
+        images: ["karamazow.jpg", "alaska.jpg", "playlist.jpg"],
         answers: [
           { text: "Bracia Karamazow", correct: true },
           { text: "Szukając Alaski", correct: false },
@@ -146,6 +165,8 @@
       },
       {
         question: "Gdybym mógł nauczyć się jednej rzeczy w jeden dzień, to byłoby:",
+        type: "slideshow",
+        images: ["jezyk.jpg", "instrument.jpg", "gotowanie.jpg"],
         answers: [
           { text: "Nowy język obcy", correct: true },
           { text: "Gra na instrumencie", correct: false },
@@ -154,6 +175,8 @@
       },
       {
         question: "Który z tych sportów chciałbym spróbować?",
+        type: "slideshow",
+        images: ["surfing.jpg", "konie.jpg", "wspinaczka.jpg"],
         answers: [
           { text: "Surfing", correct: false },
           { text: "Jazda konna", correct: false },
@@ -162,6 +185,8 @@
       },
       {
         question: "Który z tych smaków herbaty lubię najbardziej?",
+        type: "slideshow",
+        images: ["mieta.jpg", "owocowa.jpg", "czarna.jpg"],
         answers: [
           { text: "Miętowa", correct: false },
           { text: "Owocowa", correct: true },
@@ -170,6 +195,8 @@
       },
       {
         question: "Jakie jest moje ulubione śniadanie?",
+        type: "slideshow",
+        images: ["pancakes.jpg", "jajka.jpg", "owsianka.jpg"],
         answers: [
           { text: "Pancakes z owocami", correct: true },
           { text: "Jajka na bekonie", correct: false },
@@ -216,7 +243,7 @@
         if (current < quiz.length) {
           renderQuestion();
         } else {
-          container.innerHTML = `<div class='question'><h2>Gratulacje! Znasz Matiego jak nikt! 🎉</h2></div>`;
+          container.innerHTML = `<div class='question'><h2>Gratulacje! Znasz Matiego jak nikt! 🎉</h2><a id="final-btn" href="zagadka8.html">🎟️ Odbierz bilet do Pałacu Matiego</a></div>`;
         }
       } else {
         current = 0;
