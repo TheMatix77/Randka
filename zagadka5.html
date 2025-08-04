@@ -1,212 +1,215 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wejście do baru</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to top, #3a3a3a, #888);
-      font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
-      position: relative;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wejście do baru</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to top, #3a3a3a, #888);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
 
-    #entryScreen {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: url('drzwi.png') no-repeat center center;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 5;
-    }
+  #entryScreen {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: url('drzwi.png') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+  }
 
-    #entryScreen button {
-      font-size: 24px;
-      padding: 16px 32px;
-      background-color: #614d3d;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 2px 2px 12px rgba(0,0,0,0.5);
-      cursor: pointer;
-    }
+  #entryScreen button {
+    font-size: 24px;
+    padding: 16px 32px;
+    background-color: #614d3d;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 2px 2px 12px rgba(0,0,0,0.5);
+    cursor: pointer;
+  }
 
-    #entryScreen button:hover {
-      background-color: #4d3b2f;
-    }
+  #entryScreen button:hover {
+    background-color: #4d3b2f;
+  }
 
-    .sprite {
-      position: absolute;
-      bottom: 0;
-      width: 40%;
-      max-width: 320px;
-      z-index: 2;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
+  .sprite {
+    position: absolute;
+    bottom: 0;
+    width: 40%;
+    max-width: 320px;
+    max-height: 90vh;
+    object-fit: contain;
+    z-index: 2;
+    opacity: 0;
+    display: none;
+    transition: opacity 1s ease-in-out;
+  }
 
-    #leftChar { left: 3%; }
-    #rightChar { right: 3%; }
+  #leftChar { left: 3%; }
+  #rightChar { right: 3%; }
 
-    .dialogBox {
-      position: absolute;
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 720px;
-      background: rgba(255, 255, 255, 0.92);
-      padding: 24px 28px;
-      border-radius: 20px;
-      border: 4px solid #3a3a3a;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-      opacity: 0;
-      transition: opacity 0.6s ease-in-out;
-      z-index: 3;
-      display: none;
-    }
+  .dialogBox {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 720px;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 24px 28px;
+    border-radius: 20px;
+    border: 4px solid #3a3a3a;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    z-index: 3;
+    display: none;
+  }
 
-    .dialogBox.show {
-      opacity: 1;
-      display: block;
-    }
+  .dialogBox.show {
+    opacity: 1;
+    display: block;
+  }
 
-    .dialogText {
-      font-size: 20px;
-      line-height: 1.5;
-      color: #222;
-      text-align: center;
-    }
+  .dialogText {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #222;
+    text-align: center;
+  }
 
-    #endModal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-    }
+  #endModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
 
-    #endBox {
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 16px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-      max-width: 80%;
-    }
+  #endBox {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    max-width: 80%;
+  }
 
-    #endBox h2 {
-      font-size: 22px;
-      margin-bottom: 20px;
-      color: #222;
-    }
+  #endBox h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #222;
+  }
 
-    #endBox button {
-      font-size: 18px;
-      padding: 12px 28px;
-      background-color: #4a785e;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
+  #endBox button {
+    font-size: 18px;
+    padding: 12px 28px;
+    background-color: #4a785e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
 
-    #endBox button:hover {
-      background-color: #355d47;
-    }
-  </style>
+  #endBox button:hover {
+    background-color: #355d47;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Ekran z drzwiami -->
-  <div id="entryScreen">
-    <button id="enterBtn">Wejdź do baru 🍺</button>
+<div id="entryScreen">
+  <button id="enterBtn">Wejdź do baru 🍺</button>
+</div>
+
+<img id="leftChar" class="sprite" src="player2.png" alt="Kobieta" />
+<img id="rightChar" class="sprite" src="goal.png" alt="Mężczyzna" />
+
+<div id="dialog" class="dialogBox">
+  <p id="dialogText" class="dialogText"></p>
+</div>
+
+<div id="endModal">
+  <div id="endBox">
+    <h2>🪖 Endrju zaprasza Cię do baru!</h2>
+    <button onclick="window.location.href='zagadka6.html'">Idź do baru z Endrju 🍺</button>
   </div>
+</div>
 
-  <!-- Postaci -->
-  <img id="leftChar" class="sprite" src="player2.png" alt="Kobieta" />
-  <img id="rightChar" class="sprite" src="goal.png" alt="Mężczyzna" />
+<script>
+const enterBtn = document.getElementById('enterBtn');
+const entryScreen = document.getElementById('entryScreen');
+const leftChar = document.getElementById('leftChar');
+const rightChar = document.getElementById('rightChar');
+const dialog = document.getElementById('dialog');
+const dialogText = document.getElementById('dialogText');
+const endModal = document.getElementById('endModal');
 
-  <!-- Dymek dialogowy -->
-  <div id="dialog" class="dialogBox">
-    <p id="dialogText" class="dialogText"></p>
-  </div>
+const steps = [
+  { show: leftChar, text: "Endrju, to Ty... co Ty tu robisz..." },
+  { show: rightChar, text: "Mamy nowego władcę tutaj na Ukrainie i mu służę." },
+  { hide: leftChar },
+  { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o lodowych oczkach z lekką nadwagą?" },
+  { show: rightChar, text: "To nasz król. Chodź do baru, to Ci opowiem..." },
+  { showModal: true }
+];
 
-  <!-- Powiadomienie na końcu -->
-  <div id="endModal">
-    <div id="endBox">
-      <h2>🪖 Endrju zaprasza Cię do baru!</h2>
-      <button onclick="window.location.href='zagadka6.html'">Idź do baru z Endrju 🍺</button>
-    </div>
-  </div>
+let idx = 0;
 
-  <script>
-    const enterBtn = document.getElementById('enterBtn');
-    const entryScreen = document.getElementById('entryScreen');
-    const leftChar = document.getElementById('leftChar');
-    const rightChar = document.getElementById('rightChar');
-    const dialog = document.getElementById('dialog');
-    const dialogText = document.getElementById('dialogText');
-    const endModal = document.getElementById('endModal');
+enterBtn.onclick = () => {
+  entryScreen.style.display = 'none';
+  setTimeout(() => {
+    dialog.style.display = 'block';
+    nextStep();
+  }, 200);
+};
 
-    const steps = [
-      { show: leftChar, text: "Endrju, to Ty... co Ty tu robisz..." },
-      { show: rightChar, text: "Mamy nowego władcę tutaj na Ukrainie i mu służę." },
-      { hide: leftChar },
-      { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o lodowych oczkach z lekką nadwagą?" },
-      { show: rightChar, text: "To nasz król. Chodź do baru, to Ci opowiem..." },
-      { showModal: true }
-    ];
+function nextStep() {
+  const step = steps[idx++];
+  if (!step) return;
 
-    let idx = 0;
+  if (step.show) {
+    step.show.style.display = 'block';
+    requestAnimationFrame(() => { step.show.style.opacity = 1; });
+  }
+  if (step.hide) {
+    step.hide.style.opacity = 0;
+    setTimeout(() => step.hide.style.display = 'none', 1000);
+  }
 
-    enterBtn.onclick = () => {
-      entryScreen.style.display = 'none';
-      dialog.style.display = 'block';
-      nextStep();
-    };
+  if (step.text) {
+    dialogText.textContent = step.text;
+    dialog.classList.add('show');
+  }
 
-    function nextStep() {
-      const step = steps[idx++];
-      if (!step) return;
-
-      // Pokaż/ukryj postacie
-      if (step.show) step.show.style.opacity = 1;
-      if (step.hide) step.hide.style.opacity = 0;
-
-      // Pokaż tekst dialogu
-      if (step.text) {
-        dialogText.textContent = step.text;
-        dialog.classList.add('show');
-      }
-
-      // Ostatni krok -> pokazujemy modal
-      if (step.showModal) {
+  if (step.showModal) {
+    dialog.classList.remove('show');
+    setTimeout(() => {
+      dialog.style.display = 'none';
+      endModal.style.display = 'flex';
+    }, 1000);
+  } else {
+    if (idx < steps.length) {
+      setTimeout(() => {
         dialog.classList.remove('show');
-        setTimeout(() => {
-          dialog.style.display = 'none';
-          endModal.style.display = 'flex';
-        }, 1000);
-      } else {
-        // Przejście do następnego dialogu
-        if (idx < steps.length) {
-          setTimeout(() => {
-            dialog.classList.remove('show');
-            setTimeout(nextStep, 800); // przerwa między dialogami
-          }, 3500); // czas na czytanie tekstu
-        }
-      }
+        setTimeout(nextStep, 800);
+      }, 3500);
     }
-  </script>
+  }
+}
+</script>
 </body>
 </html>
