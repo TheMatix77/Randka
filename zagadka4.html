@@ -1,243 +1,296 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Vertical Runner Special</title>
-  <style>
-    #startScreen {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(255, 255, 255, 0.95);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 30px;
-  box-sizing: border-box;
-}
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Vertical Runner Special</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-#startScreen h1 {
-  font-size: 24px;
-  color: #222;
-  max-width: 90vw;
-  line-height: 1.5;
-}
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      overflow: hidden;
+      background-color: #f0f0f0;
+    }
 
-#startScreen button {
-  padding: 12px 24px;
-  font-size: 16px;
-  margin-top: 20px;
-  background-color: #6e3b8f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
+    #startScreen, #endScreen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #f0fff0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-#startScreen button:hover {
-  background-color: #542c6e;
-}
-#game {
-  display: none;
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('background.png'); /* 👈 Twój plik tła */
-  background-size: cover;
-  background-repeat: repeat-y;
-}
+    .container {
+      padding: 40px;
+      border: 5px solid #a2e8a2;
+      border-radius: 20px;
+      background-color: #f0fff0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
 
-#player {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-image: url('player.png'); /* 👈 Twój gracz */
-  background-size: cover;
-  border-radius: 8px;
-  z-index: 10;
-}
+    h1, h2 {
+      font-size: 28px;
+      color: #333;
+      max-width: 90vw;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
 
-.obstacle {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  background-image: url('obstacle.jpg'); /* 👈 Przeszkoda */
-  background-size: cover;
-  border-radius: 4px;
-  z-index: 5;
-}
+    #endScreen h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
 
-.bullet {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-image: url('bullet.png'); /* 👈 Pocisk */
-  background-size: cover;
-  border-radius: 50%;
-  z-index: 6;
-}
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      margin-top: 15px;
+      background-color: #6e3b8f;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, background-color 0.2s;
+    }
 
-#goal {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  background-image: url('goal.png'); /* 👈 Meta */
-  background-size: cover;
-  border-radius: 8px;
-  z-index: 9;
-}
+    button:hover {
+      background-color: #542c6e;
+      transform: translateY(-2px);
+    }
 
-  </style>
+    #game {
+      display: none;
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('background.png');
+      background-size: cover;
+      background-repeat: repeat-y;
+    }
+
+    #player {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-image: url('player.png');
+      background-size: cover;
+      border-radius: 8px;
+      z-index: 10;
+    }
+
+    .obstacle {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-image: url('obstacle.png');
+      background-size: cover;
+      border-radius: 4px;
+      z-index: 5;
+    }
+
+    .bullet {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-image: url('bullet.png');
+      background-size: cover;
+      border-radius: 50%;
+      z-index: 6;
+    }
+
+    #goal {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-image: url('goal.png');
+      background-size: cover;
+      border-radius: 8px;
+      z-index: 9;
+    }
+  </style>
 </head>
 <body>
 
 <div id="startScreen">
-  <h1>💣 Co odjebało temu Matiemu? Pojechał na Ukrainę... Muszę go ratować! <br> A WIĘC JA POJECHAJU ZA NIM NA FRONT💥</h1>
-  <button id="start">Zaczynamy</button>
+  <div class="container">
+    <h1>💣 Co odjebało temu Matiemu? Pojechał na Ukrainę... Muszę go ratować! <br> A WIĘC JA POJECHAJU ZA NIM NA FRONT💥</h1>
+    <button id="start">Zaczynamy</button>
+    <button>Instrukcje</button>
+    <button>Najlepsze Wyniki</button>
+  </div>
 </div>
 
 <div id="game">
-  <div id="player"></div>
-  <div id="goal"></div>
+  <div id="player"></div>
+  <div id="goal"></div>
 </div>
 
 <div id="endScreen" style="display:none;">
-  <h2>🍀 Spotykasz znajomą twarz!</h2>
-  <button id="talk">Zacznij rozmowę</button>
+  <div class="container">
+    <h2>🍀 Spotykasz znajomą twarz!</h2>
+    <button id="talk">Zacznij rozmowę</button>
+    <button>Zagraj ponownie</button>
+  </div>
 </div>
 
 <script>
-  const startBtn = document.getElementById('start');
-  const talkBtn = document.getElementById('talk');
-  const startScreen = document.getElementById('startScreen');
-  const endScreen = document.getElementById('endScreen');
-  const game = document.getElementById('game');
-  const player = document.getElementById('player');
-  const goal = document.getElementById('goal');
-  let playing = false;
-  const scrollSpeed = 2;
-  let gameOffset = 0;
+  const startBtn = document.getElementById('start');
+  const talkBtn = document.getElementById('talk');
+  const startScreen = document.getElementById('startScreen');
+  const endScreen = document.getElementById('endScreen');
+  const game = document.getElementById('game');
+  const player = document.getElementById('player');
+  const goal = document.getElementById('goal');
+  let playing = false;
+  const scrollSpeed = 2;
+  let gameOffset = 0;
 
-  function moveBackground(){
-    gameOffset += scrollSpeed;
-    game.style.backgroundPositionY = gameOffset + 'px';
-    if(playing) requestAnimationFrame(moveBackground);
-  }
+  function moveBackground(){
+    gameOffset += scrollSpeed;
+    game.style.backgroundPositionY = gameOffset + 'px';
+    if(playing) requestAnimationFrame(moveBackground);
+  }
 
-  function placeGoal(){
-    goal.style.top = '-2000px';
-    goal.style.left = Math.random() * (game.clientWidth - 60) + 'px';
-  }
+  function placeGoal(){
+    goal.style.top = '-2000px';
+    goal.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+  }
 
-  function moveGoal(){
-    function step(){
-      if(!playing) return;
-      let top = parseFloat(goal.style.top);
-      goal.style.top = (top + scrollSpeed) + 'px';
-      if(top + 60 > game.clientHeight){
-        playing = false;
-      } else {
-        requestAnimationFrame(step);
-      }
-    }
-    step();
-  }
+  function moveGoal(){
+    function step(){
+      if(!playing) return;
+      let top = parseFloat(goal.style.top);
+      goal.style.top = (top + scrollSpeed) + 'px';
+      if(top + 60 > game.clientHeight){
+        playing = false;
+      } else {
+        requestAnimationFrame(step);
+      }
+    }
+    step();
+  }
 
-  function spawnObstacle(){
-    if(!playing) return;
-    const obs = document.createElement('div');
-    obs.className = 'obstacle';
-    const side = Math.random() < 0.5 ? 'left' : 'right';
-    obs.style.left = (side==='left' ? 0 : game.clientWidth - 60) + 'px';
-    obs.style.top = '-60px';
-    game.appendChild(obs);
-    moveObstacle(obs);
-  }
-  function moveObstacle(obs){
-    function step(){
-      if(!playing) return;
-      const top = parseFloat(obs.style.top);
-      obs.style.top = (top + scrollSpeed) + 'px';
-      if(top > game.clientHeight) obs.remove();
-      else {
-        if(checkCollision(player, obs)) endGame('💥 Wpadłeś na przeszkodę!');
-        requestAnimationFrame(step);
-      }
-    }
-    step();
-  }
+  function spawnObstacle(){
+    // Zmniejszona częstotliwość przeszkód (np. co 100 klatek)
+    if(!playing) return;
+    if(Math.random() < 0.015) { // To jest szansa na pojawienie się przeszkody
+      const obs = document.createElement('div');
+      obs.className = 'obstacle';
+      
+      // Ustawienie kolumn przeszkód
+      const gapWidth = 150; // Szerokość przejścia
+      const randomStart = Math.random() * (game.clientWidth - gapWidth - 120);
+      
+      obs.style.width = randomStart + 'px';
+      obs.style.height = '60px';
+      obs.style.left = '0px';
+      obs.style.top = '-60px';
+      game.appendChild(obs);
+      moveObstacle(obs);
 
-  function spawnBullet(){
-    if(!playing) return;
-    if(Math.random() < 0.03){
-      const b = document.createElement('div');
-      b.className = 'bullet';
-      b.style.top = '-20px';
-      b.style.left = Math.random() * (game.clientWidth - 20) + 'px';
-      game.appendChild(b);
-      moveBullet(b);
-    }
-  }
-  function moveBullet(b){
-    function step(){
-      if(!playing) return;
-      const top = parseFloat(b.style.top);
-      b.style.top = (top + scrollSpeed + 3) + 'px';
-      if(top > game.clientHeight) b.remove();
-      else {
-        if(checkCollision(player, b)) endGame('💣 Trafiony pociskiem!');
-        requestAnimationFrame(step);
-      }
-    }
-    step();
-  }
+      const obs2 = document.createElement('div');
+      obs2.className = 'obstacle';
+      obs2.style.width = (game.clientWidth - randomStart - gapWidth) + 'px';
+      obs2.style.height = '60px';
+      obs2.style.left = (randomStart + gapWidth) + 'px';
+      obs2.style.top = '-60px';
+      game.appendChild(obs2);
+      moveObstacle(obs2);
+    }
+  }
 
-  function checkCollision(a,b){
-    const A=a.getBoundingClientRect(), B=b.getBoundingClientRect();
-    return !(A.right<B.left||A.left>B.right||A.bottom<B.top||A.top>B.bottom);
-  }
+  function moveObstacle(obs){
+    function step(){
+      if(!playing) return;
+      const top = parseFloat(obs.style.top);
+      obs.style.top = (top + scrollSpeed) + 'px';
+      if(top > game.clientHeight) obs.remove();
+      else {
+        if(checkCollision(player, obs)) endGame('💥 Wpadłeś na przeszkodę!');
+        requestAnimationFrame(step);
+      }
+    }
+    step();
+  }
 
-  function movePlayer(x){
-    const r=game.getBoundingClientRect();
-    let nx = x - r.left - player.clientWidth/2;
-    nx = Math.max(0, Math.min(game.clientWidth-player.clientWidth, nx));
-    player.style.left = nx + 'px';
-  }
+  function spawnBullet(){
+    if(!playing) return;
+    if(Math.random() < 0.01) { // Mniejsza szansa na pocisk
+      const b = document.createElement('div');
+      b.className = 'bullet';
+      b.style.top = '-20px';
+      b.style.left = Math.random() * (game.clientWidth - 20) + 'px';
+      game.appendChild(b);
+      moveBullet(b);
+    }
+  }
+  function moveBullet(b){
+    function step(){
+      if(!playing) return;
+      const top = parseFloat(b.style.top);
+      b.style.top = (top + scrollSpeed + 3) + 'px';
+      if(top > game.clientHeight) b.remove();
+      else {
+        if(checkCollision(player, b)) endGame('💣 Trafiony pociskiem!');
+        requestAnimationFrame(step);
+      }
+    }
+    step();
+  }
 
-  function endGame(msg){
-    alert(msg);
-    endScreen.style.display = 'flex';
-  }
+  function checkCollision(a,b){
+    const A=a.getBoundingClientRect(), B=b.getBoundingClientRect();
+    return !(A.right<B.left||A.left>B.right||A.bottom<B.top||A.top>B.bottom);
+  }
 
-  function gameLoop(){
-    if(!playing) return;
-    spawnObstacle();
-    spawnBullet();
-    requestAnimationFrame(gameLoop);
-  }
+  function movePlayer(x){
+    const r=game.getBoundingClientRect();
+    let nx = x - r.left - player.clientWidth/2;
+    nx = Math.max(0, Math.min(game.clientWidth-player.clientWidth, nx));
+    player.style.left = nx + 'px';
+  }
 
-  startBtn.onclick = ()=>{
-    startScreen.style.display='none';
-    game.style.display='block';
-    playing = true;
-    placeGoal();
-    moveBackground();
-    moveGoal();
-    gameLoop();
-  };
+  function endGame(msg){
+    alert(msg);
+    game.style.display = 'none';
+    endScreen.style.display = 'flex';
+  }
 
-  talkBtn.onclick = ()=>{
-    window.location.href = 'zagadka5.html';
-  };
+  function gameLoop(){
+    if(!playing) return;
+    spawnObstacle();
+    spawnBullet();
+    setTimeout(() => requestAnimationFrame(gameLoop), 1000 / 60); // Ograniczenie klatek
+  }
 
-  game.addEventListener('touchmove', e => movePlayer(e.touches[0].clientX));
-  game.addEventListener('mousemove', e=>{ if(e.buttons) movePlayer(e.clientX); });
+  startBtn.onclick = ()=>{
+    startScreen.style.display='none';
+    game.style.display='block';
+    playing = true;
+    placeGoal();
+    moveBackground();
+    moveGoal();
+    gameLoop();
+  };
+
+  talkBtn.onclick = ()=>{
+    window.location.href = 'zagadka5.html';
+  };
+
+  game.addEventListener('touchmove', e => movePlayer(e.touches[0].clientX));
+  game.addEventListener('mousemove', e=>{ if(e.buttons) movePlayer(e.clientX); });
 
 </script>
 </body>
