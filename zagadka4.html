@@ -14,9 +14,8 @@
       position: absolute;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: rgba(240, 255, 245, 0.95);
-      border: 8px solid #8B5E3C;
-      box-shadow: 0 0 20px rgba(139, 94, 60, 0.4);
+      background: rgba(220, 255, 230, 0.95);
+      border: 10px solid #5C3A21;
       z-index: 100;
       display: flex;
       flex-direction: column;
@@ -29,30 +28,31 @@
     }
 
     #startScreen h1, #endScreen h2 {
+      width: 80%;
+      max-width: 400px;
       font-size: 24px;
-      color: #304030;
-      max-width: 90vw;
-      line-height: 1.6;
-      background: rgba(255,255,255,0.6);
-      padding: 16px;
-      border-radius: 12px;
-      border: 2px dashed #A3CFA3;
+      color: #2E3F2F;
+      line-height: 1.5;
+      background: linear-gradient(135deg, #E0F8E8, #C1EFD6);
+      padding: 18px;
+      border-radius: 8px;
+      border: 4px solid #4A6A4C;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     #startScreen button, #endScreen button {
-      padding: 12px 24px;
-      font-size: 16px;
+      padding: 14px 28px;
+      font-size: 18px;
       margin-top: 20px;
-      background-color: #88b694;
+      background-color: #78A88B;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
     }
-
     #startScreen button:hover, #endScreen button:hover {
-      background-color: #6f9978;
+      background-color: #5F8C73;
     }
 
     #game {
@@ -67,8 +67,8 @@
 
     #player {
       position: absolute;
-      width: 50px;
-      height: 50px;
+      width: 80px;
+      height: 80px;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
@@ -82,7 +82,7 @@
       position: absolute;
       width: 60px;
       height: 60px;
-      background-image: url('obstacle.jng');
+      background-image: url('obstacle.jpg');
       background-size: cover;
       border-radius: 4px;
       z-index: 5;
@@ -90,8 +90,8 @@
 
     .bullet {
       position: absolute;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       background-image: url('bullet.png');
       background-size: cover;
       border-radius: 50%;
@@ -100,8 +100,8 @@
 
     #goal {
       position: absolute;
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       background-image: url('goal.png');
       background-size: cover;
       border-radius: 8px;
@@ -139,6 +139,7 @@
     let playing = false;
     const scrollSpeed = 2;
     let gameOffset = 0;
+    let reachedGoal = false;
 
     function moveBackground() {
       gameOffset += scrollSpeed;
@@ -147,8 +148,8 @@
     }
 
     function placeGoal() {
-      goal.style.top = '-2000px';
-      goal.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+      goal.style.top = '-2500px';
+      goal.style.left = Math.random() * (game.clientWidth - 70) + 'px';
     }
 
     function moveGoal() {
@@ -156,8 +157,9 @@
         if (!playing) return;
         let top = parseFloat(goal.style.top);
         goal.style.top = (top + scrollSpeed) + 'px';
-        if (top + 60 > game.clientHeight) {
-          playing = false;
+        if (top + 70 > game.clientHeight) {
+          reachedGoal = true;
+          endGame(false);
         } else {
           requestAnimationFrame(step);
         }
@@ -167,12 +169,14 @@
 
     function spawnObstacle() {
       if (!playing) return;
-      const obs = document.createElement('div');
-      obs.className = 'obstacle';
-      obs.style.left = Math.random() * (game.clientWidth - 60) + 'px';
-      obs.style.top = '-60px';
-      game.appendChild(obs);
-      moveObstacle(obs);
+      if (Math.random() < 0.015) {
+        const obs = document.createElement('div');
+        obs.className = 'obstacle';
+        obs.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+        obs.style.top = '-60px';
+        game.appendChild(obs);
+        moveObstacle(obs);
+      }
     }
 
     function moveObstacle(obs) {
@@ -182,7 +186,7 @@
         obs.style.top = (top + scrollSpeed) + 'px';
         if (top > game.clientHeight) obs.remove();
         else {
-          if (checkCollision(player, obs)) endGame('💥 Wpadłeś na przeszkodę!');
+          if (checkCollision(player, obs)) endGame(true);
           requestAnimationFrame(step);
         }
       }
@@ -191,11 +195,11 @@
 
     function spawnBullet() {
       if (!playing) return;
-      if (Math.random() < 0.08) {
+      if (Math.random() < 0.02) {
         const b = document.createElement('div');
         b.className = 'bullet';
-        b.style.top = '-20px';
-        b.style.left = Math.random() * (game.clientWidth - 20) + 'px';
+        b.style.top = '-24px';
+        b.style.left = Math.random() * (game.clientWidth - 24) + 'px';
         game.appendChild(b);
         moveBullet(b);
       }
@@ -205,10 +209,10 @@
       function step() {
         if (!playing) return;
         const top = parseFloat(b.style.top);
-        b.style.top = (top + scrollSpeed + 3) + 'px';
+        b.style.top = (top + scrollSpeed + 2) + 'px';
         if (top > game.clientHeight) b.remove();
         else {
-          if (checkCollision(player, b)) endGame('💣 Trafiony pociskiem!');
+          if (checkCollision(player, b)) endGame(true);
           requestAnimationFrame(step);
         }
       }
@@ -227,15 +231,19 @@
       player.style.left = nx + 'px';
     }
 
-    function endGame(msg) {
-      alert(msg);
+    function endGame(hit) {
       playing = false;
+      if (hit) {
+        endScreen.querySelector('h2').textContent = '💥 Zgniatasz się od pocisku!';
+      } else {
+        endScreen.querySelector('h2').textContent = '🍀 Spotykasz znajomą twarz!';
+      }
       endScreen.style.display = 'flex';
     }
 
     function gameLoop() {
       if (!playing) return;
-      if (Math.random() < 0.02) spawnObstacle();
+      spawnObstacle();
       spawnBullet();
       requestAnimationFrame(gameLoop);
     }
@@ -244,6 +252,7 @@
       startScreen.style.display = 'none';
       game.style.display = 'block';
       playing = true;
+      reachedGoal = false;
       placeGoal();
       moveBackground();
       moveGoal();
