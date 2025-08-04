@@ -3,213 +3,162 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wejście do baru</title>
+<title>Rozmowa w stylu anime</title>
 <style>
   body {
     margin: 0;
-    padding: 0;
-    background: linear-gradient(to top, #3a3a3a, #888);
     font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to top, #a3d3ff, #f0f9ff);
     overflow: hidden;
-    position: relative;
   }
 
-  #entryScreen {
+  /* Tło anime */
+  #sceneBg {
     position: absolute;
     top: 0; left: 0;
     width: 100vw; height: 100vh;
-    background: url('drzwi.png') no-repeat center center;
-    background-size: cover;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 5;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.5) 0%, transparent 70%),
+                linear-gradient(to top, #a3d3ff, #f0f9ff);
+    z-index: 0;
   }
 
-  #entryScreen button {
-    font-size: 24px;
-    padding: 16px 32px;
-    background-color: #614d3d;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 2px 2px 12px rgba(0,0,0,0.5);
-    cursor: pointer;
-  }
-
-  #entryScreen button:hover {
-    background-color: #4d3b2f;
-  }
-
-  .sprite {
+  /* Postacie */
+  .character {
     position: absolute;
     bottom: 0;
-    width: 40%;
-    max-width: 320px;
-    max-height: 90vh;
-    object-fit: contain;
+    max-height: 95vh;
     z-index: 2;
     opacity: 0;
-    display: none;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.8s ease-in-out;
+    pointer-events: none;
   }
 
-  #leftChar { left: 3%; }
-  #rightChar { right: 3%; }
+  #charLeft { left: 3%; }
+  #charRight { right: 3%; }
 
-  .dialogBox {
+  /* Chmurka dialogowa */
+  #dialogBox {
     position: absolute;
-    bottom: 10%;
+    bottom: 5%;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
-    max-width: 720px;
-    background: rgba(255, 255, 255, 0.92);
-    padding: 24px 28px;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
-    border: 4px solid #3a3a3a;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    opacity: 0;
-    transition: opacity 0.6s ease-in-out;
-    z-index: 3;
-    display: none;
-  }
-
-  .dialogBox.show {
-    opacity: 1;
-    display: block;
-  }
-
-  .dialogText {
+    border: 3px solid #555;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     font-size: 20px;
-    line-height: 1.5;
+    line-height: 1.4;
     color: #222;
-    text-align: center;
-  }
-
-  #endModal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-  }
-
-  #endBox {
-    background: #fff;
-    padding: 30px 40px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-    max-width: 80%;
-  }
-
-  #endBox h2 {
-    font-size: 22px;
-    margin-bottom: 20px;
-    color: #222;
-  }
-
-  #endBox button {
-    font-size: 18px;
-    padding: 12px 28px;
-    background-color: #4a785e;
-    color: white;
-    border: none;
-    border-radius: 10px;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
     cursor: pointer;
   }
 
-  #endBox button:hover {
-    background-color: #355d47;
+  /* Imię mówiącego */
+  #speakerName {
+    font-weight: bold;
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 8px;
+  }
+
+  /* Przycisk startowy */
+  #startBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 22px;
+    padding: 14px 28px;
+    background: #ff6f61;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 10;
+  }
+  #startBtn:hover {
+    background: #e65c50;
   }
 </style>
 </head>
 <body>
 
-<div id="entryScreen">
-  <button id="enterBtn">Wejdź do baru 🍺</button>
+<div id="sceneBg"></div>
+
+<!-- Postacie -->
+<img id="charLeft" class="character" src="player2.png" alt="Kobieta">
+<img id="charRight" class="character" src="goal.png" alt="Endrju">
+
+<!-- Chmurka dialogowa -->
+<div id="dialogBox">
+  <div id="speakerName"></div>
+  <div id="dialogText"></div>
 </div>
 
-<img id="leftChar" class="sprite" src="player2.png" alt="Kobieta" />
-<img id="rightChar" class="sprite" src="goal.png" alt="Mężczyzna" />
-
-<div id="dialog" class="dialogBox">
-  <p id="dialogText" class="dialogText"></p>
-</div>
-
-<div id="endModal">
-  <div id="endBox">
-    <h2>🪖 Endrju zaprasza Cię do baru!</h2>
-    <button onclick="window.location.href='zagadka6.html'">Idź do baru z Endrju 🍺</button>
-  </div>
-</div>
+<!-- Przycisk start -->
+<button id="startBtn">Hej Endrju?</button>
 
 <script>
-const enterBtn = document.getElementById('enterBtn');
-const entryScreen = document.getElementById('entryScreen');
-const leftChar = document.getElementById('leftChar');
-const rightChar = document.getElementById('rightChar');
-const dialog = document.getElementById('dialog');
+const startBtn = document.getElementById('startBtn');
+const charLeft = document.getElementById('charLeft');
+const charRight = document.getElementById('charRight');
+const dialogBox = document.getElementById('dialogBox');
+const speakerName = document.getElementById('speakerName');
 const dialogText = document.getElementById('dialogText');
-const endModal = document.getElementById('endModal');
 
-const steps = [
-  { show: leftChar, text: "Endrju, to Ty... co Ty tu robisz..." },
-  { show: rightChar, text: "Mamy nowego władcę tutaj na Ukrainie i mu służę." },
-  { hide: leftChar },
-  { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o lodowych oczkach z lekką nadwagą?" },
-  { show: rightChar, text: "To nasz król. Chodź do baru, to Ci opowiem..." },
-  { showModal: true }
+const conversation = [
+  { speaker: "Kobieta", side: "left", text: "Endrju, to Ty... co Ty tu robisz..." },
+  { speaker: "Endrju", side: "right", text: "Mamy nowego władcę tutaj na Ukrainie i mu służę." },
+  { speaker: "Kobieta", side: "left", text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o lodowych oczkach z lekką nadwagą?" },
+  { speaker: "Endrju", side: "right", text: "To nasz król. Chodź do baru, to Ci opowiem..." }
 ];
 
-let idx = 0;
+let step = 0;
 
-enterBtn.onclick = () => {
-  entryScreen.style.display = 'none';
-  setTimeout(() => {
-    dialog.style.display = 'block';
-    nextStep();
-  }, 200);
+startBtn.onclick = () => {
+  startBtn.style.display = "none";
+  showLine();
 };
 
-function nextStep() {
-  const step = steps[idx++];
-  if (!step) return;
-
-  if (step.show) {
-    step.show.style.display = 'block';
-    requestAnimationFrame(() => { step.show.style.opacity = 1; });
-  }
-  if (step.hide) {
-    step.hide.style.opacity = 0;
-    setTimeout(() => step.hide.style.display = 'none', 1000);
-  }
-
-  if (step.text) {
-    dialogText.textContent = step.text;
-    dialog.classList.add('show');
-  }
-
-  if (step.showModal) {
-    dialog.classList.remove('show');
+function showLine() {
+  const line = conversation[step];
+  if (!line) {
+    dialogBox.style.opacity = 0;
     setTimeout(() => {
-      dialog.style.display = 'none';
-      endModal.style.display = 'flex';
-    }, 1000);
-  } else {
-    if (idx < steps.length) {
-      setTimeout(() => {
-        dialog.classList.remove('show');
-        setTimeout(nextStep, 800);
-      }, 3500);
-    }
+      alert("Koniec rozmowy – przejście do kolejnej sceny.");
+    }, 500);
+    return;
   }
+
+  // Ukryj obie postacie
+  charLeft.style.opacity = 0;
+  charRight.style.opacity = 0;
+
+  // Pokaż odpowiednią
+  if (line.side === "left") {
+    charLeft.style.opacity = 1;
+  } else {
+    charRight.style.opacity = 1;
+  }
+
+  // Pokaż dialog
+  speakerName.textContent = line.speaker;
+  dialogText.textContent = line.text;
+  dialogBox.style.opacity = 1;
+
+  // Kliknięcie w dialog -> następna linia
+  dialogBox.onclick = () => {
+    step++;
+    showLine();
+  };
 }
 </script>
+
 </body>
 </html>
