@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scena Dialogowa</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #2c2f33, #111);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sprite {
+      position: absolute;
+      bottom: 0;
+      width: 40%;
+      max-width: 320px;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    #leftChar { left: 5%; }
+    #rightChar { right: 5%; }
+
+    .dialogBox {
+      position: absolute;
+      bottom: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 24px;
+      border-radius: 16px;
+      border: 4px solid #888;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: 3;
+    }
+
+    .dialogBox.show { opacity: 1; }
+
+    .dialogText {
+      font-size: 20px;
+      line-height: 1.6;
+      color: #222;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Postaci -->
+  <img id="leftChar" class="sprite" src="player2.png" alt="Kobieta" />
+  <img id="rightChar" class="sprite" src="goal.png" alt="Mężczyzna" />
+
+  <!-- Balon dialogowy -->
+  <div id="dialog" class="dialogBox">
+    <p id="dialogText" class="dialogText"></p>
+  </div>
+
+  <script>
+    const leftChar = document.getElementById('leftChar');
+    const rightChar = document.getElementById('rightChar');
+    const dialog = document.getElementById('dialog');
+    const dialogText = document.getElementById('dialogText');
+
+    const steps = [
+      { show: leftChar, text: "Endrju, to Ty... co Ty tu robisz..." },
+      { show: rightChar, text: "Mamy nowego władcę tutaj na Ukrainie i mu służę." },
+      { hide: leftChar, text: "" },
+      { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o błękitnych oczkach z lekką nadwagą?" },
+      { show: rightChar, text: "To nasz król. Chodź do baru, to Ci opowiem..." }
+    ];
+
+    let idx = 0;
+
+    function nextStep() {
+      dialog.classList.remove('show');
+      setTimeout(() => {
+        const step = steps[idx++];
+        if (!step) return;
+        if (step.show) step.show.style.opacity = 1;
+        if (step.hide) step.hide.style.opacity = 0;
+        dialogText.textContent = step.text;
+        setTimeout(() => dialog.classList.add('show'), 100);
+        if (idx < steps.length) {
+          setTimeout(nextStep, 3800);
+        }
+      }, 600);
+    }
+
+    window.addEventListener('load', () => {
+      nextStep();
+    });
+  </script>
+</body>
+</html>
