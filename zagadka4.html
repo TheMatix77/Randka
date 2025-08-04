@@ -123,7 +123,7 @@
   </div>
 
   <div id="endScreen" style="display:none;">
-    <h2>🍀 Spotykasz znajomą twarz!</h2>
+    <h2>Spotykasz znajomą twarz!</h2>
     <button id="talk">Zacznij rozmowę</button>
     <button id="retry" style="display:none;">Spróbuj jeszcze raz</button>
   </div>
@@ -242,10 +242,26 @@
       step();
     }
 
-    function checkCollision(a, b) {
-      const A = a.getBoundingClientRect(), B = b.getBoundingClientRect();
-      return !(A.right < B.left || A.left > B.right || A.bottom < B.top || A.top > B.bottom);
-    }
+ function checkCollision(a, b) {
+  const A = a.getBoundingClientRect();
+  const B = b.getBoundingClientRect();
+
+  // Zmniejszamy hitbox o 20% z każdej strony
+  const shrinkFactor = 0.2;
+
+  const Ax1 = A.left + A.width * shrinkFactor;
+  const Ax2 = A.right - A.width * shrinkFactor;
+  const Ay1 = A.top + A.height * shrinkFactor;
+  const Ay2 = A.bottom - A.height * shrinkFactor;
+
+  const Bx1 = B.left + B.width * shrinkFactor;
+  const Bx2 = B.right - B.width * shrinkFactor;
+  const By1 = B.top + B.height * shrinkFactor;
+  const By2 = B.bottom - B.height * shrinkFactor;
+
+  return !(Ax2 < Bx1 || Ax1 > Bx2 || Ay2 < By1 || Ay1 > By2);
+}
+
 
     function movePlayer(x) {
       const r = game.getBoundingClientRect();
@@ -257,11 +273,11 @@
     function endGame(hit) {
       playing = false;
       if (hit) {
-        endScreen.querySelector('h2').textContent = '💥 Trafiony! Spróbuj ponownie.';
+        endScreen.querySelector('h2').textContent = '💥Trafiony!';
         retryBtn.style.display = 'block';
         talkBtn.style.display = 'none';
       } else {
-        endScreen.querySelector('h2').textContent = '🍀 Spotykasz znajomą twarz!';
+        endScreen.querySelector('h2').textContent = 'Spotykasz znajomą twarz!';
         retryBtn.style.display = 'none';
         talkBtn.style.display = 'block';
       }
