@@ -2,14 +2,15 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zagadka Czekolada</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         background-color: #f8f1e4;
-        text-align: center;
         margin: 0;
         padding: 0;
+        text-align: center;
     }
     .intro {
         padding: 20px;
@@ -32,14 +33,14 @@
     .chocolate {
         display: none;
         margin: 20px auto;
-        width: 360px;
+        max-width: 360px;
         display: grid;
-        grid-template-columns: repeat(6, 60px);
+        grid-template-columns: repeat(6, 1fr);
         grid-gap: 5px;
     }
     .piece {
-        width: 60px;
-        height: 60px;
+        width: 100%;
+        aspect-ratio: 1 / 1;
         background-color: #6b4226;
         border: 2px solid #4d2d1a;
         border-radius: 5px;
@@ -51,22 +52,61 @@
     .password-section {
         display: none;
         margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
     }
-    input {
-        padding: 10px;
-        font-size: 16px;
+    .hint-img {
+        max-width: 120px;
+        height: auto;
+    }
+    /* Stylizacja telefonu */
+    .phone {
         width: 200px;
-        text-align: center;
+        height: 350px;
+        background-color: black;
+        border-radius: 20px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
     }
-    .next-btn {
-        display: none;
-        margin-top: 15px;
+    .screen {
+        background-color: #dcdcdc;
+        width: 100%;
+        flex-grow: 1;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+    }
+    .screen input {
+        font-size: 18px;
+        padding: 8px;
+        text-align: center;
+        width: 100%;
+        border: 2px solid #555;
+        border-radius: 5px;
+        outline: none;
+    }
+    @media (max-width: 500px) {
+        .password-section {
+            flex-direction: column;
+        }
+        .hint-img {
+            max-width: 80px;
+        }
     }
 </style>
 </head>
 <body>
 
-<div class="intro">
+<div class="intro" id="introBox">
     <h2>Sprzątając pokój natknęłaś się na telefon i czekoladę, którą jadł Mati.</h2>
     <p>Tylko czemu wyjadł <b>tylko niektóre kostki</b>...? 🤔</p>
     <button class="btn" onclick="startPuzzle()">Zaczynaj</button>
@@ -74,24 +114,29 @@
 
 <div class="chocolate" id="chocolate"></div>
 
-<div class="password-section">
-    <p>Wpisz hasło:</p>
-    <input type="text" id="password" placeholder="Hasło...">
-    <button class="btn" onclick="checkPassword()">Sprawdź</button>
+<div class="password-section" id="passwordSection">
+    <img src="abc.png" alt="Podpowiedź" class="hint-img">
+    <div class="phone">
+        <div class="screen">
+            <input type="text" id="password" placeholder="Hasło...">
+        </div>
+        <button class="btn" style="margin-top:10px;" onclick="checkPassword()">Sprawdź</button>
+    </div>
 </div>
 
 <div id="result"></div>
-<button class="btn next-btn" id="nextBtn" onclick="location.href='zagadka3.html'">Dalej ➡</button>
+<button class="btn" style="display:none;" id="nextBtn" onclick="location.href='zagadka3.html'">Dalej ➡</button>
 
 <script>
 function startPuzzle() {
+    document.getElementById('introBox').style.display = 'none';
     document.getElementById('chocolate').style.display = 'grid';
-    document.querySelector('.password-section').style.display = 'block';
+    document.getElementById('passwordSection').style.display = 'flex';
 
     const chocolate = document.getElementById('chocolate');
     chocolate.innerHTML = '';
 
-    // Alfabet A-Z (1-26), ale w formie 6x6 tabliczki
+    // Wyjedzone litery M Y S Z K A
     const eatenLetters = ['M', 'Y', 'S', 'Z', 'K', 'A']; 
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     
