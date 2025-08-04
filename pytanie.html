@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>💗 Pytanie Miłosne 💗</title>
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       background: linear-gradient(to bottom right, #ffe4ec, #ffeaf6);
       font-family: 'Segoe UI', sans-serif;
       color: #c2185b;
       text-align: center;
-      overflow: hidden;
+      height: 100%;
+    }
+    body {
+      overflow-x: hidden;
+      overflow-y: auto;
     }
     h1 {
       font-size: 26px;
@@ -20,6 +24,12 @@
     }
     .container {
       padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      border: 4px solid #f8bbd0;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .gif {
       margin: 20px auto;
@@ -85,6 +95,7 @@
       left: 50%;
       animation: fall linear infinite;
       opacity: 0.8;
+      pointer-events: none;
     }
     @keyframes fall {
       0% {transform: translateY(-40px) rotate(0deg);}
