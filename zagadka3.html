@@ -32,19 +32,15 @@
         padding: 0 8px;
     }
     .screen {
-        background-color: #000;
-        width: 100%;
-        flex-grow: 1;
-        border-radius: 10px;
-        overflow: hidden;
-        position: relative;
-        margin-top: 5px;
-    }
-    .screen iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-    .screen::after {
+    background-color: #000;
+    width: 100%;
+    flex-grow: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 5px;
+}
+.screen::after {
     content: "";
     position: absolute;
     top: 5px;
@@ -53,6 +49,13 @@
     height: 25px;
     background: black;
     z-index: 10;
+}
+.screen iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    position: relative; /* Dodałem, żeby z-index działał poprawnie */
+    z-index: 9; /* Mniejszy z-index niż 'after' */
 }
     }
     .flag-options {
