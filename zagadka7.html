@@ -24,7 +24,7 @@
       border-radius: 20px;
       max-width: 700px;
     }
-    .video-wrapper {
+    .video-wrapper, .slideshow {
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -38,11 +38,13 @@
       border: 3px solid #f8bbd0;
       border-radius: 12px;
     }
-    .answers {
+    .answers, .video-buttons {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 20px;
+      justify-content: center;
+      align-items: center;
     }
     button {
       padding: 12px;
@@ -56,17 +58,12 @@
     button:hover {
       background: #ec407a;
     }
-    .image-placeholder {
-      height: 200px;
-      background: #fce4ec;
-      border: 2px dashed #f06292;
-      margin-bottom: 10px;
+    .slideshow img {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
       border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-style: italic;
-      color: #c2185b;
+      border: 3px solid #f8bbd0;
     }
   </style>
 </head>
@@ -87,8 +84,12 @@
       },
       {
         question: "Który z tych filmów najchętniej bym z Tobą obejrzał:",
-        type: "text",
-        image: "(tutaj dodaj grafikę z filmami)",
+        type: "slideshow",
+        images: [
+          "efekt-motyla.jpg",
+          "zamiana-cial.jpg",
+          "ojciec-roku.jpg"
+        ],
         answers: [
           { text: "Efekt motyla", correct: false },
           { text: "Zamiana ciał", correct: false },
@@ -179,26 +180,32 @@
 
     let current = 0;
     const container = document.getElementById("quiz");
+    let slideshowInterval;
 
     function renderQuestion() {
+      clearInterval(slideshowInterval);
       const q = quiz[current];
-      container.innerHTML = `<div class="question">
-        <h2>${q.question}</h2>
-        ${q.image ? `<div class='image-placeholder'>${q.image}</div>` : ""}
-        ${q.type === 'video' ? `
-          <div class="video-wrapper">
-            ${q.answers.map((a, i) => `<iframe src="${a.embed}" allowfullscreen data-index="${i}"></iframe>`).join('')}
-          </div>`
-        : `
-          <div class="answers">
-            ${q.answers.map((a, i) => `<button onclick="checkAnswer(${i})">${a.text}</button>`).join('')}
-          </div>`}
-      </div>`;
+      let html = `<div class="question"><h2>${q.question}</h2>`;
+
       if (q.type === 'video') {
-        const iframes = document.querySelectorAll('iframe');
-        iframes.forEach((frame, index) => {
-          frame.addEventListener('click', () => checkAnswer(index));
-        });
+        html += `<div class="video-wrapper">${q.answers.map((a, i) => `<iframe src="${a.embed}" allowfullscreen></iframe>`).join('')}</div>`;
+        html += `<div class="video-buttons">${q.answers.map((_, i) => `<button onclick="checkAnswer(${i})">${i + 1}</button>`).join('')}</div>`;
+      } else if (q.type === 'slideshow') {
+        html += `<div class="slideshow"><img id="slideshow-img" src="${q.images[0]}" alt="Slajd"></div>`;
+        html += `<div class="answers">${q.answers.map((a, i) => `<button onclick="checkAnswer(${i})">${a.text}</button>`).join('')}</div>`;
+      } else {
+        html += `<div class="answers">${q.answers.map((a, i) => `<button onclick="checkAnswer(${i})">${a.text}</button>`).join('')}</div>`;
+      }
+
+      html += `</div>`;
+      container.innerHTML = html;
+
+      if (q.type === 'slideshow') {
+        let index = 0;
+        slideshowInterval = setInterval(() => {
+          index = (index + 1) % q.images.length;
+          document.getElementById("slideshow-img").src = q.images[index];
+        }, 2000);
       }
     }
 
