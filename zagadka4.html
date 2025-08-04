@@ -30,9 +30,9 @@
 
     .container {
       padding: 40px;
-      border: 5px solid #a2e8a2;
+      border: 5px solid #8B4513; /* Brązowa ramka */
       border-radius: 20px;
-      background-color: #f0fff0;
+      background-color: #f0fff0; /* Pastelowe tło */
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
@@ -127,8 +127,6 @@
   <div class="container">
     <h1>💣 Co odjebało temu Matiemu? Pojechał na Ukrainę... Muszę go ratować! <br> A WIĘC JA POJECHAJU ZA NIM NA FRONT💥</h1>
     <button id="start">Zaczynamy</button>
-    <button>Instrukcje</button>
-    <button>Najlepsze Wyniki</button>
   </div>
 </div>
 
@@ -141,7 +139,6 @@
   <div class="container">
     <h2>🍀 Spotykasz znajomą twarz!</h2>
     <button id="talk">Zacznij rozmowę</button>
-    <button>Zagraj ponownie</button>
   </div>
 </div>
 
@@ -183,22 +180,19 @@
   }
 
   function spawnObstacle(){
-    // Zmniejszona częstotliwość przeszkód (np. co 100 klatek)
     if(!playing) return;
-    if(Math.random() < 0.015) { // To jest szansa na pojawienie się przeszkody
-      const obs = document.createElement('div');
-      obs.className = 'obstacle';
+    if(Math.random() < 0.01) {
+      const gapWidth = 100;
+      const randomStart = Math.random() * (game.clientWidth - gapWidth - 120) + 60;
       
-      // Ustawienie kolumn przeszkód
-      const gapWidth = 150; // Szerokość przejścia
-      const randomStart = Math.random() * (game.clientWidth - gapWidth - 120);
-      
-      obs.style.width = randomStart + 'px';
-      obs.style.height = '60px';
-      obs.style.left = '0px';
-      obs.style.top = '-60px';
-      game.appendChild(obs);
-      moveObstacle(obs);
+      const obs1 = document.createElement('div');
+      obs1.className = 'obstacle';
+      obs1.style.width = randomStart + 'px';
+      obs1.style.height = '60px';
+      obs1.style.left = '0px';
+      obs1.style.top = '-60px';
+      game.appendChild(obs1);
+      moveObstacle(obs1);
 
       const obs2 = document.createElement('div');
       obs2.className = 'obstacle';
@@ -227,7 +221,7 @@
 
   function spawnBullet(){
     if(!playing) return;
-    if(Math.random() < 0.01) { // Mniejsza szansa na pocisk
+    if(Math.random() < 0.05){
       const b = document.createElement('div');
       b.className = 'bullet';
       b.style.top = '-20px';
@@ -240,7 +234,7 @@
     function step(){
       if(!playing) return;
       const top = parseFloat(b.style.top);
-      b.style.top = (top + scrollSpeed + 3) + 'px';
+      b.style.top = (top + scrollSpeed + 5) + 'px';
       if(top > game.clientHeight) b.remove();
       else {
         if(checkCollision(player, b)) endGame('💣 Trafiony pociskiem!');
@@ -264,7 +258,6 @@
 
   function endGame(msg){
     alert(msg);
-    game.style.display = 'none';
     endScreen.style.display = 'flex';
   }
 
@@ -272,7 +265,7 @@
     if(!playing) return;
     spawnObstacle();
     spawnBullet();
-    setTimeout(() => requestAnimationFrame(gameLoop), 1000 / 60); // Ograniczenie klatek
+    requestAnimationFrame(gameLoop);
   }
 
   startBtn.onclick = ()=>{
