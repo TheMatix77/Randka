@@ -14,8 +14,8 @@
       position: absolute;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: rgba(220, 255, 230, 0.95);
-      border: 10px solid #5C3A21;
+      background: linear-gradient(to bottom right, #e0e0d1, #c7bca1);
+      border: 8px solid #4b3e2e;
       z-index: 100;
       display: flex;
       flex-direction: column;
@@ -24,35 +24,35 @@
       text-align: center;
       padding: 30px;
       box-sizing: border-box;
-      border-radius: 12px;
+      border-radius: 10px;
     }
 
     #startScreen h1, #endScreen h2 {
       width: 80%;
       max-width: 400px;
       font-size: 24px;
-      color: #2E3F2F;
+      color: #2f2f2f;
       line-height: 1.5;
-      background: linear-gradient(135deg, #E0F8E8, #C1EFD6);
+      background: linear-gradient(to right, #fff5e6, #e6d7b9);
       padding: 18px;
       border-radius: 8px;
-      border: 4px solid #4A6A4C;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border: 3px solid #665c47;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
 
     #startScreen button, #endScreen button {
       padding: 14px 28px;
       font-size: 18px;
       margin-top: 20px;
-      background-color: #78A88B;
+      background-color: #8c6f4e;
       color: white;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
     #startScreen button:hover, #endScreen button:hover {
-      background-color: #5F8C73;
+      background-color: #6e543d;
     }
 
     #game {
@@ -181,18 +181,18 @@
       step();
     }
 
- function spawnObstacle() {
-  if (!playing) return;
-  let chance = window.innerWidth < 768 ? 0.010 : 0.018; // było 0.008 / 0.015
-  if (Math.random() < chance) {
-    const obs = document.createElement('div');
-    obs.className = 'obstacle';
-    obs.style.left = Math.random() * (game.clientWidth - 60) + 'px';
-    obs.style.top = '-60px';
-    game.appendChild(obs);
-    moveObstacle(obs);
-  }
-}
+    function spawnObstacle() {
+      if (!playing) return;
+      let chance = window.innerWidth < 768 ? 0.016 : 0.024;
+      if (Math.random() < chance) {
+        const obs = document.createElement('div');
+        obs.className = 'obstacle';
+        obs.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+        obs.style.top = '-60px';
+        game.appendChild(obs);
+        moveObstacle(obs);
+      }
+    }
 
     function moveObstacle(obs) {
       function step() {
@@ -211,19 +211,19 @@
       step();
     }
 
-function spawnBullet() {
-  if (!playing) return;
-  let chance = window.innerWidth < 768 ? 0.012 : 0.024; // było 0.01 / 0.02
-  if (Math.random() < chance) {
-    const b = document.createElement('div');
-    b.className = 'bullet';
-    b.style.top = '-24px';
-    b.style.left = Math.random() * (game.clientWidth - 24) + 'px';
-    game.appendChild(b);
-    shootSound.play();
-    moveBullet(b);
-  }
-}
+    function spawnBullet() {
+      if (!playing) return;
+      let chance = window.innerWidth < 768 ? 0.018 : 0.03;
+      if (Math.random() < chance) {
+        const b = document.createElement('div');
+        b.className = 'bullet';
+        b.style.top = '-24px';
+        b.style.left = Math.random() * (game.clientWidth - 24) + 'px';
+        game.appendChild(b);
+        shootSound.play();
+        moveBullet(b);
+      }
+    }
 
     function moveBullet(b) {
       function step() {
@@ -242,26 +242,20 @@ function spawnBullet() {
       step();
     }
 
- function checkCollision(a, b) {
-  const A = a.getBoundingClientRect();
-  const B = b.getBoundingClientRect();
-
-  // Zmniejszamy hitbox o 20% z każdej strony
-  const shrinkFactor = 0.2;
-
-  const Ax1 = A.left + A.width * shrinkFactor;
-  const Ax2 = A.right - A.width * shrinkFactor;
-  const Ay1 = A.top + A.height * shrinkFactor;
-  const Ay2 = A.bottom - A.height * shrinkFactor;
-
-  const Bx1 = B.left + B.width * shrinkFactor;
-  const Bx2 = B.right - B.width * shrinkFactor;
-  const By1 = B.top + B.height * shrinkFactor;
-  const By2 = B.bottom - B.height * shrinkFactor;
-
-  return !(Ax2 < Bx1 || Ax1 > Bx2 || Ay2 < By1 || Ay1 > By2);
-}
-
+    function checkCollision(a, b) {
+      const A = a.getBoundingClientRect();
+      const B = b.getBoundingClientRect();
+      const shrink = 0.2;
+      const Ax1 = A.left + A.width * shrink;
+      const Ax2 = A.right - A.width * shrink;
+      const Ay1 = A.top + A.height * shrink;
+      const Ay2 = A.bottom - A.height * shrink;
+      const Bx1 = B.left + B.width * shrink;
+      const Bx2 = B.right - B.width * shrink;
+      const By1 = B.top + B.height * shrink;
+      const By2 = B.bottom - B.height * shrink;
+      return !(Ax2 < Bx1 || Ax1 > Bx2 || Ay2 < By1 || Ay1 > By2);
+    }
 
     function movePlayer(x) {
       const r = game.getBoundingClientRect();
@@ -277,7 +271,7 @@ function spawnBullet() {
         retryBtn.style.display = 'block';
         talkBtn.style.display = 'none';
       } else {
-        endScreen.querySelector('h2').textContent = 'Spotykasz znajomą twarz!';
+        endScreen.querySelector('h2').textContent = '🎖️ Spotykasz znajomą twarz!';
         retryBtn.style.display = 'none';
         talkBtn.style.display = 'block';
       }
