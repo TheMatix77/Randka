@@ -58,7 +58,6 @@
     cursor: pointer;
   }
 
-  /* Imię mówiącego */
   #speakerName {
     font-weight: bold;
     font-size: 18px;
@@ -85,6 +84,65 @@
   #startBtn:hover {
     background: #e65c50;
   }
+
+  /* Modal końcowy */
+  #endModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+
+  #endBox {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    max-width: 80%;
+  }
+
+  #endBox h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #222;
+  }
+
+  #endBox button {
+    font-size: 18px;
+    padding: 12px 28px;
+    background-color: #4a785e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #endBox button:hover {
+    background-color: #355d47;
+  }
+
+  /* Dostosowanie na telefon */
+  @media (max-width: 768px) {
+    .character {
+      max-height: 70vh;
+    }
+    #dialogBox {
+      font-size: 16px;
+      padding: 15px;
+    }
+    #speakerName {
+      font-size: 16px;
+    }
+    #startBtn {
+      font-size: 18px;
+      padding: 10px 20px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -104,6 +162,14 @@
 <!-- Przycisk start -->
 <button id="startBtn">Hej Endrju?</button>
 
+<!-- Modal końcowy -->
+<div id="endModal">
+  <div id="endBox">
+    <h2>🍺 Idź do baru z Endrju!</h2>
+    <button onclick="window.location.href='zagadka6.html'">Przejdź dalej</button>
+  </div>
+</div>
+
 <script>
 const startBtn = document.getElementById('startBtn');
 const charLeft = document.getElementById('charLeft');
@@ -111,6 +177,7 @@ const charRight = document.getElementById('charRight');
 const dialogBox = document.getElementById('dialogBox');
 const speakerName = document.getElementById('speakerName');
 const dialogText = document.getElementById('dialogText');
+const endModal = document.getElementById('endModal');
 
 const conversation = [
   { speaker: "Kobieta", side: "left", text: "Endrju, to Ty... co Ty tu robisz..." },
@@ -131,28 +198,24 @@ function showLine() {
   if (!line) {
     dialogBox.style.opacity = 0;
     setTimeout(() => {
-      alert("Koniec rozmowy – przejście do kolejnej sceny.");
+      endModal.style.display = 'flex';
     }, 500);
     return;
   }
 
-  // Ukryj obie postacie
   charLeft.style.opacity = 0;
   charRight.style.opacity = 0;
 
-  // Pokaż odpowiednią
   if (line.side === "left") {
     charLeft.style.opacity = 1;
   } else {
     charRight.style.opacity = 1;
   }
 
-  // Pokaż dialog
   speakerName.textContent = line.speaker;
   dialogText.textContent = line.text;
   dialogBox.style.opacity = 1;
 
-  // Kliknięcie w dialog -> następna linia
   dialogBox.onclick = () => {
     step++;
     showLine();
