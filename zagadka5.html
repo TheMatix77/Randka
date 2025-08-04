@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom, #2c2f33, #111);
+      background: linear-gradient(to top, #5e5e5e, #b7c1cc);
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
       position: relative;
@@ -21,48 +21,124 @@
       max-width: 320px;
       z-index: 2;
       opacity: 0;
-      transition: opacity 0.8s ease-in-out;
+      transition: opacity 1s ease-in-out;
     }
 
-    #leftChar { left: 5%; }
-    #rightChar { right: 5%; }
+    #leftChar { left: 3%; }
+    #rightChar { right: 3%; }
 
     .dialogBox {
       position: absolute;
-      bottom: 12%;
+      bottom: 10%;
       left: 50%;
       transform: translateX(-50%);
       width: 90%;
-      max-width: 800px;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 24px;
-      border-radius: 16px;
-      border: 4px solid #888;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      max-width: 720px;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 24px 28px;
+      border-radius: 20px;
+      border: 4px solid #3a3a3a;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
       opacity: 0;
-      transition: opacity 0.5s;
+      transition: opacity 0.6s ease-in-out;
       z-index: 3;
     }
 
-    .dialogBox.show { opacity: 1; }
+    .dialogBox.show {
+      opacity: 1;
+    }
 
     .dialogText {
       font-size: 20px;
-      line-height: 1.6;
+      line-height: 1.5;
       color: #222;
       text-align: center;
+    }
+
+    .cloud {
+      position: absolute;
+      background: url('cloud.png') no-repeat center center;
+      background-size: contain;
+      width: 200px;
+      height: 100px;
+      opacity: 0.25;
+      animation: floatCloud 80s linear infinite;
+      top: 10%;
+      z-index: 1;
+    }
+
+    .cloud:nth-child(1) { left: -200px; animation-delay: 0s; }
+    .cloud:nth-child(2) { left: -400px; animation-delay: 20s; }
+    .cloud:nth-child(3) { left: -600px; animation-delay: 40s; }
+
+    @keyframes floatCloud {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(200vw); }
+    }
+
+    #endModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    #endBox {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+      max-width: 80%;
+    }
+
+    #endBox h2 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #222;
+    }
+
+    #endBox button {
+      font-size: 18px;
+      padding: 12px 28px;
+      background-color: #4a785e;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #endBox button:hover {
+      background-color: #355d47;
     }
   </style>
 </head>
 <body>
 
+  <!-- Chmurki -->
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+
   <!-- Postaci -->
   <img id="leftChar" class="sprite" src="player2.png" alt="Kobieta" />
   <img id="rightChar" class="sprite" src="goal.png" alt="Mężczyzna" />
 
-  <!-- Balon dialogowy -->
+  <!-- Dymek dialogowy -->
   <div id="dialog" class="dialogBox">
     <p id="dialogText" class="dialogText"></p>
+  </div>
+
+  <!-- Powiadomienie na końcu -->
+  <div id="endModal">
+    <div id="endBox">
+      <h2>🪖 Endrju zaprasza Cię do baru!</h2>
+      <button onclick="window.location.href='zagadka6.html'">Idź do baru z Endrju 🍺</button>
+    </div>
   </div>
 
   <script>
@@ -70,13 +146,15 @@
     const rightChar = document.getElementById('rightChar');
     const dialog = document.getElementById('dialog');
     const dialogText = document.getElementById('dialogText');
+    const endModal = document.getElementById('endModal');
 
     const steps = [
       { show: leftChar, text: "Endrju, to Ty... co Ty tu robisz..." },
       { show: rightChar, text: "Mamy nowego władcę tutaj na Ukrainie i mu służę." },
-      { hide: leftChar, text: "" },
-      { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o błękitnych oczkach z lekką nadwagą?" },
-      { show: rightChar, text: "To nasz król. Chodź do baru, to Ci opowiem..." }
+      { hide: leftChar },
+      { show: leftChar, text: "Czy widziałeś gdzieś przystojnego, słodkiego blondyna o lodowych oczkach z lekką nadwagą?" },
+      { show: rightChar, text: "To nasz król. Chodź do baru, to Ci opowiem..." },
+      { showModal: true }
     ];
 
     let idx = 0;
@@ -88,12 +166,21 @@
         if (!step) return;
         if (step.show) step.show.style.opacity = 1;
         if (step.hide) step.hide.style.opacity = 0;
-        dialogText.textContent = step.text;
-        setTimeout(() => dialog.classList.add('show'), 100);
-        if (idx < steps.length) {
-          setTimeout(nextStep, 3800);
+        if (step.text) {
+          dialogText.textContent = step.text;
+          dialog.classList.add('show');
         }
-      }, 600);
+        if (step.showModal) {
+          dialog.style.display = 'none';
+          setTimeout(() => {
+            endModal.style.display = 'flex';
+          }, 1000);
+        } else {
+          if (idx < steps.length) {
+            setTimeout(nextStep, 4000);
+          }
+        }
+      }, 500);
     }
 
     window.addEventListener('load', () => {
