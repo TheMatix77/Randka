@@ -2,23 +2,30 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gra w Anomalie</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         background-color: #111;
         color: #fff;
-        text-align: center;
         margin: 0;
         padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
     }
     .container {
+        width: 100%;
         max-width: 800px;
-        margin: auto;
         padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
     }
     img {
         max-width: 100%;
+        height: auto;
         border-radius: 8px;
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
@@ -31,6 +38,7 @@
         cursor: pointer;
         color: #fff;
         margin-top: 15px;
+        transition: background 0.3s ease;
     }
     button:hover {
         background-color: #b8860b;
@@ -45,6 +53,20 @@
         color: #222;
         width: 100px;
         text-align: center;
+    }
+    h1 {
+        font-size: 1.5em;
+        line-height: 1.4;
+    }
+    @media (max-width: 500px) {
+        button {
+            width: 100%;
+            font-size: 16px;
+        }
+        .input-box {
+            width: 80px;
+            font-size: 16px;
+        }
     }
 </style>
 </head>
