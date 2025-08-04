@@ -100,8 +100,8 @@
 
     #goal {
       position: absolute;
-      width: 70px;
-      height: 70px;
+      width: 120px;
+      height: 120px;
       background-image: url('goal.png');
       background-size: cover;
       border-radius: 8px;
@@ -125,21 +125,30 @@
   <div id="endScreen" style="display:none;">
     <h2>🍀 Spotykasz znajomą twarz!</h2>
     <button id="talk">Zacznij rozmowę</button>
+    <button id="retry" style="display:none;">Spróbuj jeszcze raz</button>
   </div>
+
+  <audio id="shootSound" src="shoot.mp3" preload="auto"></audio>
+  <audio id="hitSound" src="hit.mp3" preload="auto"></audio>
+  <audio id="winSound" src="win.mp3" preload="auto"></audio>
 
   <script>
     const startBtn = document.getElementById('start');
     const talkBtn = document.getElementById('talk');
+    const retryBtn = document.getElementById('retry');
     const startScreen = document.getElementById('startScreen');
     const endScreen = document.getElementById('endScreen');
     const game = document.getElementById('game');
     const player = document.getElementById('player');
     const goal = document.getElementById('goal');
 
+    const shootSound = document.getElementById('shootSound');
+    const hitSound = document.getElementById('hitSound');
+    const winSound = document.getElementById('winSound');
+
     let playing = false;
     const scrollSpeed = 2;
     let gameOffset = 0;
-    let reachedGoal = false;
 
     function moveBackground() {
       gameOffset += scrollSpeed;
@@ -149,7 +158,7 @@
 
     function placeGoal() {
       goal.style.top = '-2500px';
-      goal.style.left = Math.random() * (game.clientWidth - 70) + 'px';
+      goal.style.left = (game.clientWidth / 2 - goal.clientWidth / 2) + 'px';
     }
 
     function moveGoal() {
@@ -157,19 +166,25 @@
         if (!playing) return;
         let top = parseFloat(goal.style.top);
         goal.style.top = (top + scrollSpeed) + 'px';
-        if (top + 70 > game.clientHeight) {
-          reachedGoal = true;
-          endGame(false);
-        } else {
-          requestAnimationFrame(step);
+
+        if (checkCollision(player, goal)) {
+          winSound.play();
+          endGame(false); // wygrana
+          return;
         }
+        if (top > game.clientHeight) {
+          endGame(true); // meta minęła - przegrana
+          return;
+        }
+        requestAnimationFrame(step);
       }
       step();
     }
 
     function spawnObstacle() {
       if (!playing) return;
-      if (Math.random() < 0.015) {
+      let chance = window.innerWidth < 768 ? 0.008 : 0.015;
+      if (Math.random() < chance) {
         const obs = document.createElement('div');
         obs.className = 'obstacle';
         obs.style.left = Math.random() * (game.clientWidth - 60) + 'px';
@@ -186,7 +201,10 @@
         obs.style.top = (top + scrollSpeed) + 'px';
         if (top > game.clientHeight) obs.remove();
         else {
-          if (checkCollision(player, obs)) endGame(true);
+          if (checkCollision(player, obs)) {
+            hitSound.play();
+            endGame(true);
+          }
           requestAnimationFrame(step);
         }
       }
@@ -195,12 +213,14 @@
 
     function spawnBullet() {
       if (!playing) return;
-      if (Math.random() < 0.02) {
+      let chance = window.innerWidth < 768 ? 0.01 : 0.02;
+      if (Math.random() < chance) {
         const b = document.createElement('div');
         b.className = 'bullet';
         b.style.top = '-24px';
         b.style.left = Math.random() * (game.clientWidth - 24) + 'px';
         game.appendChild(b);
+        shootSound.play();
         moveBullet(b);
       }
     }
@@ -212,7 +232,10 @@
         b.style.top = (top + scrollSpeed + 2) + 'px';
         if (top > game.clientHeight) b.remove();
         else {
-          if (checkCollision(player, b)) endGame(true);
+          if (checkCollision(player, b)) {
+            hitSound.play();
+            endGame(true);
+          }
           requestAnimationFrame(step);
         }
       }
@@ -234,11 +257,26 @@
     function endGame(hit) {
       playing = false;
       if (hit) {
-        endScreen.querySelector('h2').textContent = '💥 Zgniatasz się od pocisku!';
+        endScreen.querySelector('h2').textContent = '💥 Trafiony! Spróbuj ponownie.';
+        retryBtn.style.display = 'block';
+        talkBtn.style.display = 'none';
       } else {
         endScreen.querySelector('h2').textContent = '🍀 Spotykasz znajomą twarz!';
+        retryBtn.style.display = 'none';
+        talkBtn.style.display = 'block';
       }
       endScreen.style.display = 'flex';
+    }
+
+    function resetGame() {
+      game.querySelectorAll('.obstacle, .bullet').forEach(el => el.remove());
+      placeGoal();
+      endScreen.style.display = 'none';
+      playing = true;
+      gameOffset = 0;
+      moveBackground();
+      moveGoal();
+      gameLoop();
     }
 
     function gameLoop() {
@@ -251,12 +289,11 @@
     startBtn.onclick = () => {
       startScreen.style.display = 'none';
       game.style.display = 'block';
-      playing = true;
-      reachedGoal = false;
-      placeGoal();
-      moveBackground();
-      moveGoal();
-      gameLoop();
+      resetGame();
+    };
+
+    retryBtn.onclick = () => {
+      resetGame();
     };
 
     talkBtn.onclick = () => {
