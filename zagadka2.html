@@ -22,6 +22,12 @@
         width: 100%; height: 100%;
         background-color: rgba(0,0,0,0.5);
         z-index: 999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+    }
+    .modal.hide {
+        opacity: 0;
+        pointer-events: none;
     }
     .modal-content {
         background: white;
@@ -59,10 +65,19 @@
         background-color: #6b4226;
         border: 2px solid #4d2d1a;
         border-radius: 5px;
+        opacity: 0;
+        transform: scale(0.8);
+        animation: appear 0.3s forwards;
     }
     .eaten {
         background-color: #f8f1e4;
         border: 2px dashed #b89b83;
+    }
+    @keyframes appear {
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
     /* Sekcja hasła */
     .password-section {
@@ -73,6 +88,11 @@
         justify-content: center;
         align-items: flex-start;
         gap: 15px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+    .password-section.show {
+        opacity: 1;
     }
     .hint-img {
         max-width: 100px;
@@ -170,9 +190,10 @@
 
 <script>
 function startPuzzle() {
-    document.getElementById('introModal').style.display = 'none';
-    document.getElementById('chocolate').style.display = 'grid';
-    document.getElementById('passwordSection').style.display = 'flex';
+    // Animacja zamykania intro
+    const intro = document.getElementById('introModal');
+    intro.classList.add('hide');
+    setTimeout(() => { intro.style.display = 'none'; }, 500);
 
     const chocolate = document.getElementById('chocolate');
     chocolate.innerHTML = '';
@@ -181,21 +202,30 @@ function startPuzzle() {
     const eatenLetters = ['M', 'Y', 'S', 'Z', 'K', 'A']; 
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     
-    alphabet.forEach(letter => {
+    alphabet.forEach((letter, i) => {
         const piece = document.createElement('div');
         if (eatenLetters.includes(letter)) {
             piece.className = 'piece eaten';
         } else {
             piece.className = 'piece';
         }
+        piece.style.animationDelay = `${i * 0.05}s`;
         chocolate.appendChild(piece);
     });
+
+    // Pokazanie tabliczki po krótkim czasie
+    setTimeout(() => {
+        chocolate.style.display = 'grid';
+        document.getElementById('passwordSection').classList.add('show');
+    }, 300);
 }
 
 function checkPassword() {
     const pass = document.getElementById('password').value.trim().toLowerCase();
     if (pass === 'myszka') {
-        document.getElementById('endModal').style.display = 'flex';
+        const end = document.getElementById('endModal');
+        end.style.display = 'flex';
+        setTimeout(() => { end.classList.remove('hide'); }, 10);
     } else {
         document.getElementById('result').innerHTML = '<p style="color:red;">Błędne hasło ❌</p>';
     }
