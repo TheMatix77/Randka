@@ -3,140 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oficjalna Prośba 💕</title>
+  <title>💗 Pytanie Miłosne 💗</title>
   <style>
     body {
-      background: linear-gradient(to bottom, #ffe0f0, #ffd1e3);
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      color: #d81b60;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #ffe4ec, #ffeaf6);
+      font-family: 'Segoe UI', sans-serif;
+      color: #c2185b;
       text-align: center;
-      padding: 40px 20px;
+      overflow: hidden;
     }
     h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
+      font-size: 26px;
+      margin-top: 40px;
     }
-    .question {
-      font-size: 22px;
-      margin: 30px 0;
-      background: #fff5fa;
-      border: 3px dashed #f48fb1;
+    .container {
       padding: 20px;
-      border-radius: 20px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 20px rgba(248, 187, 208, 0.8);
     }
-    .gifs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin: 30px auto;
-    }
-    .gifs img {
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
+    .gif {
+      margin: 20px auto;
+      max-width: 300px;
       border-radius: 20px;
-      box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     .buttons {
       margin-top: 30px;
     }
-    .buttons button {
-      padding: 15px 30px;
+    button {
       font-size: 20px;
+      padding: 15px 30px;
+      border-radius: 20px;
       border: none;
-      border-radius: 14px;
-      margin: 10px;
+      background: #f06292;
+      color: white;
       cursor: pointer;
+      margin: 10px;
       transition: all 0.3s ease;
     }
-    .yes-btn {
-      background-color: #f06292;
-      color: white;
+    button:hover {
+      background: #ec407a;
     }
-    .no-btn {
-      background-color: #e0e0e0;
-      color: #424242;
+    .hidden {
+      display: none;
     }
-    .frame {
-      border: 8px double #f48fb1;
-      padding: 10px;
-      width: 250px;
-      margin: 20px auto;
-      border-radius: 20px;
-      background: #fff0f7;
-      box-shadow: 0 0 20px rgba(248, 187, 208, 0.9);
-    }
-    .pulse {
+    .uwu {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 30px;
       animation: pulse 1.5s infinite;
-      font-size: 22px;
-      margin-top: 10px;
-      color: #c2185b;
+      color: #d81b60;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
+    .photo-frame {
+      margin-top: 30px;
+      padding: 20px;
+      border: 5px double #f8bbd0;
+      border-radius: 30px;
+      display: inline-block;
+      background-color: #fff0f6;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .photo-frame img {
+      width: 200px;
+      height: auto;
+      border-radius: 20px;
+      border: 3px solid #f06292;
+    }
+    .falling-heart {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Red_heart_icon.svg/1024px-Red_heart_icon.svg.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      top: -30px;
+      left: 50%;
+      animation: fall linear infinite;
+      opacity: 0.8;
+    }
+    @keyframes fall {
+      0% {transform: translateY(-40px) rotate(0deg);}
+      100% {transform: translateY(100vh) rotate(360deg);}
+    }
   </style>
 </head>
 <body>
-  <h1>wiesz... i tak Cię traktuję jak moją dziewczynę 💞</h1>
-  <div class="question">
-    ...mówię, że jestem zajęty MIMIMI a nigdy oficjalnie nie zapytałem<br><br>
-    <strong>Czy zostaniesz tak oficjalnie moją dziewczyną? 💍</strong><br><br>
-    (żeby w końcu była oficjalna data rocznicy)
+  <audio id="love-song" src="slodka.mp3"></audio>
+  <div class="container" id="main-content">
+    <img src="https://i.pinimg.com/originals/0f/63/0b/0f630b6b9673c23a0101337c507cca5b.gif" class="gif">
+    <h1>wiesz w sumie i tak Cię traktuję, jak moją dziewczynę i mówię, że jestem zajęty MIMIMI 😳💕<br><br>
+    a nigdy oficjalnie nie zapytałem dlatego pytam...</h1>
+    <h1><strong>CZY ZOSTANIESZ TAK OFICJALNIE MOJĄ DZIEWCZYNĄ?</strong></h1>
+    <p>(żeby w końcu była oficjalna data rocznicy)</p>
+    <div class="buttons">
+      <button onclick="yesAnswer()">TAK</button>
+      <button id="no-button" onclick="noAnswer()">NIE</button>
+    </div>
   </div>
 
-  <div class="gifs">
-    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
-    <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
-    <img src="https://media.giphy.com/media/l3q2K5jinAlChoCLS/giphy.gif">
-    <img src="https://media.giphy.com/media/13borq7Zo2kulO/giphy.gif">
+  <div class="container hidden" id="yes-content">
+    <div class="uwu">💘 OFICJALNIE JESTEŚ MOJĄ DZIEWCZYNĄ MIMIMI 💘</div>
+    <div class="photo-frame">
+      <p>Twój oficjalny chłopak 🥺👉👈</p>
+      <img src="twoje-zdjecie.jpg" alt="Zakochany chłopak">
+    </div>
+    <img src="https://media.tenor.com/lW82bJyoS6wAAAAi/cute-cat-love.gif" class="gif">
   </div>
-
-  <div class="buttons">
-    <button class="yes-btn" onclick="sayYes()">TAK 💖</button>
-    <button class="no-btn" id="noBtn" onclick="shrinkNo()">NIE 🙈</button>
-  </div>
-
-  <div id="result"></div>
-
-  <audio id="music" src="slodka.mp3"></audio>
 
   <script>
-    let noBtn = document.getElementById("noBtn");
-    let size = 100;
-
-    function shrinkNo() {
-      size -= 10;
-      if (size <= 0) {
-        noBtn.style.display = "none";
-      } else {
-        noBtn.style.transform = `scale(${size / 100})`;
+    let noSize = 20;
+    function noAnswer() {
+      const btn = document.getElementById('no-button');
+      noSize -= 2;
+      btn.style.fontSize = noSize + 'px';
+      if (noSize <= 8) {
+        btn.remove();
       }
     }
 
-    function sayYes() {
-      document.getElementById("music").play();
-      document.getElementById("result").innerHTML = `
-        <div class="question">
-          <div class="pulse">OFICJALNIE JESTEŚ MOJĄ DZIEWCZYNĄ MIMIMI 💞</div>
-          <div style="margin-top: 20px; font-size: 18px;">Twój oficjalny chłopak:</div>
-          <div class="frame">
-            <img src="twoje-zdjecie.jpg" alt="my photo" style="width:100%; border-radius: 15px;">
-          </div>
-          <div class="gifs">
-            <img src="https://media.giphy.com/media/kfRrqJxZMbWBi/giphy.gif">
-            <img src="https://media.giphy.com/media/11s7Ke7jcNxCHS/giphy.gif">
-            <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
-          </div>
-        </div>
-      `;
+    function yesAnswer() {
+      document.getElementById('main-content').classList.add('hidden');
+      document.getElementById('yes-content').classList.remove('hidden');
+      document.getElementById('love-song').play();
+
+      // serduszka
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('falling-heart');
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        document.body.appendChild(heart);
+      }
     }
   </script>
 </body>
