@@ -1,290 +1,487 @@
 <!DOCTYPE html>
+
 <html lang="pl">
+
 <head>
+
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0">
+
   <title>Vertical Runner Special</title>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      overflow: hidden;
-      background-color: #f0f0f0;
-    }
+    #startScreen {
 
-    #startScreen, #endScreen {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: #f0fff0;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      box-sizing: border-box;
-    }
+  position: absolute;
 
-    .container {
-      padding: 40px;
-      border: 5px solid #8B4513; /* Brązowa ramka */
-      border-radius: 20px;
-      background-color: #f0fff0; /* Pastelowe tło */
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
+  top: 0; left: 0;
 
-    h1, h2 {
-      font-size: 28px;
-      color: #333;
-      max-width: 90vw;
-      line-height: 1.5;
-      margin-bottom: 30px;
-    }
+  width: 100vw; height: 100vh;
 
-    #endScreen h2 {
-      color: #333;
-      margin-bottom: 20px;
-    }
+  background: rgba(255, 255, 255, 0.95);
 
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      margin-top: 15px;
-      background-color: #6e3b8f;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s, background-color 0.2s;
-    }
+  z-index: 100;
 
-    button:hover {
-      background-color: #542c6e;
-      transform: translateY(-2px);
-    }
+  display: flex;
 
-    #game {
-      display: none;
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      background-image: url('background.png');
-      background-size: cover;
-      background-repeat: repeat-y;
-    }
+  flex-direction: column;
 
-    #player {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-image: url('player.png');
-      background-size: cover;
-      border-radius: 8px;
-      z-index: 10;
-    }
+  justify-content: center;
 
-    .obstacle {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background-image: url('obstacle.png');
-      background-size: cover;
-      border-radius: 4px;
-      z-index: 5;
-    }
+  align-items: center;
 
-    .bullet {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background-image: url('bullet.png');
-      background-size: cover;
-      border-radius: 50%;
-      z-index: 6;
-    }
+  text-align: center;
 
-    #goal {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background-image: url('goal.png');
-      background-size: cover;
-      border-radius: 8px;
-      z-index: 9;
-    }
+  padding: 30px;
+
+  box-sizing: border-box;
+
+}
+
+
+
+#startScreen h1 {
+
+  font-size: 24px;
+
+  color: #222;
+
+  max-width: 90vw;
+
+  line-height: 1.5;
+
+}
+
+
+
+#startScreen button {
+
+  padding: 12px 24px;
+
+  font-size: 16px;
+
+  margin-top: 20px;
+
+  background-color: #6e3b8f;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+}
+
+
+
+#startScreen button:hover {
+
+  background-color: #542c6e;
+
+}
+
+#game {
+
+  display: none;
+
+  position: relative;
+
+  width: 100vw;
+
+  height: 100vh;
+
+  background-image: url('background.png'); /* 👈 Twój plik tła */
+
+  background-size: cover;
+
+  background-repeat: repeat-y;
+
+}
+
+
+
+#player {
+
+  position: absolute;
+
+  width: 50px;
+
+  height: 50px;
+
+  bottom: 20px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background-image: url('player.png'); /* 👈 Twój gracz */
+
+  background-size: cover;
+
+  border-radius: 8px;
+
+  z-index: 10;
+
+}
+
+
+
+.obstacle {
+
+  position: absolute;
+
+  width: 60px;
+
+  height: 60px;
+
+  background-image: url('obstacle.png'); /* 👈 Przeszkoda */
+
+  background-size: cover;
+
+  border-radius: 4px;
+
+  z-index: 5;
+
+}
+
+
+
+.bullet {
+
+  position: absolute;
+
+  width: 20px;
+
+  height: 20px;
+
+  background-image: url('bullet.png'); /* 👈 Pocisk */
+
+  background-size: cover;
+
+  border-radius: 50%;
+
+  z-index: 6;
+
+}
+
+
+
+#goal {
+
+  position: absolute;
+
+  width: 60px;
+
+  height: 60px;
+
+  background-image: url('goal.png'); /* 👈 Meta */
+
+  background-size: cover;
+
+  border-radius: 8px;
+
+  z-index: 9;
+
+}
+
+
+
   </style>
+
 </head>
+
 <body>
 
+
+
 <div id="startScreen">
-  <div class="container">
-    <h1>💣 Co odjebało temu Matiemu? Pojechał na Ukrainę... Muszę go ratować! <br> A WIĘC JA POJECHAJU ZA NIM NA FRONT💥</h1>
-    <button id="start">Zaczynamy</button>
-  </div>
+
+  <h1>💣 Co odjebało temu Matiemu? Pojechał na Ukrainę... Muszę go ratować! <br> A WIĘC JA POJECHAJU ZA NIM NA FRONT💥</h1>
+
+  <button id="start">Zaczynamy</button>
+
 </div>
+
+
 
 <div id="game">
+
   <div id="player"></div>
+
   <div id="goal"></div>
+
 </div>
+
+
 
 <div id="endScreen" style="display:none;">
-  <div class="container">
-    <h2>🍀 Spotykasz znajomą twarz!</h2>
-    <button id="talk">Zacznij rozmowę</button>
-  </div>
+
+  <h2>🍀 Spotykasz znajomą twarz!</h2>
+
+  <button id="talk">Zacznij rozmowę</button>
+
 </div>
 
+
+
 <script>
+
   const startBtn = document.getElementById('start');
+
   const talkBtn = document.getElementById('talk');
+
   const startScreen = document.getElementById('startScreen');
+
   const endScreen = document.getElementById('endScreen');
+
   const game = document.getElementById('game');
+
   const player = document.getElementById('player');
+
   const goal = document.getElementById('goal');
+
   let playing = false;
+
   const scrollSpeed = 2;
+
   let gameOffset = 0;
 
+
+
   function moveBackground(){
+
     gameOffset += scrollSpeed;
+
     game.style.backgroundPositionY = gameOffset + 'px';
+
     if(playing) requestAnimationFrame(moveBackground);
+
   }
+
+
 
   function placeGoal(){
+
     goal.style.top = '-2000px';
+
     goal.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+
   }
+
+
 
   function moveGoal(){
+
     function step(){
+
       if(!playing) return;
+
       let top = parseFloat(goal.style.top);
+
       goal.style.top = (top + scrollSpeed) + 'px';
+
       if(top + 60 > game.clientHeight){
+
         playing = false;
+
       } else {
+
         requestAnimationFrame(step);
+
       }
+
     }
+
     step();
+
   }
 
-  function spawnObstacle(){
-    if(!playing) return;
-    if(Math.random() < 0.01) {
-      const gapWidth = 100;
-      const randomStart = Math.random() * (game.clientWidth - gapWidth - 120) + 60;
-      
-      const obs1 = document.createElement('div');
-      obs1.className = 'obstacle';
-      obs1.style.width = randomStart + 'px';
-      obs1.style.height = '60px';
-      obs1.style.left = '0px';
-      obs1.style.top = '-60px';
-      game.appendChild(obs1);
-      moveObstacle(obs1);
 
-      const obs2 = document.createElement('div');
-      obs2.className = 'obstacle';
-      obs2.style.width = (game.clientWidth - randomStart - gapWidth) + 'px';
-      obs2.style.height = '60px';
-      obs2.style.left = (randomStart + gapWidth) + 'px';
-      obs2.style.top = '-60px';
-      game.appendChild(obs2);
-      moveObstacle(obs2);
-    }
+
+  function spawnObstacle(){
+
+    if(!playing) return;
+
+    const obs = document.createElement('div');
+
+    obs.className = 'obstacle';
+
+    const side = Math.random() < 0.5 ? 'left' : 'right';
+
+    obs.style.left = (side==='left' ? 0 : game.clientWidth - 60) + 'px';
+
+    obs.style.top = '-60px';
+
+    game.appendChild(obs);
+
+    moveObstacle(obs);
+
   }
 
   function moveObstacle(obs){
+
     function step(){
+
       if(!playing) return;
+
       const top = parseFloat(obs.style.top);
+
       obs.style.top = (top + scrollSpeed) + 'px';
+
       if(top > game.clientHeight) obs.remove();
+
       else {
+
         if(checkCollision(player, obs)) endGame('💥 Wpadłeś na przeszkodę!');
+
         requestAnimationFrame(step);
+
       }
+
     }
+
     step();
+
   }
+
+
 
   function spawnBullet(){
+
     if(!playing) return;
-    if(Math.random() < 0.05){
+
+    if(Math.random() < 0.03){
+
       const b = document.createElement('div');
+
       b.className = 'bullet';
+
       b.style.top = '-20px';
+
       b.style.left = Math.random() * (game.clientWidth - 20) + 'px';
+
       game.appendChild(b);
+
       moveBullet(b);
+
     }
+
   }
+
   function moveBullet(b){
+
     function step(){
+
       if(!playing) return;
+
       const top = parseFloat(b.style.top);
-      b.style.top = (top + scrollSpeed + 5) + 'px';
+
+      b.style.top = (top + scrollSpeed + 3) + 'px';
+
       if(top > game.clientHeight) b.remove();
+
       else {
+
         if(checkCollision(player, b)) endGame('💣 Trafiony pociskiem!');
+
         requestAnimationFrame(step);
+
       }
+
     }
+
     step();
+
   }
+
+
 
   function checkCollision(a,b){
+
     const A=a.getBoundingClientRect(), B=b.getBoundingClientRect();
+
     return !(A.right<B.left||A.left>B.right||A.bottom<B.top||A.top>B.bottom);
+
   }
+
+
 
   function movePlayer(x){
+
     const r=game.getBoundingClientRect();
+
     let nx = x - r.left - player.clientWidth/2;
+
     nx = Math.max(0, Math.min(game.clientWidth-player.clientWidth, nx));
+
     player.style.left = nx + 'px';
+
   }
+
+
 
   function endGame(msg){
+
     alert(msg);
+
     endScreen.style.display = 'flex';
+
   }
+
+
 
   function gameLoop(){
+
     if(!playing) return;
+
     spawnObstacle();
+
     spawnBullet();
+
     requestAnimationFrame(gameLoop);
+
   }
 
+
+
   startBtn.onclick = ()=>{
+
     startScreen.style.display='none';
+
     game.style.display='block';
+
     playing = true;
+
     placeGoal();
+
     moveBackground();
+
     moveGoal();
+
     gameLoop();
+
   };
+
+
 
   talkBtn.onclick = ()=>{
+
     window.location.href = 'zagadka5.html';
+
   };
 
+
+
   game.addEventListener('touchmove', e => movePlayer(e.touches[0].clientX));
+
   game.addEventListener('mousemove', e=>{ if(e.buttons) movePlayer(e.clientX); });
 
+
+
 </script>
+
 </body>
+
 </html>
