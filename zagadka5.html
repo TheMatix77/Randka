@@ -177,27 +177,35 @@
     };
 
     function nextStep() {
-      dialog.classList.remove('show');
-      setTimeout(() => {
-        const step = steps[idx++];
-        if (!step) return;
-        if (step.show) step.show.style.opacity = 1;
-        if (step.hide) step.hide.style.opacity = 0;
-        if (step.text) {
-          dialogText.textContent = step.text;
-          dialog.classList.add('show');
-        }
-        if (step.showModal) {
+      const step = steps[idx++];
+      if (!step) return;
+
+      // Pokaż/ukryj postacie
+      if (step.show) step.show.style.opacity = 1;
+      if (step.hide) step.hide.style.opacity = 0;
+
+      // Pokaż tekst dialogu
+      if (step.text) {
+        dialogText.textContent = step.text;
+        dialog.classList.add('show');
+      }
+
+      // Ostatni krok -> pokazujemy modal
+      if (step.showModal) {
+        dialog.classList.remove('show');
+        setTimeout(() => {
           dialog.style.display = 'none';
+          endModal.style.display = 'flex';
+        }, 1000);
+      } else {
+        // Przejście do następnego dialogu
+        if (idx < steps.length) {
           setTimeout(() => {
-            endModal.style.display = 'flex';
-          }, 1000);
-        } else {
-          if (idx < steps.length) {
-            setTimeout(nextStep, 4000);
-          }
+            dialog.classList.remove('show');
+            setTimeout(nextStep, 800); // przerwa między dialogami
+          }, 3500); // czas na czytanie tekstu
         }
-      }, 500);
+      }
     }
   </script>
 </body>
