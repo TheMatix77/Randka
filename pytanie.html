@@ -101,10 +101,35 @@
       0% {transform: translateY(-40px) rotate(0deg);}
       100% {transform: translateY(100vh) rotate(360deg);}
     }
+    .sweet-text {
+      margin-top: 25px;
+      text-align: left;
+      font-size: 18px;
+      line-height: 1.6;
+      background: #fff9fc;
+      padding: 20px;
+      border-radius: 20px;
+      border: 3px dashed #f8bbd0;
+    }
+    .smaczek {
+      margin-top: 40px;
+      padding: 15px;
+      border: 4px solid orange;
+      border-radius: 20px;
+      background: #fffaf0;
+    }
+    #slideshow {
+      width: 250px;
+      height: auto;
+      border-radius: 10px;
+      margin-top: 10px;
+      border: 4px solid orange;
+    }
   </style>
 </head>
 <body>
   <audio id="love-song" src="slodka.mp3"></audio>
+
   <div class="container" id="main-content">
     <img src="https://i.pinimg.com/originals/0f/63/0b/0f630b6b9673c23a0101337c507cca5b.gif" class="gif">
     <h1>wiesz w sumie i tak Cię traktuję, jak moją dziewczynę i mówię, że jestem zajęty MIMIMI 😳💕<br><br>
@@ -119,11 +144,27 @@
 
   <div class="container hidden" id="yes-content">
     <div class="uwu">💘 OFICJALNIE JESTEŚ MOJĄ DZIEWCZYNĄ MIMIMI 💘</div>
+
+    <div class="sweet-text">
+      🍦 Słodka jak lody karmelowe obsypane cukrem – i to takim grubym, kryształowym<br>
+      🧠 Inteligentna, jakbyś miała swojego własnego ChatGPT w głowie<br>
+      👑 Śliczna jak księżniczka Disneya - tylko prawdziwa, i moja<br>
+      ✨ Wyjątkowa, bo drugiej takiej nie ma i nie będzie<br>
+      😂 Zabawna, a Twój śmiech, brzmiący jak odpalający silnik, jest absolutnie cudowny<br>
+      💎 I najważniejsze – jesteś IDEALNA. Po prostu. Bo taka się urodziłaś.<br><br>
+      💦 Źdźbło w pizdzisko będzie ślisko, więc CHCĘ TEGO, BO CHCĘ CIEBIE 😤💦
+    </div>
+
     <div class="photo-frame">
       <p>Twój oficjalny chłopak 🥺👉👈</p>
       <img src="twoje-zdjecie.jpg" alt="Zakochany chłopak">
     </div>
     <img src="https://media.tenor.com/lW82bJyoS6wAAAAi/cute-cat-love.gif" class="gif">
+
+    <div class="smaczek">
+      <strong>🐶 Żart o psie spawaczu:</strong><br>
+      <img id="slideshow" src="pies1.png" alt="Pies spawacz">
+    </div>
   </div>
 
   <script>
@@ -142,7 +183,6 @@
       document.getElementById('yes-content').classList.remove('hidden');
       document.getElementById('love-song').play();
 
-      // serduszka
       for (let i = 0; i < 30; i++) {
         const heart = document.createElement('div');
         heart.classList.add('falling-heart');
@@ -150,6 +190,17 @@
         heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
         document.body.appendChild(heart);
       }
+
+      startSlideshow();
+    }
+
+    function startSlideshow() {
+      const images = ['pies1.png', 'pies2.png', 'pies3.png', 'pies4.png'];
+      let i = 0;
+      setInterval(() => {
+        i = (i + 1) % images.length;
+        document.getElementById('slideshow').src = images[i];
+      }, 5000);
     }
   </script>
 </body>
