@@ -141,7 +141,12 @@
     </div>
     <div class="handle"></div>
   </div>
+  
+  <!-- PRZYCISK -->
   <button id="enterBtn" onclick="enterBar()">Wejdź do baru</button>
+
+  <!-- AUDIO (dodany tutaj) -->
+  <audio id="barSound" src="glos.mp3"></audio>
 
   <div id="barSection">
     <img id="barImage" src="zadanie.png" alt="Zadanie">
@@ -155,6 +160,9 @@
       document.querySelector('.door').style.display = 'none';
       document.getElementById('enterBtn').style.display = 'none';
       document.getElementById('barSection').style.display = 'flex';
+
+      const audio = document.getElementById('barSound');
+      audio.play();
     }
 
     function checkCode() {
