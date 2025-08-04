@@ -181,18 +181,18 @@
       step();
     }
 
-    function spawnObstacle() {
-      if (!playing) return;
-      let chance = window.innerWidth < 768 ? 0.008 : 0.015;
-      if (Math.random() < chance) {
-        const obs = document.createElement('div');
-        obs.className = 'obstacle';
-        obs.style.left = Math.random() * (game.clientWidth - 60) + 'px';
-        obs.style.top = '-60px';
-        game.appendChild(obs);
-        moveObstacle(obs);
-      }
-    }
+ function spawnObstacle() {
+  if (!playing) return;
+  let chance = window.innerWidth < 768 ? 0.010 : 0.018; // było 0.008 / 0.015
+  if (Math.random() < chance) {
+    const obs = document.createElement('div');
+    obs.className = 'obstacle';
+    obs.style.left = Math.random() * (game.clientWidth - 60) + 'px';
+    obs.style.top = '-60px';
+    game.appendChild(obs);
+    moveObstacle(obs);
+  }
+}
 
     function moveObstacle(obs) {
       function step() {
@@ -211,19 +211,19 @@
       step();
     }
 
-    function spawnBullet() {
-      if (!playing) return;
-      let chance = window.innerWidth < 768 ? 0.01 : 0.02;
-      if (Math.random() < chance) {
-        const b = document.createElement('div');
-        b.className = 'bullet';
-        b.style.top = '-24px';
-        b.style.left = Math.random() * (game.clientWidth - 24) + 'px';
-        game.appendChild(b);
-        shootSound.play();
-        moveBullet(b);
-      }
-    }
+function spawnBullet() {
+  if (!playing) return;
+  let chance = window.innerWidth < 768 ? 0.012 : 0.024; // było 0.01 / 0.02
+  if (Math.random() < chance) {
+    const b = document.createElement('div');
+    b.className = 'bullet';
+    b.style.top = '-24px';
+    b.style.left = Math.random() * (game.clientWidth - 24) + 'px';
+    game.appendChild(b);
+    shootSound.play();
+    moveBullet(b);
+  }
+}
 
     function moveBullet(b) {
       function step() {
