@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test o Matiego</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #fce4ec, #f8bbd0);
+      color: #880e4f;
+      text-align: center;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 30px;
+    }
+    .question {
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff0f6;
+      border: 3px dashed #f06292;
+      border-radius: 20px;
+      max-width: 700px;
+    }
+    .video-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      margin-top: 20px;
+    }
+    iframe {
+      width: 90%;
+      max-width: 560px;
+      height: 315px;
+      border: 3px solid #f8bbd0;
+      border-radius: 12px;
+    }
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      background: #f06292;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ec407a;
+    }
+    .image-placeholder {
+      height: 200px;
+      background: #fce4ec;
+      border: 2px dashed #f06292;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      color: #c2185b;
+    }
+  </style>
+</head>
+<body>
+  <h1>TEST: Czy znasz Matiego?</h1>
+  <div id="quiz"></div>
+
+  <script>
+    const quiz = [
+      {
+        question: "Której piosenki Mati by słuchał najchętniej:",
+        type: "video",
+        answers: [
+          { embed: "https://www.youtube.com/embed/mTN2PytS2_g", correct: false },
+          { embed: "https://www.youtube.com/embed/Jq2n3C3f9v8", correct: false },
+          { embed: "https://www.youtube.com/embed/SluVBtAl27k", correct: true }
+        ]
+      },
+      {
+        question: "Który z tych filmów najchętniej bym z Tobą obejrzał:",
+        type: "text",
+        image: "(tutaj dodaj grafikę z filmami)",
+        answers: [
+          { text: "Efekt motyla", correct: false },
+          { text: "Zamiana ciał", correct: false },
+          { text: "Ojciec roku", correct: true }
+        ]
+      },
+      {
+        question: "Które z tych miejsc najbardziej chciałbym odwiedzić?",
+        answers: [
+          { text: "Tadź Mahal", correct: false },
+          { text: "Piramidy Egipskie", correct: true },
+          { text: "Wielki Mur Chiński", correct: false }
+        ]
+      },
+      {
+        question: "Jaką kuchnię najbardziej lubię?",
+        answers: [
+          { text: "Włoska", correct: true },
+          { text: "Japońska", correct: false },
+          { text: "Meksykańska", correct: false }
+        ]
+      },
+      {
+        question: "Kiedy się śmieję najbardziej?",
+        answers: [
+          { text: "Gdy ktoś opowiada śmieszne historie", correct: false },
+          { text: "Gdy jestem z Tobą", correct: true },
+          { text: "Gdy oglądam komedię", correct: false }
+        ]
+      },
+      {
+        question: "Który z tych kierunków wakacyjnych wydaje mi się najbardziej ekscytujący?",
+        answers: [
+          { text: "Azja", correct: false },
+          { text: "Europa", correct: false },
+          { text: "Ameryka Południowa", correct: true }
+        ]
+      },
+      {
+        question: "Jaka jest moja wymarzona DZIKA podróż?",
+        answers: [
+          { text: "Safari w Afryce", correct: true },
+          { text: "Rejs po Morzu Śródziemnym", correct: false },
+          { text: "Trekking w Himalajach", correct: false }
+        ]
+      },
+      {
+        question: "Jaką książkę mogę czytać po raz kolejny?",
+        answers: [
+          { text: "Bracia Karamazow", correct: true },
+          { text: "Szukając Alaski", correct: false },
+          { text: "Playlist for the Dead", correct: false }
+        ]
+      },
+      {
+        question: "Gdybym mógł nauczyć się jednej rzeczy w jeden dzień, to byłoby:",
+        answers: [
+          { text: "Nowy język obcy", correct: true },
+          { text: "Gra na instrumencie", correct: false },
+          { text: "Gotowanie egzotycznej potrawy", correct: false }
+        ]
+      },
+      {
+        question: "Który z tych sportów chciałbym spróbować?",
+        answers: [
+          { text: "Surfing", correct: false },
+          { text: "Jazda konna", correct: false },
+          { text: "Wspinaczka", correct: true }
+        ]
+      },
+      {
+        question: "Który z tych smaków herbaty lubię najbardziej?",
+        answers: [
+          { text: "Miętowa", correct: false },
+          { text: "Owocowa", correct: true },
+          { text: "Czarna", correct: false }
+        ]
+      },
+      {
+        question: "Jakie jest moje ulubione śniadanie?",
+        answers: [
+          { text: "Pancakes z owocami", correct: true },
+          { text: "Jajka na bekonie", correct: false },
+          { text: "Owsianka z odżywką", correct: false }
+        ]
+      }
+    ];
+
+    let current = 0;
+    const container = document.getElementById("quiz");
+
+    function renderQuestion() {
+      const q = quiz[current];
+      container.innerHTML = `<div class="question">
+        <h2>${q.question}</h2>
+        ${q.image ? `<div class='image-placeholder'>${q.image}</div>` : ""}
+        ${q.type === 'video' ? `
+          <div class="video-wrapper">
+            ${q.answers.map((a, i) => `<iframe src="${a.embed}" allowfullscreen data-index="${i}"></iframe>`).join('')}
+          </div>`
+        : `
+          <div class="answers">
+            ${q.answers.map((a, i) => `<button onclick="checkAnswer(${i})">${a.text}</button>`).join('')}
+          </div>`}
+      </div>`;
+      if (q.type === 'video') {
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach((frame, index) => {
+          frame.addEventListener('click', () => checkAnswer(index));
+        });
+      }
+    }
+
+    function checkAnswer(index) {
+      const correct = quiz[current].answers[index].correct;
+      if (correct) {
+        current++;
+        if (current < quiz.length) {
+          renderQuestion();
+        } else {
+          container.innerHTML = `<div class='question'><h2>Gratulacje! Znasz Matiego jak nikt! 🎉</h2></div>`;
+        }
+      } else {
+        current = 0;
+        alert("Ups! Zła odpowiedź. Wracasz na początek!");
+        renderQuestion();
+      }
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
