@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Gra w Anomalie</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #111;
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+    img {
+        max-width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    button {
+        background-color: #d4af37;
+        border: none;
+        padding: 12px 24px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #fff;
+        margin-top: 15px;
+    }
+    button:hover {
+        background-color: #b8860b;
+    }
+    .input-box {
+        margin-top: 15px;
+        padding: 10px;
+        font-size: 18px;
+        border: 2px solid #b76e79;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #f5c2c7, #ffd8a8);
+        color: #222;
+        width: 100px;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<div class="container" id="game">
+    <h1>Jakoś dziwnie to wygląda...<br>Chyba warto zapamiętać ten korytarz</h1>
+    <button onclick="startGame()">Zacznij</button>
+</div>
+
+<script>
+    const stages = [
+        { img: 'ano1.png', anomaly: null },
+        { img: 'ano2.png', anomaly: 2 },
+        { img: 'ano3.png', anomaly: 4 },
+        { img: 'ano4.png', anomaly: 3 },
+        { img: 'ano1.png', anomaly: 0 },
+        { img: 'ano5.png', anomaly: 1 }
+    ];
+
+    let currentStage = 0;
+
+    function startGame() {
+        currentStage = 0;
+        showStage();
+    }
+
+    function showStage() {
+        const stage = stages[currentStage];
+        let html = `<img src="${stage.img}" alt="Etap ${currentStage+1}">`;
+
+        if (stage.anomaly === null) {
+            html += `<br><button onclick="nextStage()">Dalej</button>`;
+        } else {
+            html += `<br><input type="number" id="anomalyInput" class="input-box" placeholder="0">
+                     <br><button onclick="checkAnomaly()">Sprawdź</button>`;
+        }
+
+        document.getElementById('game').innerHTML = html;
+    }
+
+    function nextStage() {
+        currentStage++;
+        if (currentStage >= stages.length) {
+            gameOver();
+        } else {
+            showStage();
+        }
+    }
+
+    function checkAnomaly() {
+        const value = parseInt(document.getElementById('anomalyInput').value);
+        if (value === stages[currentStage].anomaly) {
+            nextStage();
+        } else {
+            startGame(); // reset
+        }
+    }
+
+    function gameOver() {
+        document.getElementById('game').innerHTML = `
+            <h1>Przeszłaś ten dziwny korytarz</h1>
+            <a href="zagadki10.html"><button>Idź dalej</button></a>
+        `;
+    }
+</script>
+
+</body>
+</html>
