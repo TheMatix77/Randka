@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Zagadka Czekolada</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f1e4;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    .intro {
+        padding: 20px;
+        background-color: #fff3e0;
+        border-bottom: 2px solid #d2a679;
+    }
+    .btn {
+        background-color: #8b5e3c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .btn:hover {
+        background-color: #a86f4c;
+    }
+    .chocolate {
+        display: none;
+        margin: 20px auto;
+        width: 360px;
+        display: grid;
+        grid-template-columns: repeat(6, 60px);
+        grid-gap: 5px;
+    }
+    .piece {
+        width: 60px;
+        height: 60px;
+        background-color: #6b4226;
+        border: 2px solid #4d2d1a;
+        border-radius: 5px;
+    }
+    .eaten {
+        background-color: #f8f1e4;
+        border: 2px dashed #b89b83;
+    }
+    .password-section {
+        display: none;
+        margin-top: 20px;
+    }
+    input {
+        padding: 10px;
+        font-size: 16px;
+        width: 200px;
+        text-align: center;
+    }
+    .next-btn {
+        display: none;
+        margin-top: 15px;
+    }
+</style>
+</head>
+<body>
+
+<div class="intro">
+    <h2>Sprzątając pokój natknęłaś się na telefon i czekoladę, którą jadł Mati.</h2>
+    <p>Tylko czemu wyjadł <b>tylko niektóre kostki</b>...? 🤔</p>
+    <button class="btn" onclick="startPuzzle()">Zaczynaj</button>
+</div>
+
+<div class="chocolate" id="chocolate"></div>
+
+<div class="password-section">
+    <p>Wpisz hasło:</p>
+    <input type="text" id="password" placeholder="Hasło...">
+    <button class="btn" onclick="checkPassword()">Sprawdź</button>
+</div>
+
+<div id="result"></div>
+<button class="btn next-btn" id="nextBtn" onclick="location.href='zagadka3.html'">Dalej ➡</button>
+
+<script>
+function startPuzzle() {
+    document.getElementById('chocolate').style.display = 'grid';
+    document.querySelector('.password-section').style.display = 'block';
+
+    const chocolate = document.getElementById('chocolate');
+    chocolate.innerHTML = '';
+
+    // Alfabet A-Z (1-26), ale w formie 6x6 tabliczki
+    const eatenLetters = ['M', 'Y', 'S', 'Z', 'K', 'A']; 
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    
+    alphabet.forEach(letter => {
+        const piece = document.createElement('div');
+        if (eatenLetters.includes(letter)) {
+            piece.className = 'piece eaten';
+        } else {
+            piece.className = 'piece';
+        }
+        chocolate.appendChild(piece);
+    });
+}
+
+function checkPassword() {
+    const pass = document.getElementById('password').value.trim().toLowerCase();
+    if (pass === 'myszka') {
+        document.getElementById('result').innerHTML = '<p><b>Mam teraz hasło do telefonu Matiego!</b> 📱</p>';
+        document.getElementById('nextBtn').style.display = 'inline-block';
+    } else {
+        document.getElementById('result').innerHTML = '<p style="color:red;">Błędne hasło ❌</p>';
+    }
+}
+</script>
+
+</body>
+</html>
